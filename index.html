@@ -178,7 +178,7 @@
             <div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div>
             <div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
             <div class="shift-line"><span class="date-entry">28日</span><span class="secondary-option disabled">（13:00～17:00の任意の時間も入る)</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            </div>
+        </div>
         <div class="shift-block">
             <p><span class="block-title">【立川B】</span><br>◎庄や立川南諏訪通り<br>・おっ魚<br>・和海（なごみ）<br>◎夜なんです3、◎AR、◎AR+（イベント日のみ）<br>水、金、土、祝、祝前</p>
             <div class="shift-line"><span class="date-entry">3水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">10水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">17水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22月祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23火祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">24水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
@@ -294,8 +294,7 @@ function toggleSecondaryOption(clickedElement) {
         return;
     }
     const appendedTextSpan = clickedElement.parentElement.querySelector('.appended-text');
-    // ▼▼▼ 選択肢のテキストを動的に取得するように変更 ▼▼▼
-    const textToAdd = clickedElement.innerText; 
+    const textToAdd = clickedElement.innerText;
     
     if (clickedElement.classList.contains('selected')) {
         clickedElement.classList.remove('selected');
