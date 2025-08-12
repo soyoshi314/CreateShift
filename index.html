@@ -279,6 +279,7 @@
             <div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div>
             <div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
         </div>
+
         <div class="scroll-button-wrapper">
             <a href="#toc-anchor" class="scroll-button">目次に戻る</a>
             <a href="#page-bottom-anchor" class="scroll-button">一番下まで移動する</a>
@@ -352,7 +353,6 @@
 <div id="notification">内容をコピーしました</div>
 
 <script>
-// JavaScriptは変更ありませんので、そのままです。
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.date-entry').forEach(el => {
         el.addEventListener('click', () => toggleSelection(el));
@@ -453,51 +453,34 @@ function toggleSecondaryOption(clickedElement) {
     }
 }
 
+// ▼▼▼【！】ここを修正▼▼▼
 function copyContentToClipboard() {
     let textToCopy = '';
-    const contentContainer = document.getElementById('shift-content');
+    const shiftBlocks = document.querySelectorAll('#shift-content .shift-block');
 
-    contentContainer.childNodes.forEach(node => {
-        if (node.nodeType !== 1) return; 
+    shiftBlocks.forEach(block => {
+        const hasSelection = Array.from(block.querySelectorAll('.assignee')).some(span => span.innerText.trim() !== '');
 
-        if (node.classList.contains('section-title')) {
-            const sectionTitle = node.innerText;
-            let sectionContent = ''; 
-            let hasSelectionInSection = false;
+        if (hasSelection) {
+            const description = block.querySelector('p').innerText.trim();
+            textToCopy += description + '\n';
 
-            let nextElem = node.nextElementSibling;
-            while(nextElem && !nextElem.classList.contains('section-title')) {
-                if (nextElem.classList.contains('shift-block')) {
-                    const assigneesInBlock = nextElem.querySelectorAll('.assignee');
-                    const hasSelectionInBlock = Array.from(assigneesInBlock).some(span => span.innerText.trim() !== '');
-
-                    if (hasSelectionInBlock) {
-                        hasSelectionInSection = true;
-                        sectionContent += nextElem.querySelector('p').innerText.trim() + '\n';
-                        nextElem.querySelectorAll('.shift-line').forEach(line => {
-                            const assigneeText = line.querySelector('.assignee').innerText;
-                            if(assigneeText) { 
-                                const dateText = line.querySelector('.date-entry').innerText;
-                                let appendedText = '';
-                                const appendedEl = line.querySelector('.appended-text');
-                                if (appendedEl && appendedEl.innerText) {
-                                    appendedText = ' ' + appendedEl.innerText;
-                                }
-                                sectionContent += dateText + '｜' + assigneeText + appendedText + '\n';
-                            }
-                        });
-                        sectionContent += '\n';
+            block.querySelectorAll('.shift-line').forEach(line => {
+                const assigneeText = line.querySelector('.assignee').innerText;
+                if (assigneeText) {
+                    const dateText = line.querySelector('.date-entry').innerText;
+                    let appendedText = '';
+                    const appendedEl = line.querySelector('.appended-text');
+                    if (appendedEl && appendedEl.innerText) {
+                        appendedText = ' ' + appendedEl.innerText;
                     }
+                    textToCopy += dateText + '｜' + assigneeText + appendedText + '\n';
                 }
-                nextElem = nextElem.nextElementSibling;
-            }
-
-            if(hasSelectionInSection) {
-                textToCopy += '\n' + "=".repeat(30) + '\n' + sectionTitle + '\n' + "=".repeat(30) + '\n\n' + sectionContent;
-            }
+            });
+            textToCopy += '\n'; 
         }
     });
-    
+
     navigator.clipboard.writeText(textToCopy.trim()).then(() => {
         const notification = document.getElementById('notification');
         notification.classList.add('show');
@@ -509,6 +492,7 @@ function copyContentToClipboard() {
         alert('コピーに失敗しました。');
     });
 }
+// ▲▲▲【！】ここまで修正▲▲▲
 </script>
 
 </body>
