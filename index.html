@@ -47,15 +47,34 @@
         .toc a:hover { text-decoration: underline; }
         .note-red { color: #dc3545; font-weight: bold; }
         
-        /* ▼▼▼【！】ここに追加したスタイル▼▼▼ */
         .date-entry.conflicting-disabled {
             color: #bbb;
             cursor: not-allowed;
             text-decoration: line-through;
             background-color: #f2f2f2;
         }
-        /* ▲▲▲【！】ここまで追加したスタイル▲▲▲ */
         
+        /* ▼▼▼【！】ここに追加したスタイル▼▼▼ */
+        .scroll-button-wrapper {
+            text-align: right;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .scroll-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.9em;
+            transition: background-color 0.2s;
+        }
+        .scroll-button:hover {
+            background-color: #5a6268;
+        }
+        /* ▲▲▲【！】ここまで追加したスタイル▲▲▲ */
+
         /* --- ▲ここまで追加・変更したCSS▲ --- */
 
         .secondary-option {
@@ -92,6 +111,9 @@
         <input type="text" id="mainTextBox" placeholder="ここに名前を入力">
     </div>
 
+    <p class="note-red" style="margin-top: -10px; margin-bottom: 20px;">
+        すべてのシフト入力が完了したら、ページ一番下の「コピー」ボタンを押し、<br>〇〇の部屋に張り付けて送信してください。
+    </p>
     <div class="toc">
         <h3>目次</h3>
         <ul>
@@ -122,7 +144,10 @@
             <p><span class="block-title">【茗荷谷】</span><br>◎築地日本海茗荷谷店<br>◎大翔園<br>金、土</p>
             <div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
         </div>
-
+        
+        <div class="scroll-button-wrapper">
+            <a href="#page-bottom-anchor" class="scroll-button">一番下まで移動する</a>
+        </div>
         <h2 class="section-title" id="section-2">２．都心ブロック②その他東京</h2>
         <div class="shift-block">
             <p><span class="block-title">【門前仲町+木場】</span><br>◎庄や門前仲町店<br>◎庄や木場店<br>金、祝、祝前</p>
@@ -160,7 +185,10 @@
             <p><span class="block-title">【大井町】</span><br>・大井町バル横丁<br>金、土、祝、祝前</p>
             <div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22月祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23火祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
         </div>
-
+        
+        <div class="scroll-button-wrapper">
+            <a href="#page-bottom-anchor" class="scroll-button">一番下まで移動する</a>
+        </div>
         <h2 class="section-title" id="section-3">３．立川町田ブロック</h2>
         <div class="shift-block">
             <p><span class="block-title">【立川A】</span><br>
@@ -216,6 +244,9 @@
             <div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
         </div>
 
+        <div class="scroll-button-wrapper">
+            <a href="#page-bottom-anchor" class="scroll-button">一番下まで移動する</a>
+        </div>
         <h2 class="section-title" id="section-4">４．千葉埼玉ホームブロック</h2>
         <div class="shift-block">
             <p><span class="block-title">【南行徳】</span><br>・庄や南行徳店<br>・やる気酒場アトレ新浦安店<br>金、土、日、祝、祝前</p>
@@ -269,6 +300,8 @@
             <div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22月祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23火祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
         </div>
     </div>
+
+    <div id="page-bottom-anchor"></div>
     <div class="button-container">
         <button id="copyButton">コピー（選択した店舗のみ）</button>
     </div>
@@ -277,6 +310,7 @@
 <div id="notification">内容をコピーしました</div>
 
 <script>
+// JavaScriptは変更ありませんので、そのままです。
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.date-entry').forEach(el => {
         el.addEventListener('click', () => toggleSelection(el));
@@ -289,43 +323,36 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('copyButton').addEventListener('click', copyContentToClipboard);
 });
 
-// 町田ブロック間の競合状態を更新する関数
 function updateMachidaConflict(clickedElement, isSelecting) {
     const dateText = clickedElement.innerText;
     const parentBlock = clickedElement.closest('.shift-block');
     if (!parentBlock) return;
 
     let otherBlockId;
-    // クリックされたブロックに応じて、もう一方のブロックのIDを決定
     if (parentBlock.id === 'machida-sagamihara-block') {
         otherBlockId = 'machida-noborito-block';
     } else if (parentBlock.id === 'machida-noborito-block') {
         otherBlockId = 'machida-sagamihara-block';
     } else {
-        return; // 関係ないブロックなら何もしない
+        return; 
     }
 
     const otherBlock = document.getElementById(otherBlockId);
     if (!otherBlock) return;
 
-    // もう一方のブロックから同じ日付を持つ要素を探す
     const otherDateElements = otherBlock.querySelectorAll('.date-entry');
     const targetElement = Array.from(otherDateElements).find(el => el.innerText === dateText);
 
     if (targetElement) {
         if (isSelecting) {
-            // 日付を選択した場合、もう一方を無効化
             targetElement.classList.add('conflicting-disabled');
         } else {
-            // 選択を解除した場合、もう一方を有効化
             targetElement.classList.remove('conflicting-disabled');
         }
     }
 }
 
-
 function toggleSelection(clickedElement) {
-    // 競合により無効化されている場合は何もしない
     if (clickedElement.classList.contains('conflicting-disabled')) {
         return;
     }
@@ -337,7 +364,6 @@ function toggleSelection(clickedElement) {
     const isCurrentlySelected = clickedElement.classList.contains('selected');
 
     if (isCurrentlySelected) {
-        // --- 日付の選択を解除 ---
         clickedElement.classList.remove('selected');
         assigneeSpan.textContent = '';
         
@@ -349,11 +375,9 @@ function toggleSelection(clickedElement) {
             const appendedTextSpan = clickedElement.parentElement.querySelector('.appended-text');
             if (appendedTextSpan) appendedTextSpan.textContent = '';
         }
-        // 競合状態を更新 (選択解除)
         updateMachidaConflict(clickedElement, false);
 
     } else {
-        // --- 日付を選択 ---
         if (name.trim() === '') {
             alert('マジシャン名を入力してください。');
             return;
@@ -366,7 +390,6 @@ function toggleSelection(clickedElement) {
                 option.classList.remove('disabled');
             });
         }
-        // 競合状態を更新 (選択)
         updateMachidaConflict(clickedElement, true);
     }
 }
@@ -380,11 +403,9 @@ function toggleSecondaryOption(clickedElement) {
     const formattedText = `（${textToAdd}）`;
     
     if (clickedElement.classList.contains('selected')) {
-        // --- 選択解除 ---
         clickedElement.classList.remove('selected');
         appendedTextSpan.textContent = appendedTextSpan.textContent.replace(formattedText, '').trim();
     } else {
-        // --- 選択 ---
         clickedElement.classList.add('selected');
         appendedTextSpan.textContent = (appendedTextSpan.textContent + ' ' + formattedText).trim();
     }
@@ -402,25 +423,29 @@ function copyContentToClipboard() {
             let sectionContent = ''; 
 
             let nextElem = node.nextElementSibling;
-            while(nextElem && nextElem.classList.contains('shift-block')) {
-                const assigneesInBlock = nextElem.querySelectorAll('.assignee');
-                const hasSelection = Array.from(assigneesInBlock).some(span => span.innerText.trim() !== '');
+            while(nextElem && (nextElem.classList.contains('shift-block') || nextElem.classList.contains('scroll-button-wrapper'))) {
+                if (nextElem.classList.contains('shift-block')) {
+                    const assigneesInBlock = nextElem.querySelectorAll('.assignee');
+                    const hasSelection = Array.from(assigneesInBlock).some(span => span.innerText.trim() !== '');
 
-                if (hasSelection) {
-                    sectionContent += nextElem.querySelector('p').innerText.trim() + '\n';
-                    nextElem.querySelectorAll('.shift-line').forEach(line => {
-                        const assigneeText = line.querySelector('.assignee').innerText;
-                        if(assigneeText) { 
-                            const dateText = line.querySelector('.date-entry').innerText;
-                            let appendedText = '';
-                            const appendedEl = line.querySelector('.appended-text');
-                            if (appendedEl && appendedEl.innerText) {
-                                appendedText = ' ' + appendedEl.innerText;
-                            }
-                            sectionContent += dateText + '｜' + assigneeText + appendedText + '\n';
+                    if (hasSelection) {
+                        if (!sectionContent.includes(nextElem.querySelector('p').innerText.trim())) {
+                             sectionContent += nextElem.querySelector('p').innerText.trim() + '\n';
                         }
-                    });
-                    sectionContent += '\n';
+                        nextElem.querySelectorAll('.shift-line').forEach(line => {
+                            const assigneeText = line.querySelector('.assignee').innerText;
+                            if(assigneeText) { 
+                                const dateText = line.querySelector('.date-entry').innerText;
+                                let appendedText = '';
+                                const appendedEl = line.querySelector('.appended-text');
+                                if (appendedEl && appendedEl.innerText) {
+                                    appendedText = ' ' + appendedEl.innerText;
+                                }
+                                sectionContent += dateText + '｜' + assigneeText + appendedText + '\n';
+                            }
+                        });
+                        sectionContent += '\n';
+                    }
                 }
                 nextElem = nextElem.nextElementSibling;
             }
@@ -431,7 +456,20 @@ function copyContentToClipboard() {
         }
     });
 
-    navigator.clipboard.writeText(textToCopy.trim()).then(() => {
+    // コピーロジックを少し修正して、セクションごとの区切りを保つ
+    let finalTextToCopy = '';
+    const sections = textToCopy.split("==============================").filter(s => s.trim() !== '');
+    
+    let formattedText = '';
+    for(let i=0; i < sections.length; i+=2) {
+        const title = sections[i];
+        const content = sections[i+1];
+        if (content && content.trim() !== '') {
+            formattedText += "\n" + "=".repeat(30) + title + "=".repeat(30) + "\n\n" + content;
+        }
+    }
+
+    navigator.clipboard.writeText(formattedText.trim()).then(() => {
         const notification = document.getElementById('notification');
         notification.classList.add('show');
         setTimeout(() => {
@@ -443,5 +481,6 @@ function copyContentToClipboard() {
     });
 }
 </script>
+
 </body>
 </html>
