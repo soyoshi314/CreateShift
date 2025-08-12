@@ -462,22 +462,8 @@ function copyContentToClipboard() {
         const hasSelection = Array.from(block.querySelectorAll('.assignee')).some(span => span.innerText.trim() !== '');
 
         if (hasSelection) {
-            const pElement = block.querySelector('p');
-            // p要素を複製して、表示に影響を与えずに処理する
-            const pClone = pElement.cloneNode(true);
-            
-            // 複製した要素から赤文字の注釈を削除
-            pClone.querySelectorAll('.note-red').forEach(el => el.remove());
-            
-            // テキストを取得し、行に分割
-            let descriptionLines = pClone.innerText.trim().split('\n');
-            
-            // 最後の行（曜日の説明）を削除
-            descriptionLines.pop();
-            
-            // 残りの行を結合して、コピー用のテキストに追加
-            const processedDescription = descriptionLines.join('\n');
-            textToCopy += processedDescription + '\n';
+            const description = block.querySelector('p').innerText.trim();
+            textToCopy += description + '\n';
 
             block.querySelectorAll('.shift-line').forEach(line => {
                 const assigneeText = line.querySelector('.assignee').innerText;
