@@ -87,12 +87,17 @@
         .appended-text { color: #155724; font-weight: bold; margin-left: 8px; }
 
         .button-container { text-align: center; margin-top: 30px; }
-        #copyButton {
+        #copyButton, #resetButton {
             padding: 12px 25px; font-size: 1.1em; cursor: pointer;
-            background-color: #007bff; color: white; border: none;
+            color: white; border: none;
             border-radius: 5px; transition: background-color 0.2s;
         }
+        #copyButton { background-color: #007bff; margin-right: 10px; }
         #copyButton:hover { background-color: #0056b3; }
+        
+        #resetButton { background-color: #dc3545; }
+        #resetButton:hover { background-color: #c82333; }
+        
         #notification {
             position: fixed; bottom: 20px; left: 50%;
             transform: translateX(-50%); background-color: #28a745;
@@ -133,7 +138,6 @@
             <p><span class="block-title">【新宿】</span><br>◎沖縄料理一(いち)新宿店<br>◎築地日本海新宿西口店<br>水、金、土、祝、祝前</p>
             <div class="shift-line"><span class="date-entry">3水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">10水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">17水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22月祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23火祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">24水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
         </div>
-        
         <div class="shift-block">
             <p><span class="block-title">【トニーローマ】</span><br>◎トニーローマ三番町店<br>水、金、土、日、祝、祝前</p>
             <div class="shift-line"><span class="date-entry">3水</span>｜<span class="assignee"></span></div>
@@ -156,7 +160,6 @@
             <div class="shift-line"><span class="date-entry">27土</span><span class="secondary-option disabled">門前仲町も希望</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
             <div class="shift-line"><span class="date-entry">28日</span>｜<span class="assignee"></span></div>
         </div>
-
         <div class="shift-block">
             <p><span class="block-title">【目黒】</span><br>◎庄や 目黒408店<br>・博多天神もつ鍋お多福<br>水、金、土、祝、祝前</p>
             <div class="shift-line"><span class="date-entry">3水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">10水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">17水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22月祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23火祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">24水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
@@ -165,105 +168,15 @@
             <p><span class="block-title">【茗荷谷】</span><br>◎築地日本海茗荷谷店<br>◎大翔園<br>金、土</p>
             <div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
         </div>
-        
         <div class="scroll-button-wrapper">
             <a href="#toc-anchor" class="scroll-button">目次に戻る</a>
             <a href="#page-bottom-anchor" class="scroll-button">一番下まで移動する</a>
         </div>
-
         <h2 class="section-title" id="section-2">２．都心ブロック②その他東京</h2>
-        <div class="shift-block">
-            <p><span class="block-title">【門前仲町+木場】</span><br>◎庄や門前仲町店<br>◎庄や木場店<br>金、祝、祝前</p>
-            <div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22月祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23火祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div>
-        </div>
-        <div class="shift-block">
-            <p><span class="block-title">【門前仲町+水道橋】</span><br>◎庄や門前仲町店<br>◎庄や水道橋店<br>土、祝、祝前</p>
-            <div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22月祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23火祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
-        </div>
-        <div class="shift-block">
-            <p><span class="block-title">【錦糸町】</span><br>◎庄や錦糸町店<br>(土→＋◎庄や神田東口店 日→+庄や◎新小岩南口店)<br>◎夜なんです1,2(イベント日のみ)<br>土、日</p>
-            <div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">7日</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14日</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">21日</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">28日</span>｜<span class="assignee"></span></div>
-        </div>
-        <div class="shift-block">
-            <p><span class="block-title">【蒲田A】</span><br>◎築地日本海蒲田店<br>・花火<br>・夜明けぜよ<br>・ナンバーニク<br>・バーヒロ<br>・カウンターバーRAPU RAPU<br>・居酒屋RAPU RAPU<br>築地日本海糀谷店 (希望者のみ)<br>金、土、祝、祝前</p>
-            <div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22月祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23火祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
-        </div>
-        <div class="shift-block">
-            <p><span class="block-title">【蒲田B】</span><br>・串幸 (日休業)<br>◎お好み焼きとしちゃん<br>・ぼっけもん<br>・パズリング<br>・魚浜<br>・うなぎ屋<br>・豚番長<br>・路地一献◯まる<br>・（ザトランジット東京　しばらく無し）<br>金、土、祝、祝前</p>
-            <div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22月祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23火祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
-        </div>
-        <div class="shift-block">
-            <p><span class="block-title">【蒲田水曜日】</span><br>◎築地日本海蒲田店<br>・串幸<br>・夜明けぜよ<br>・ぼっけもん<br>・居酒屋RAPU RAPU<br>・豚番長<br>(・ザトランジット東京　しばらく無し）<br>◎お好み焼きとしちゃん<br>水</p>
-            <div class="shift-line"><span class="date-entry">3水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">10水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">17水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">24水</span>｜<span class="assignee"></span></div>
-        </div>
-        <div class="shift-block">
-            <p><span class="block-title">【赤坂】</span><br>◎庄や赤坂店<br>◎Irish Pub Craic (クライック、都度許可取り)<br>水、金</p>
-            <div class="shift-line"><span class="date-entry">3水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">10水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">17水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">24水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div>
-        </div>
-        <div class="shift-block">
-            <p><span class="block-title">【上野】</span><br>◎庄や上野駅前店<br>◎エソラ上野駅前店<br>（水金のみ→◎日本海庄や 上野浅草口店　日定休）<br>水、金、土、祝、祝前</p>
-            <div class="shift-line"><span class="date-entry">3水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">10水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">17水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22月祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23火祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">24水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
-        </div>
-        <div class="shift-block">
-            <p><span class="block-title">【大井町】</span><br>・大井町バル横丁<br>金、土、祝、祝前</p>
-            <div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22月祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23火祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
-        </div>
-        
-        <div class="scroll-button-wrapper">
-            <a href="#toc-anchor" class="scroll-button">目次に戻る</a>
-            <a href="#page-bottom-anchor" class="scroll-button">一番下まで移動する</a>
-        </div>
-
-        <h2 class="section-title" id="section-3">３．立川町田ブロック</h2>
-        <div class="shift-block">
-            <p><span class="block-title">【立川A】</span><br>
-            <span class="note-red">・2週目以降の月、火、木も入れます。希望する場合は、〇〇の部屋で希望日を別途連絡してください。ぜひお待ちしております(^^）</span><br>
-            <span class="note-red">・日は、ビアガーデンのみ、お昼から夕方（13:00～17:00くらいまで）の任意の時間で入れますので、希望する場合は選択してください。（マージンは、お昼から夕方は1,000円。夜もセットで2,000円です。）</span><br>
-            ◎空島<br>◎GB立川店<br>◎ここにこんね<br>・フレンチ酒場こづ<br>・マルミヤ（水金土のみ）<br>（日曜 GB+こんね）<br>1週目のみ毎日、2週目以降は水、金、土、日、祝、祝前</p>
-            <div class="shift-line"><span class="date-entry">1月</span>｜<span class="assignee"></span></div>
-            <div class="shift-line"><span class="date-entry">2火</span>｜<span class="assignee"></span></div>
-            <div class="shift-line"><span class="date-entry">3水</span>｜<span class="assignee"></span></div>
-            <div class="shift-line"><span class="date-entry">4木</span>｜<span class="assignee"></span></div>
-            <div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div>
-            <div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div>
-            <div class="shift-line"><span class="date-entry">7日</span><span class="secondary-option disabled">13:00～17:00の任意の時間も入る</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">10水</span>｜<span class="assignee"></span></div>
-            <div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div>
-            <div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div>
-            <div class="shift-line"><span class="date-entry">14日</span><span class="secondary-option disabled">13:00～17:00の任意の時間も入る</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">15月祝</span>｜<span class="assignee"></span></div>
-            <div class="shift-line"><span class="date-entry">17水</span>｜<span class="assignee"></span></div>
-            <div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div>
-            <div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div>
-            <div class="shift-line"><span class="date-entry">21日</span><span class="secondary-option disabled">13:00～17:00の任意の時間も入る</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">22月祝前</span>｜<span class="assignee"></span></div>
-            <div class="shift-line"><span class="date-entry">23火祝</span>｜<span class="assignee"></span></div>
-            <div class="shift-line"><span class="date-entry">24水</span>｜<span class="assignee"></span></div>
-            <div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div>
-            <div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
-            <div class="shift-line"><span class="date-entry">28日</span><span class="secondary-option disabled">13:00～17:00の任意の時間も入る</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-        </div>
-        <div class="shift-block">
-            <p><span class="block-title">【立川B】</span><br>◎庄や立川南諏訪通り<br>・おっ魚<br>・和海（なごみ）<br>◎夜なんです3、◎AR、◎AR+（イベント日のみ）<br>水、金、土、祝、祝前</p>
-            <div class="shift-line"><span class="date-entry">3水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">10水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">17水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22月祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23火祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">24水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
-        </div>
-        <div class="shift-block">
-            <p><span class="block-title">【国立+新小平】</span><br>◎庄や国立店<br>◎庄や新小平店<br>・クラフト酒場クニタチカ<br>金、土、祝、祝前</p>
-            <div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22月祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23火祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
-        </div>
-        
-        <div class="shift-block" id="machida-sagamihara-block">
-            <p><span class="block-title">【町田+小田急相模原】</span><br>
-            <span class="note-red">町田に人が入っている場合は、小田急相模原のみとなります。</span><br>
-            ◎庄や町田本家店<br>・エソラ町田駅前店<br>◎庄や小田急相模原店<br>・ManiMani<br>◎いくどん<br>・とりいちず<br>・明月苑（水休み）<br>・マリアンナ<br>・えびす<br>以下は、翔・ダイキチ・オーイズミのみ<br>・スナックライブリー<br>・スポット<br>水、金、土、日、祝、祝前</p>
-            <div class="shift-line"><span class="date-entry">3水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">7日</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">10水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14日</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">17水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">21日</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22月祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23火祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">24水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">28日</span>｜<span class="assignee"></span></div>
-        </div>
-        
         <div class="shift-block" id="machida-noborito-block">
             <p><span class="block-title">【町田＋登戸】</span><br>◎庄や町田本家店<br>・エソラ町田駅前店<br>◎日本海庄や登戸店<br>金、土、祝、祝前</p>
             <div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22月祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23火祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
         </div>
-
         <div class="shift-block">
             <p><span class="block-title">【横浜関内】</span><br>・うし極<br>◎トントス<br>◎ミヤオガパオ<br>◎ガールズバーさくら<br>◎バー111<br>・バーりあん<br>・金魚（月～木）未定<br>金、土、祝、祝前</p>
             <div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div>
@@ -279,66 +192,16 @@
             <div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div>
             <div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
         </div>
-
         <div class="scroll-button-wrapper">
             <a href="#toc-anchor" class="scroll-button">目次に戻る</a>
             <a href="#page-bottom-anchor" class="scroll-button">一番下まで移動する</a>
         </div>
-
         <h2 class="section-title" id="section-4">４．千葉埼玉ホームブロック</h2>
-        <div class="shift-block">
-            <p><span class="block-title">【南行徳】</span><br>・庄や南行徳店<br>・やる気酒場アトレ新浦安店<br>金、土、日、祝、祝前</p>
-            <div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14日</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22月祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23火祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
-        </div>
-        <div class="shift-block">
-            <p><span class="block-title">【千葉】</span><br>・築地日本海千葉駅前店<br>・築地日本海千葉中央店<br>金</p>
-            <div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div>
-        </div>
-        <div class="shift-block">
-            <p><span class="block-title">【西千葉】</span><br>・庄や西千葉店<br>・ドラム缶<br>(土日→＋築地日本海千葉中央店)<br>金、土、日、祝、祝前</p>
-            <div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">7日</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14日</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">21日</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22月祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23火祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">28日</span>｜<span class="assignee"></span></div>
-        </div>
-        <div class="shift-block">
-            <p><span class="block-title">【津田沼】</span><br>・庄や京成津田沼店<br>・庄や本八幡店<br>・絶好鳥<br>金、土、祝、祝前</p>
-            <div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22月祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23火祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
-        </div>
-        <div class="shift-block">
-            <p><span class="block-title">【赤羽】</span><br>・日本海庄や赤羽西口店<br>・築地日本海赤羽店<br>土、祝、祝前</p>
-            <div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22月祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23火祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
-        </div>
-        <div class="shift-block">
-            <p><span class="block-title">【新小岩】</span><br>・庄や新小岩南口<br>・庄や本八幡店<br>水</p>
-            <div class="shift-line"><span class="date-entry">3水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">10水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">17水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">24水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div>
-        </div>
-        <div class="shift-block">
-            <p><span class="block-title">【柏西口】</span><br>
-            <span class="note-red">庄や新八柱南口店、庄や増尾店、日昇から入りたい店舗を選択してください。</span><br>
-            ・庄や柏西口店(改装中）<br>
-            (+選択式 庄や新八柱南口店、庄や増尾店、日昇)<br>
-            水、金、土、祝、祝前</p>
-            <div class="shift-line"><span class="date-entry">3水</span><span class="secondary-option disabled">庄や新八柱南口店</span><span class="secondary-option disabled">庄や増尾店</span><span class="secondary-option disabled">日昇</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">5金</span><span class="secondary-option disabled">庄や新八柱南口店</span><span class="secondary-option disabled">庄や増尾店</span><span class="secondary-option disabled">日昇</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">6土</span><span class="secondary-option disabled">庄や新八柱南口店</span><span class="secondary-option disabled">庄や増尾店</span><span class="secondary-option disabled">日昇</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">10水</span><span class="secondary-option disabled">庄や新八柱南口店</span><span class="secondary-option disabled">庄や増尾店</span><span class="secondary-option disabled">日昇</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">12金</span><span class="secondary-option disabled">庄や新八柱南口店</span><span class="secondary-option disabled">庄や増尾店</span><span class="secondary-option disabled">日昇</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">13土</span><span class="secondary-option disabled">庄や新八柱南口店</span><span class="secondary-option disabled">庄や増尾店</span><span class="secondary-option disabled">日昇</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">14日祝前</span><span class="secondary-option disabled">庄や新八柱南口店</span><span class="secondary-option disabled">庄や増尾店</span><span class="secondary-option disabled">日昇</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">15月祝</span><span class="secondary-option disabled">庄や新八柱南口店</span><span class="secondary-option disabled">庄や増尾店</span><span class="secondary-option disabled">日昇</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">17水</span><span class="secondary-option disabled">庄や新八柱南口店</span><span class="secondary-option disabled">庄や増尾店</span><span class="secondary-option disabled">日昇</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">19金</span><span class="secondary-option disabled">庄や新八柱南口店</span><span class="secondary-option disabled">庄や増尾店</span><span class="secondary-option disabled">日昇</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">20土</span><span class="secondary-option disabled">庄や新八柱南口店</span><span class="secondary-option disabled">庄や増尾店</span><span class="secondary-option disabled">日昇</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">22月祝前</span><span class="secondary-option disabled">庄や新八柱南口店</span><span class="secondary-option disabled">庄や増尾店</span><span class="secondary-option disabled">日昇</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">23火祝</span><span class="secondary-option disabled">庄や新八柱南口店</span><span class="secondary-option disabled">庄や増尾店</span><span class="secondary-option disabled">日昇</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">24水</span><span class="secondary-option disabled">庄や新八柱南口店</span><span class="secondary-option disabled">庄や増尾店</span><span class="secondary-option disabled">日昇</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">26金</span><span class="secondary-option disabled">庄や新八柱南口店</span><span class="secondary-option disabled">庄や増尾店</span><span class="secondary-option disabled">日昇</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">27土</span><span class="secondary-option disabled">庄や新八柱南口店</span><span class="secondary-option disabled">庄や増尾店</span><span class="secondary-option disabled">日昇</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-        </div>
         <div class="shift-block">
             <p><span class="block-title">【船橋南口】</span><br>・日本海庄や船橋南口店<br>・庄や馬込沢店<br>金、土、祝、祝前</p>
             <div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22月祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23火祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
         </div>
     </div>
-
     <div class="scroll-button-wrapper" style="text-align: center;">
         <a href="#toc-anchor" class="scroll-button">目次に戻る</a>
     </div>
@@ -347,23 +210,145 @@
 
     <div class="button-container">
         <button id="copyButton">コピー（選択した店舗のみ）</button>
+        <button id="resetButton">リセット</button>
     </div>
 </div>
 
 <div id="notification">内容をコピーしました</div>
 
 <script>
+// LocalStorageのキーを定義
+const STORAGE_KEY = 'shiftAppData_2025_09';
+
+// --- 初期化処理 ---
 document.addEventListener('DOMContentLoaded', function() {
+    loadData();
+
     document.querySelectorAll('.date-entry').forEach(el => {
-        el.addEventListener('click', () => toggleSelection(el));
+        el.addEventListener('click', () => {
+            toggleSelection(el);
+            saveData();
+        });
     });
 
     document.querySelectorAll('.secondary-option').forEach(el => {
-        el.addEventListener('click', () => toggleSecondaryOption(el));
+        el.addEventListener('click', () => {
+            toggleSecondaryOption(el);
+            saveData();
+        });
     });
+    
+    document.getElementById('mainTextBox').addEventListener('input', saveData);
 
     document.getElementById('copyButton').addEventListener('click', copyContentToClipboard);
+    document.getElementById('resetButton').addEventListener('click', resetAll);
 });
+
+// --- データ保存/復元/リセット機能 ---
+
+// ▼▼▼【！】ここを修正▼▼▼
+function saveData() {
+    const data = {
+        magicianName: document.getElementById('mainTextBox').value,
+        selections: []
+    };
+
+    document.querySelectorAll('.shift-line').forEach((line, index) => {
+        const dateEntry = line.querySelector('.date-entry');
+        if (dateEntry && dateEntry.classList.contains('selected')) {
+            const secondaryOptions = [];
+            line.querySelectorAll('.secondary-option.selected').forEach(opt => {
+                secondaryOptions.push(opt.innerText);
+            });
+            data.selections.push({
+                lineIndex: index,
+                options: secondaryOptions
+            });
+        }
+    });
+
+    const now = new Date();
+    // 10日後のタイムスタンプを有効期限として設定
+    const expiry = now.getTime() + (10 * 24 * 60 * 60 * 1000);
+
+    const item = {
+        value: data,
+        expiry: expiry,
+    };
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(item));
+}
+
+// ▼▼▼【！】ここを修正▼▼▼
+function loadData() {
+    const itemStr = localStorage.getItem(STORAGE_KEY);
+    if (!itemStr) {
+        return;
+    }
+
+    const item = JSON.parse(itemStr);
+    const now = new Date();
+
+    // 有効期限をチェック
+    if (now.getTime() > item.expiry) {
+        // 期限切れならデータを削除して終了
+        localStorage.removeItem(STORAGE_KEY);
+        return;
+    }
+
+    const data = item.value; // 有効期限内のデータ本体
+    const name = data.magicianName || '';
+    
+    document.getElementById('mainTextBox').value = name;
+
+    const allLines = document.querySelectorAll('.shift-line');
+    if (data.selections) {
+        data.selections.forEach(sel => {
+            const line = allLines[sel.lineIndex];
+            if (line) {
+                const dateEntry = line.querySelector('.date-entry');
+                if (dateEntry) {
+                    dateEntry.classList.add('selected');
+                    line.querySelector('.assignee').textContent = name;
+                    
+                    const secondaryOpts = line.querySelectorAll('.secondary-option');
+                    secondaryOpts.forEach(opt => opt.classList.remove('disabled'));
+
+                    if (sel.options && sel.options.length > 0) {
+                        let appendedText = '';
+                        secondaryOpts.forEach(opt => {
+                            if (sel.options.includes(opt.innerText)) {
+                                opt.classList.add('selected');
+                                appendedText += `（${opt.innerText}） `;
+                            }
+                        });
+                        line.querySelector('.appended-text').textContent = appendedText.trim();
+                    }
+                }
+            }
+        });
+    }
+    updateAllMachidaConflicts();
+}
+// ▲▲▲【！】ここまで修正▲▲▲
+
+
+function resetAll() {
+    if (confirm('入力内容をすべてリセットします。よろしいですか？')) {
+        localStorage.removeItem(STORAGE_KEY);
+        location.reload();
+    }
+}
+
+// --- 既存の機能 ---
+
+function updateAllMachidaConflicts() {
+    document.querySelectorAll('#machida-sagamihara-block .date-entry, #machida-noborito-block .date-entry').forEach(el => {
+        if (el.classList.contains('selected')) {
+            updateMachidaConflict(el, true);
+        }
+    });
+}
 
 function updateMachidaConflict(clickedElement, isSelecting) {
     const dateText = clickedElement.innerText;
@@ -453,7 +438,6 @@ function toggleSecondaryOption(clickedElement) {
     }
 }
 
-// ▼▼▼【！】ここを修正▼▼▼
 function copyContentToClipboard() {
     let textToCopy = '';
     const shiftBlocks = document.querySelectorAll('#shift-content .shift-block');
@@ -462,8 +446,13 @@ function copyContentToClipboard() {
         const hasSelection = Array.from(block.querySelectorAll('.assignee')).some(span => span.innerText.trim() !== '');
 
         if (hasSelection) {
-            const description = block.querySelector('p').innerText.trim();
-            textToCopy += description + '\n';
+            const pElement = block.querySelector('p');
+            const pClone = pElement.cloneNode(true);
+            pClone.querySelectorAll('.note-red').forEach(el => el.remove());
+            let descriptionLines = pClone.innerText.trim().split('\n');
+            descriptionLines.pop();
+            const processedDescription = descriptionLines.join('\n');
+            textToCopy += processedDescription + '\n';
 
             block.querySelectorAll('.shift-line').forEach(line => {
                 const assigneeText = line.querySelector('.assignee').innerText;
@@ -492,7 +481,6 @@ function copyContentToClipboard() {
         alert('コピーに失敗しました。');
     });
 }
-// ▲▲▲【！】ここまで修正▲▲▲
 </script>
 
 </body>
