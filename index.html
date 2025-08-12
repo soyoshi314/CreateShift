@@ -54,7 +54,6 @@
             background-color: #f2f2f2;
         }
         
-        /* ▼▼▼【！】ここに追加したスタイル▼▼▼ */
         .scroll-button-wrapper {
             text-align: right;
             margin-top: 20px;
@@ -72,6 +71,10 @@
         }
         .scroll-button:hover {
             background-color: #5a6268;
+        }
+        /* ▼▼▼【！】ここに追加したスタイル▼▼▼ */
+        .scroll-button + .scroll-button {
+            margin-left: 8px;
         }
         /* ▲▲▲【！】ここまで追加したスタイル▲▲▲ */
 
@@ -114,7 +117,8 @@
     <p class="note-red" style="margin-top: -10px; margin-bottom: 20px;">
         すべてのシフト入力が完了したら、ページ一番下の「コピー」ボタンを押し、<br>〇〇の部屋に張り付けて送信してください。
     </p>
-    <div class="toc">
+
+    <div class="toc" id="toc-anchor">
         <h3>目次</h3>
         <ul>
             <li><a href="#section-1">１．都心ブロック①新宿周辺</a></li>
@@ -146,6 +150,7 @@
         </div>
         
         <div class="scroll-button-wrapper">
+            <a href="#toc-anchor" class="scroll-button">目次に戻る</a>
             <a href="#page-bottom-anchor" class="scroll-button">一番下まで移動する</a>
         </div>
         <h2 class="section-title" id="section-2">２．都心ブロック②その他東京</h2>
@@ -187,6 +192,7 @@
         </div>
         
         <div class="scroll-button-wrapper">
+            <a href="#toc-anchor" class="scroll-button">目次に戻る</a>
             <a href="#page-bottom-anchor" class="scroll-button">一番下まで移動する</a>
         </div>
         <h2 class="section-title" id="section-3">３．立川町田ブロック</h2>
@@ -245,6 +251,7 @@
         </div>
 
         <div class="scroll-button-wrapper">
+            <a href="#toc-anchor" class="scroll-button">目次に戻る</a>
             <a href="#page-bottom-anchor" class="scroll-button">一番下まで移動する</a>
         </div>
         <h2 class="section-title" id="section-4">４．千葉埼玉ホームブロック</h2>
@@ -302,6 +309,7 @@
     </div>
 
     <div id="page-bottom-anchor"></div>
+
     <div class="button-container">
         <button id="copyButton">コピー（選択した店舗のみ）</button>
     </div>
@@ -415,23 +423,24 @@ function copyContentToClipboard() {
     let textToCopy = '';
     const contentContainer = document.getElementById('shift-content');
 
+    // This logic ensures that the copy function ignores the scroll buttons.
     contentContainer.childNodes.forEach(node => {
         if (node.nodeType !== 1) return; 
 
         if (node.classList.contains('section-title')) {
-            const sectionTitle = '\n' + "=".repeat(30) + '\n' + node.innerText + '\n' + "=".repeat(30) + '\n\n';
+            const sectionTitle = node.innerText;
             let sectionContent = ''; 
+            let hasSelectionInSection = false;
 
             let nextElem = node.nextElementSibling;
-            while(nextElem && (nextElem.classList.contains('shift-block') || nextElem.classList.contains('scroll-button-wrapper'))) {
+            while(nextElem && !nextElem.classList.contains('section-title')) {
                 if (nextElem.classList.contains('shift-block')) {
                     const assigneesInBlock = nextElem.querySelectorAll('.assignee');
-                    const hasSelection = Array.from(assigneesInBlock).some(span => span.innerText.trim() !== '');
+                    const hasSelectionInBlock = Array.from(assigneesInBlock).some(span => span.innerText.trim() !== '');
 
-                    if (hasSelection) {
-                        if (!sectionContent.includes(nextElem.querySelector('p').innerText.trim())) {
-                             sectionContent += nextElem.querySelector('p').innerText.trim() + '\n';
-                        }
+                    if (hasSelectionInBlock) {
+                        hasSelectionInSection = true;
+                        sectionContent += nextElem.querySelector('p').innerText.trim() + '\n';
                         nextElem.querySelectorAll('.shift-line').forEach(line => {
                             const assigneeText = line.querySelector('.assignee').innerText;
                             if(assigneeText) { 
@@ -450,26 +459,13 @@ function copyContentToClipboard() {
                 nextElem = nextElem.nextElementSibling;
             }
 
-            if(sectionContent) {
-                textToCopy += sectionTitle + sectionContent;
+            if(hasSelectionInSection) {
+                textToCopy += '\n' + "=".repeat(30) + '\n' + sectionTitle + '\n' + "=".repeat(30) + '\n\n' + sectionContent;
             }
         }
     });
-
-    // コピーロジックを少し修正して、セクションごとの区切りを保つ
-    let finalTextToCopy = '';
-    const sections = textToCopy.split("==============================").filter(s => s.trim() !== '');
     
-    let formattedText = '';
-    for(let i=0; i < sections.length; i+=2) {
-        const title = sections[i];
-        const content = sections[i+1];
-        if (content && content.trim() !== '') {
-            formattedText += "\n" + "=".repeat(30) + title + "=".repeat(30) + "\n\n" + content;
-        }
-    }
-
-    navigator.clipboard.writeText(formattedText.trim()).then(() => {
+    navigator.clipboard.writeText(textToCopy.trim()).then(() => {
         const notification = document.getElementById('notification');
         notification.classList.add('show');
         setTimeout(() => {
