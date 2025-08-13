@@ -87,13 +87,16 @@
         .appended-text { color: #155724; font-weight: bold; margin-left: 8px; }
 
         .button-container { text-align: center; margin-top: 30px; }
-        #copyButton {
+        #copyButton, #resetButton {
             padding: 12px 25px; font-size: 1.1em; cursor: pointer;
             color: white; border: none;
             border-radius: 5px; transition: background-color 0.2s;
-            background-color: #007bff;
         }
+        #copyButton { background-color: #007bff; margin-right: 10px; }
         #copyButton:hover { background-color: #0056b3; }
+        
+        #resetButton { background-color: #dc3545; }
+        #resetButton:hover { background-color: #c82333; }
         
         #notification {
             position: fixed; bottom: 20px; left: 50%;
@@ -190,7 +193,6 @@
 
     <div class="button-container">
         <button id="copyButton">コピー（選択した店舗のみ）</button>
-    </div>
 </div>
 
 <div id="notification">内容をコピーしました</div>
@@ -227,9 +229,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ボタンのイベント
     document.getElementById('copyButton').addEventListener('click', copyContentToClipboard);
+    document.getElementById('resetButton').addEventListener('click', resetAll); // リセットボタンのイベントを追加
 });
 
-// --- データ保存/復元機能 ---
+// --- データ保存/復元/リセット機能 ---
 
 function saveData() {
     const data = {
@@ -330,6 +333,13 @@ function loadData() {
     }
     // 競合状態も再計算して復元
     updateAllMachidaConflicts();
+}
+
+function resetAll() {
+    if (confirm('入力内容をすべてリセットします。よろしいですか？')) {
+        localStorage.removeItem(STORAGE_KEY);
+        location.reload(); // ページをリロードして完全に初期状態に戻す
+    }
 }
 
 // --- 既存の機能 ---
