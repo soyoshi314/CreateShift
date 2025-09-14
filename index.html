@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function sendDataToSheet() {
-　　 if (confirm('シフト提出します。よろしいですか？')) {    
+　　 if (confirm('シフトを提出します。よろしいですか？（提出後はフォームから修正できなくなります）')) {    
     const sendButton = document.getElementById('sendButton');
     if (document.getElementById('mainTextBox').value.trim() === '') {
         alert('マジシャン名を入力してください。');
@@ -312,6 +312,8 @@ function sendDataToSheet() {
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
+            sendButton.textContent = 'シフト提出済み'; // ボタンのテキストを変更
+　　        saveData(true); // ★★★ 提出済み(true)として状態を保存 ★★★
             showNotification('シフト提出が完了しました', false);
         } else {
             showNotification(`送信に失敗しました: ${data.message || '不明なエラー'}`, true);
@@ -336,21 +338,29 @@ function showNotification(message, isError = false) {
     setTimeout(() => { notification.classList.remove('show'); }, 4000);
 }
 
-function saveData() {
+// 提出状態を保存できるように引数を追加
+function saveData(forceSubmittedState = null) {
+    let isAlreadySubmitted = false;
+
+    // 現在の保存状態を確認
+    const itemStr = localStorage.getItem(STORAGE_KEY);
+    if (itemStr) {
+        try {
+            const item = JSON.parse(itemStr);
+            if (item && item.value && item.value.submitted) {
+                isAlreadySubmitted = true;
+            }
+        } catch (e) {}
+    }
+
     const data = {
         magicianName: document.getElementById('mainTextBox').value,
-        selections: []
+        selections: [],
+        // 意図的に状態を上書きする場合(提出成功時)はその値を、そうでなければ既存の状態を維持
+        submitted: (forceSubmittedState !== null) ? forceSubmittedState : isAlreadySubmitted
     };
-    document.querySelectorAll('.shift-line').forEach((line, index) => {
-        const dateEntry = line.querySelector('.date-entry');
-        if (dateEntry && dateEntry.classList.contains('selected')) {
-            const secondaryOptions = [];
-            line.querySelectorAll('.secondary-option.selected').forEach(opt => {
-                secondaryOptions.push(opt.innerText);
-            });
-            data.selections.push({ lineIndex: index, options: secondaryOptions });
-        }
-    });
+
+    // ... (中略) ...
     const item = { value: data, expiry: new Date().getTime() + (10 * 24 * 60 * 60 * 1000) };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(item));
 }
@@ -365,6 +375,12 @@ function loadData() {
             return;
         }
         const data = item.value;
+        // 提出済みならボタンを無効化
+        if (data.submitted) {
+            const sendButton = document.getElementById('sendButton');
+            sendButton.disabled = true;
+            sendButton.textContent = '提出済み';
+        }
         const name = data.magicianName || '';
         document.getElementById('mainTextBox').value = name;
         if (Array.isArray(data.selections)) {
@@ -398,7 +414,7 @@ function loadData() {
         localStorage.removeItem(STORAGE_KEY);
     }
 }
-    
+
 function updateAllAssigneeNames() {
     const newName = document.getElementById('mainTextBox').value;
     document.querySelectorAll('.date-entry.selected').forEach(selectedDate => {
