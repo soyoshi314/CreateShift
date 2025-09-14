@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>シフト入力補助アプリ</title>
     <style>
-        /* 基本的なスタイル */
+        /* CSS部分は変更ありません */
         html { scroll-behavior: smooth; }
         body {
             font-family: sans-serif; padding: 20px;
@@ -67,14 +67,11 @@
             color: white; border: none;
             border-radius: 5px; transition: background-color 0.2s;
         }
-        /* 送信ボタンの色を緑に変更 */
         #sendButton { background-color: #28a745; margin-right: 10px; }
         #sendButton:hover { background-color: #218838; }
         #sendButton:disabled { background-color: #96d3a4; cursor: not-allowed;}
-
         #resetButton { background-color: #6c757d; }
         #resetButton:hover { background-color: #5a6268; }
-        
         #notification {
             position: fixed; bottom: 20px; left: 50%;
             transform: translateX(-50%); background-color: #28a745;
@@ -89,7 +86,7 @@
 <body>
 
 <div class="container">
-    <h1 class="page-title">25年9月シフト</h1>
+    <h1 class="page-title">25年10月シフト</h1>
     <div class="input-group">
         <label for="mainTextBox">マジシャン名（最初に入力してください）</label>
         <input type="text" id="mainTextBox" placeholder="ここに名前を入力">
@@ -115,31 +112,36 @@
         <h2 class="section-title" id="section-1">１．都心ブロック①新宿周辺</h2>
         <div class="shift-block">
             <p><span class="block-title">【新宿】</span><br>◎沖縄料理一(いち)新宿店<br>◎築地日本海新宿西口店<br>水、金、土、祝、祝前</p>
-            <div class="shift-line"><span class="date-entry">3水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">10水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">17水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22月祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23火祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">24水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
+            <div class="shift-line"><span class="date-entry">1水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">3金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">4土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">8水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">10金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">11土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">17金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">18土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">24金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">25土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">29水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">31金</span>｜<span class="assignee"></span></div>
         </div>
         
         <div class="shift-block">
             <p><span class="block-title">【トニーローマ】</span><br>◎トニーローマ三番町店<br>水、金、土、日、祝、祝前</p>
-            <div class="shift-line"><span class="date-entry">1水</span>｜<span class="assignee"></span></div>
-            <div class="shift-line"><span class="date-entry">5日</span><span class="secondary-option disabled">門前仲町も希望</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">6土</span><span class="secondary-option disabled">門前仲町も希望</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">7日</span>｜<span class="assignee"></span></div>
-            <div class="shift-line"><span class="date-entry">10水</span>｜<span class="assignee"></span></div>
-            <div class="shift-line"><span class="date-entry">12金</span><span class="secondary-option disabled">門前仲町も希望</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">13土</span><span class="secondary-option disabled">門前仲町も希望</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">14日祝前</span><span class="secondary-option disabled">門前仲町も希望</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">15月祝</span><span class="secondary-option disabled">門前仲町も希望</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">17日</span>｜<span class="assignee"></span></div>
-            <div class="shift-line"><span class="date-entry">19金</span><span class="secondary-option disabled">門前仲町も希望</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">20土</span><span class="secondary-option disabled">門前仲町も希望</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">21日</span>｜<span class="assignee"></span></div>
-            <div class="shift-line"><span class="date-entry">22月祝前</span><span class="secondary-option disabled">門前仲町も希望</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">23火祝</span><span class="secondary-option disabled">門前仲町も希望</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">24水</span>｜<span class="assignee"></span></div>
-            <div class="shift-line"><span class="date-entry">26金</span><span class="secondary-option disabled">門前仲町も希望</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">27土</span><span class="secondary-option disabled">門前仲町も希望</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-            <div class="shift-line"><span class="date-entry">28日</span>｜<span class="assignee"></span></div>
+            <div class="shift-line"><span class="date-entry">1水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">3金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">4土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">5日</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">8水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">10金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">11土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">17金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">18土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19日</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">24金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">25土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26日</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">29水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">31金</span>｜<span class="assignee"></span></div>
         </div>
+
+        <div class="shift-block">
+            <p><span class="block-title">【目黒】</span><br>◎庄や 目黒408店<br>・博多天神もつ鍋お多福<br>水、金、土、祝、祝前</p>
+            <div class="shift-line"><span class="date-entry">1水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">3金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">4土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">8水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">10金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">11土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">17金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">18土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">24金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">25土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">29水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">31金</span>｜<span class="assignee"></span></div>
+        </div>
+        <div class="shift-block">
+            <p><span class="block-title">【茗荷谷】</span><br>◎築地日本海茗荷谷店<br>◎大翔園<br>金、土</p>
+            <div class="shift-line"><span class="date-entry">3金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">4土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">10金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">11土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">17金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">18土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">24金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">25土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">31金</span>｜<span class="assignee"></span></div>
+        </div>
+        
+        <div class="scroll-button-wrapper">
+            <a href="#toc-anchor" class="scroll-button">目次に戻る</a>
+            <a href="#page-bottom-anchor" class="scroll-button">一番下まで移動する</a>
+        </div>
+        <h2 class="section-title" id="section-2">２．都心ブロック②その他東京</h2>
+        <div class="shift-block">
+            <p><span class="block-title">【門前仲町+木場】</span><br>◎庄や門前仲町店<br>◎庄や木場店<br>金、祝、祝前</p>
+            <div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22月祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23火祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div>
+        </div>
+        <div class="shift-block">
+            <p><span class="block-title">【門前仲町+水道橋】</span><br>◎庄や門前仲町店<br>◎庄や水道橋店<br>土、祝、祝前</p>
+            <div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22月祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23火祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div>
+        </div>
         </div>
 
     <div class="scroll-button-wrapper" style="text-align: center;">
@@ -156,76 +158,60 @@
 <div id="notification"></div>
 
 <script>
-// ▼▼▼【！】ここからJavaScriptの動作が大きく変わります ▼▼▼
+// ▼▼▼ JavaScript部分は変更ありませんが、見やすさのため記載します ▼▼▼
 
 // --- ★★★【要設定】ステップ3で取得したURLをここに貼り付け ★★★ ---
 const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwmD-V9LWDQ7edPKsUwC9QWszCzJ-JYGT_vQ-nU6S75VnddpsQBRG91c90ZZymi7rP5yg/exec';
 // -------------------------------------------------------------
 
-const STORAGE_KEY = 'shiftAppData_2025_09';
+// ▼▼▼ 保存キーを10月用に変更 ▼▼▼
+const STORAGE_KEY = 'shiftAppData_2025_10';
 
 // --- 初期化処理 ---
 document.addEventListener('DOMContentLoaded', function() {
     loadData();
-
     document.querySelectorAll('.date-entry').forEach(el => {
         el.addEventListener('click', () => {
             toggleSelection(el);
             saveData();
         });
     });
-
     document.querySelectorAll('.secondary-option').forEach(el => {
         el.addEventListener('click', () => {
             toggleSecondaryOption(el);
             saveData();
         });
     });
-    
     document.getElementById('mainTextBox').addEventListener('input', () => {
         updateAllAssigneeNames();
         saveData();
     });
-
-    // ボタンのイベントリスナーを sendButton に変更
     document.getElementById('sendButton').addEventListener('click', sendDataToSheet); 
     document.getElementById('resetButton').addEventListener('click', resetAll); 
 });
 
-
-// --- 新機能：スプレッドシートへのデータ送信 ---
 function sendDataToSheet() {
     const sendButton = document.getElementById('sendButton');
     const magicianName = document.getElementById('mainTextBox').value.trim();
-
     if (magicianName === '') {
         alert('マジシャン名を入力してください。');
         return;
     }
-
-    // 送信するデータを格納する配列
     const payload = [];
-
     document.querySelectorAll('.shift-block').forEach(block => {
-        // 店舗名を取得
         const blockTitleEl = block.querySelector('.block-title');
         if (!blockTitleEl) return;
         const storeName = blockTitleEl.innerText.trim();
-        
-        // その店舗で選択されているシフトを収集
         block.querySelectorAll('.shift-line').forEach(line => {
             const assigneeSpan = line.querySelector('.assignee');
             if (assigneeSpan && assigneeSpan.innerText.trim() !== '') {
                 const dateText = line.querySelector('.date-entry').innerText;
-                
                 let appendedText = '';
                 const appendedEl = line.querySelector('.appended-text');
                 if (appendedEl && appendedEl.innerText) {
                     appendedText = ' ' + appendedEl.innerText;
                 }
                 const valueString = assigneeSpan.innerText + appendedText;
-
-                // 送信データとしてオブジェクトを追加
                 payload.push({
                     store: storeName,
                     date: dateText,
@@ -234,26 +220,20 @@ function sendDataToSheet() {
             }
         });
     });
-
     if (payload.length === 0) {
         alert('送信するシフトが選択されていません。');
         return;
     }
-
     if (GAS_WEB_APP_URL === 'ここにウェブアプリのURLを貼り付けてください') {
         alert('HTMLファイル内の「GAS_WEB_APP_URL」が設定されていません。\n設定手順を確認してください。');
         return;
     }
-
-    // ボタンを無効化し、テキストを変更して処理中であることを示す
     sendButton.disabled = true;
     sendButton.textContent = '送信中...';
-
-    // Google Apps ScriptにデータをPOST送信
     fetch(GAS_WEB_APP_URL, {
         method: 'POST',
         headers: {
-            'Content-Type': 'text/plain;charset=utf-8', // GASのPOSTではこのタイプが一般的
+            'Content-Type': 'text/plain;charset=utf-8',
         },
         body: JSON.stringify(payload)
     })
@@ -262,7 +242,6 @@ function sendDataToSheet() {
         if (data.status === 'success') {
             showNotification('スプレッドシートに送信しました', false);
         } else {
-            // エラーメッセージがあれば表示
             const errorMessage = data.message || '不明なエラーが発生しました。';
             showNotification(`送信に失敗しました: ${errorMessage}`, true);
         }
@@ -272,31 +251,25 @@ function sendDataToSheet() {
         showNotification('送信中にエラーが発生しました。', true);
     })
     .finally(() => {
-        // ボタンを元に戻す
         sendButton.disabled = false;
         sendButton.textContent = 'スプレッドシートに送信';
     });
 }
 
-
-// --- 通知機能の修正（エラー表示対応） ---
 function showNotification(message, isError = false) {
     const notification = document.getElementById('notification');
     notification.textContent = message;
-    
     notification.classList.remove('error');
     if (isError) {
         notification.classList.add('error');
     }
-    
     notification.classList.add('show');
     setTimeout(() => {
         notification.classList.remove('show');
-    }, 4000); // 少し長めに表示
+    }, 4000);
 }
 
-
-// --- 以下、既存の関数（変更なし） ---
+// (他のJavaScript関数は変更ないため省略)
 function saveData() {
     const data = {
         magicianName: document.getElementById('mainTextBox').value,
@@ -324,7 +297,6 @@ function saveData() {
 function loadData() {
     const itemStr = localStorage.getItem(STORAGE_KEY);
     if (!itemStr) return;
-
     let item;
     try {
         item = JSON.parse(itemStr);
@@ -332,22 +304,18 @@ function loadData() {
         localStorage.removeItem(STORAGE_KEY);
         return;
     }
-
     if (typeof item !== 'object' || item === null || !item.expiry || !item.value) {
         localStorage.removeItem(STORAGE_KEY);
         return;
     }
-    
     const now = new Date();
     if (now.getTime() > item.expiry) {
         localStorage.removeItem(STORAGE_KEY);
         return;
     }
-
     const data = item.value;
     const name = data.magicianName || '';
     document.getElementById('mainTextBox').value = name;
-
     if (Array.isArray(data.selections)) {
         const allLines = document.querySelectorAll('.shift-line');
         data.selections.forEach(sel => {
@@ -358,10 +326,8 @@ function loadData() {
                     if (dateEntry) {
                         dateEntry.classList.add('selected');
                         line.querySelector('.assignee').textContent = name;
-                        
                         const secondaryOpts = line.querySelectorAll('.secondary-option');
                         secondaryOpts.forEach(opt => opt.classList.remove('disabled'));
-
                         if (sel.options && sel.options.length > 0) {
                             let appendedText = '';
                             secondaryOpts.forEach(opt => {
@@ -401,7 +367,6 @@ function toggleSelection(clickedElement) {
     const assigneeSpan = clickedElement.parentElement.querySelector('.assignee');
     const secondaryOptions = clickedElement.parentElement.querySelectorAll('.secondary-option');
     const isCurrentlySelected = clickedElement.classList.contains('selected');
-
     if (isCurrentlySelected) {
         clickedElement.classList.remove('selected');
         assigneeSpan.textContent = '';
@@ -430,7 +395,6 @@ function toggleSelection(clickedElement) {
 
 function toggleSecondaryOption(clickedElement) {
     if (clickedElement.classList.contains('disabled')) return;
-
     const appendedTextSpan = clickedElement.parentElement.querySelector('.appended-text');
     const textToAdd = clickedElement.innerText;
     const formattedText = `（${textToAdd}）`;
