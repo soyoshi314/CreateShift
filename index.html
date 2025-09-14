@@ -93,8 +93,7 @@
     </div>
 
     <p class="note-red" style="margin-top: -10px; margin-bottom: 20px;">
-        ・すべてのシフト入力が完了したら、ページ一番下の「スプレッドシートに送信」ボタンを押し、内容を送信ください。<br>
-        ・シフトに関してコメントがある場合は、〇〇の部屋で別途送信ください。
+        ・すべてのシフト入力が完了したら、ページ一番下の「シフト提出」ボタンを押し、「シフト提出が完了しました」が表示されるまでお待ちください<br>
     </p>
 
     <div class="toc" id="toc-anchor">
@@ -317,7 +316,7 @@ function sendDataToSheet() {
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            showNotification('スプレッドシートに送信しました', false);
+            showNotification('シフト提出が完了しました。', false);
         } else {
             showNotification(`送信に失敗しました: ${data.message || '不明なエラー'}`, true);
         }
