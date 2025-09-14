@@ -93,7 +93,7 @@
     </div>
 
     <p class="note-red" style="margin-top: -10px; margin-bottom: 20px;">
-        ・すべてのシフト入力が完了したら、ページ一番下の「シフト提出」ボタンを押し、「シフト提出が完了しました」が表示されるまでお待ちください<br>
+        すべてのシフト入力が完了したら、ページ一番下の「シフト提出」ボタンを押し、「シフト提出が完了しました」と表示されるまでお待ちください<br>
     </p>
 
     <div class="toc" id="toc-anchor">
@@ -316,7 +316,7 @@ function sendDataToSheet() {
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            showNotification('シフト提出が完了しました。', false);
+            showNotification('シフト提出が完了しました', false);
         } else {
             showNotification(`送信に失敗しました: ${data.message || '不明なエラー'}`, true);
         }
@@ -327,7 +327,7 @@ function sendDataToSheet() {
     })
     .finally(() => {
         sendButton.disabled = false;
-        sendButton.textContent = 'スプレッドシートに送信';
+        sendButton.textContent = 'シフト提出';
     });
 }
 
