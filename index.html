@@ -315,7 +315,14 @@ function sendDataToSheet() {
         if (data.status === 'success') {
             sendButton.textContent = 'シフト提出済み'; // ボタンのテキストを変更
 　　        saveData(true); // ★★★ 提出済み(true)として状態を保存 ★★★
-            showNotification('シフト提出が完了しました', false);
+            const textToCopy = formatPayloadForCopy(payload);
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                    showNotification('シフト提出が完了しました。また、提出内容をコピーしました。各自、好きな場所に張り付けて保存してください。', false);
+                }).catch(err => {
+                    console.error('コピーに失敗しました:', err);
+                    showNotification('シフト提出が完了しました。', true);
+                });
         } else {
             showNotification(`送信に失敗しました: ${data.message || '不明なエラー'}`, true);
         }
@@ -331,6 +338,28 @@ function sendDataToSheet() {
  }
 }
 
+// 提出内容を整形してテキスト化する関数
+function formatPayloadForCopy(payload) {
+    if (!payload || payload.length === 0) return '';
+    
+    // 店舗（ブロック）ごとにグループ化
+    const grouped = payload.reduce((acc, item) => {
+        if (!acc[item.store]) {
+            acc[item.store] = [];
+        }
+        acc[item.store].push(`${item.date}｜${item.value}`);
+        return acc;
+    }, {});
+
+    let text = '';
+    for (const store in grouped) {
+        text += `${store}\n`;
+        text += grouped[store].join('\n');
+        text += '\n\n';
+    }
+    return text.trim();
+}
+    
 function showNotification(message, isError = false) {
     const notification = document.getElementById('notification');
     notification.textContent = message;
