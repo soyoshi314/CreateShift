@@ -321,7 +321,7 @@ function sendDataToSheet() {
                     showNotification('シフト提出が完了しました。また、提出内容をコピーしました。各自、好きな場所に張り付けて保存してください。', false);
                 }).catch(err => {
                     console.error('コピーに失敗しました:', err);
-                    showNotification('シフト提出が完了しました。', true);
+                    showNotification('シフト提出が完了しました。（コピーは失敗）', true);
                 });
         } else {
             showNotification(`送信に失敗しました: ${data.message || '不明なエラー'}`, true);
