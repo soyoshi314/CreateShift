@@ -61,7 +61,7 @@
         .secondary-option.selected { background-color: #d4edda; color: #155724; }
         .appended-text { color: #155724; font-weight: bold; margin-left: 8px; }
         .button-container { text-align: center; margin-top: 30px; }
-        #sendButton, #resetButton {
+        #sendButton{
             padding: 12px 25px; font-size: 1.1em; cursor: pointer;
             color: white; border: none;
             border-radius: 5px; transition: background-color 0.2s;
@@ -69,8 +69,6 @@
         #sendButton { background-color: #28a745; margin-right: 10px; }
         #sendButton:hover { background-color: #218838; }
         #sendButton:disabled { background-color: #96d3a4; cursor: not-allowed;}
-        #resetButton { background-color: #6c757d; }
-        #resetButton:hover { background-color: #5a6268; }
         #notification {
             position: fixed; bottom: 20px; left: 50%;
             transform: translateX(-50%); background-color: #28a745;
@@ -268,7 +266,6 @@ document.addEventListener('DOMContentLoaded', function() {
         saveData();
     });
     document.getElementById('sendButton').addEventListener('click', sendDataToSheet); 
-    document.getElementById('resetButton').addEventListener('click', resetAll); 
 });
 
 function sendDataToSheet() {
@@ -401,14 +398,7 @@ function loadData() {
         localStorage.removeItem(STORAGE_KEY);
     }
 }
-
-function resetAll() {
-    if (confirm('入力内容をすべてリセットします。よろしいですか？')) {
-        localStorage.removeItem(STORAGE_KEY);
-        location.reload();
-    }
-}
-
+    
 function updateAllAssigneeNames() {
     const newName = document.getElementById('mainTextBox').value;
     document.querySelectorAll('.date-entry.selected').forEach(selectedDate => {
