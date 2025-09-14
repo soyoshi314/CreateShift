@@ -244,8 +244,7 @@
     <div id="page-bottom-anchor"></div>
 
     <div class="button-container">
-        <button id="sendButton">スプレッドシートに送信</button>
-        <button id="resetButton">リセット</button>
+        <button id="sendButton">シフト提出</button>
     </div>
 
 <div id="notification"></div>
@@ -274,6 +273,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function sendDataToSheet() {
+　　 if (confirm('シフト提出します。よろしいですか？')) {    
     const sendButton = document.getElementById('sendButton');
     if (document.getElementById('mainTextBox').value.trim() === '') {
         alert('マジシャン名を入力してください。');
@@ -329,6 +329,7 @@ function sendDataToSheet() {
         sendButton.disabled = false;
         sendButton.textContent = 'シフト提出';
     });
+ }
 }
 
 function showNotification(message, isError = false) {
