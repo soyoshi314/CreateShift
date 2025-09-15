@@ -79,6 +79,30 @@
         }
         #notification.show { opacity: 1; }
         #notification.error { background-color: #dc3545; }
+        #result-shifts-list ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        #result-shifts-list li {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        #result-shifts-list h4 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+            color: #0056b3;
+        }
+        #result-comment {
+            white-space: pre-wrap;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -262,19 +286,75 @@ const STORAGE_KEY = 'shiftAppData_2025_10';
 
 document.addEventListener('DOMContentLoaded', function() {
     loadData();
-    document.querySelectorAll('.date-entry').forEach(el => {
-        el.addEventListener('click', () => { toggleSelection(el); saveData(); });
-    });
-    document.querySelectorAll('.secondary-option').forEach(el => {
-        el.addEventListener('click', () => { toggleSecondaryOption(el); saveData(); });
-    });
-    document.getElementById('mainTextBox').addEventListener('input', () => {
-        updateAllAssigneeNames();
-        saveData();
-    });
-    document.getElementById('commentBox').addEventListener('input', saveData); // コメント欄の入力も保存
-    document.getElementById('sendButton').addEventListener('click', sendDataToSheet); 
+
+    const itemStr = localStorage.getItem(STORAGE_KEY);
+    let isSubmitted = false;
+    if (itemStr) {
+        try {
+            const item = JSON.parse(itemStr);
+            if (item && item.value && item.value.submitted) {
+                isSubmitted = true;
+            }
+        } catch(e) {}
+    }
+
+    if (!isSubmitted) {
+        document.querySelectorAll('.date-entry').forEach(el => {
+            el.addEventListener('click', () => { toggleSelection(el); saveData(); });
+        });
+        document.querySelectorAll('.secondary-option').forEach(el => {
+            el.addEventListener('click', () => { toggleSecondaryOption(el); saveData(); });
+        });
+        document.getElementById('mainTextBox').addEventListener('input', () => {
+            updateAllAssigneeNames();
+            saveData();
+        });
+        document.getElementById('commentBox').addEventListener('input', saveData);
+        document.getElementById('sendButton').addEventListener('click', sendDataToSheet);
+    } 
 });
+
+function displaySubmissionResult(payload) {
+    const formElement = document.getElementById('shift-input-form');
+    const resultElement = document.getElementById('submission-result');
+    if (!payload || payload.length === 0) return;
+
+    // フォームを非表示にし、結果表示エリアを表示
+    formElement.style.display = 'none';
+    resultElement.style.display = 'block';
+
+    const magicianName = payload[0].value.split(' ')[0];
+    const comment = payload[0].comment;
+
+    document.getElementById('result-magician-name').textContent = magicianName;
+
+    // 店舗ごとにシフトをグループ化
+    const shiftsByStore = payload.reduce((acc, shift) => {
+        if (!acc[shift.store]) {
+            acc[shift.store] = [];
+        }
+        acc[shift.store].push(`${shift.date}${shift.value.replace(magicianName, '').trim()}`);
+        return acc;
+    }, {});
+
+    // HTMLを生成
+    let shiftsHtml = '<ul>';
+    for (const store in shiftsByStore) {
+        shiftsHtml += `
+            <li>
+                <h4>【${store}】</h4>
+                ${shiftsByStore[store].join('、 ')}
+            </li>`;
+    }
+    shiftsHtml += '</ul>';
+    document.getElementById('result-shifts-list').innerHTML = shiftsHtml;
+
+    // コメント表示
+    if (comment && comment.trim() !== '') {
+        document.getElementById('result-comment-area').style.display = 'block';
+        document.getElementById('result-comment').textContent = comment;
+    }
+}
 
 function sendDataToSheet() {
     if (confirm('シフトを提出します。よろしいですか？（提出後はフォームから修正できなくなります）')) {    
@@ -317,9 +397,9 @@ function sendDataToSheet() {
     .then(response => response.json())
     .then(data => {
        if (data.status === 'success') {
-                sendButton.textContent = '提出済み';
-                saveData(true);
                 showNotification('シフト提出が完了しました。', false);
+　　　           saveData(true, payload); // 送信した内容も一緒に保存
+                displaySubmissionResult(payload); // 提出内容を表示
             } else {
                 showNotification(`送信に失敗しました: ${data.message || '不明なエラー'}`, true);
                 sendButton.disabled = false; // 失敗時はボタンを有効に戻す
@@ -389,6 +469,13 @@ function loadData() {
             return;
         }
         const data = item.value;
+        
+        // もし提出済みなら、結果を表示して処理を終了する
+        if (data.submitted && data.submittedPayload) {
+            displaySubmissionResult(data.submittedPayload);
+            return; // これ以降のフォーム復元処理は行わない
+        }
+        
         // 提出済みならボタンを無効化
         if (data.submitted) {
             const sendButton = document.getElementById('sendButton');
