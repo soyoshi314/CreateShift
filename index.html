@@ -284,7 +284,6 @@ function sendDataToSheet() {
         alert('マジシャン名を入力してください。');
         return;
     }
-    const comment = document.getElementById('commentBox').value.trim(); // コメントを取得
     const payload = [];
     document.querySelectorAll('.shift-block').forEach(block => {
         const blockTitleEl = block.querySelector('.block-title');
@@ -300,7 +299,7 @@ function sendDataToSheet() {
                     appendedText = ' ' + appendedEl.innerText;
                 }
                 const valueString = assigneeSpan.innerText + appendedText;
-                payload.push({ store: storeName, date: dateText, value: valueString, comment: comment });
+                payload.push({ store: storeName, date: dateText, value: valueString });
             }
         });
     });
