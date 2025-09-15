@@ -107,9 +107,10 @@
 </head>
 <body>
 
-<div class="container">
+<div id="shift-input-form" class="container">
     <h1 class="page-title">25年10月シフト</h1>
     <div class="input-group">
+        
         <label for="mainTextBox">マジシャン名（最初に入力してください）</label>
         <input type="text" id="mainTextBox" placeholder="ここに名前を入力">
     </div>
@@ -423,11 +424,8 @@ function showNotification(message, isError = false) {
     setTimeout(() => { notification.classList.remove('show'); }, 4000);
 }
 
-// 提出状態を保存できるように引数を追加
-function saveData(forceSubmittedState = null) {
+function saveData(forceSubmittedState = null, submittedPayload = null) {
     let isAlreadySubmitted = false;
-
-    // 現在の保存状態を確認
     const itemStr = localStorage.getItem(STORAGE_KEY);
     if (itemStr) {
         try {
@@ -440,9 +438,10 @@ function saveData(forceSubmittedState = null) {
 
     const data = {
         magicianName: document.getElementById('mainTextBox').value,
+        comment: document.getElementById('commentBox').value,
         selections: [],
-        // 意図的に状態を上書きする場合(提出成功時)はその値を、そうでなければ既存の状態を維持
-        submitted: (forceSubmittedState !== null) ? forceSubmittedState : isAlreadySubmitted
+        submitted: (forceSubmittedState !== null) ? forceSubmittedState : isAlreadySubmitted,
+        submittedPayload: submittedPayload
     };
 
     document.querySelectorAll('.shift-line').forEach((line, index) => {
@@ -469,14 +468,12 @@ function loadData() {
             return;
         }
         const data = item.value;
-        
-        // もし提出済みなら、結果を表示して処理を終了する
+
         if (data.submitted && data.submittedPayload) {
             displaySubmissionResult(data.submittedPayload);
-            return; // これ以降のフォーム復元処理は行わない
+            return;
         }
-        
-        // 提出済みならボタンを無効化
+
         if (data.submitted) {
             const sendButton = document.getElementById('sendButton');
             sendButton.disabled = true;
@@ -484,7 +481,7 @@ function loadData() {
         }
         const name = data.magicianName || '';
         document.getElementById('mainTextBox').value = name;
-        document.getElementById('commentBox').value = data.comment || ''; // コメントを復元
+        document.getElementById('commentBox').value = data.comment || '';
         if (Array.isArray(data.selections)) {
             const allLines = document.querySelectorAll('.shift-line');
             data.selections.forEach(sel => {
