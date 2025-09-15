@@ -304,10 +304,6 @@ function sendDataToSheet() {
             }
         });
     });
-    if (payload.length === 0) {
-        alert('送信するシフトが選択されていません。');
-        return;
-    }
     if (GAS_WEB_APP_URL === 'ここにウェブアプリのURLを貼り付けてください') {
         alert('HTMLファイル内の「GAS_WEB_APP_URL」が設定されていません。\n設定手順を確認してください。');
         return;
