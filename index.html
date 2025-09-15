@@ -284,6 +284,7 @@ function sendDataToSheet() {
         alert('マジシャン名を入力してください。');
         return;
     }
+    const comment = document.getElementById('commentBox').value.trim(); // コメントを取得
     const payload = [];
     document.querySelectorAll('.shift-block').forEach(block => {
         const blockTitleEl = block.querySelector('.block-title');
@@ -299,7 +300,7 @@ function sendDataToSheet() {
                     appendedText = ' ' + appendedEl.innerText;
                 }
                 const valueString = assigneeSpan.innerText + appendedText;
-                payload.push({ store: storeName, date: dateText, value: valueString });
+                payload.push({ store: storeName, date: dateText, value: valueString, comment: comment});
             }
         });
     });
@@ -389,7 +390,6 @@ function saveData(forceSubmittedState = null) {
 
     const data = {
         magicianName: document.getElementById('mainTextBox').value,
-        comment: document.getElementById('commentBox').value, // コメントも保存
         selections: [],
         // 意図的に状態を上書きする場合(提出成功時)はその値を、そうでなければ既存の状態を維持
         submitted: (forceSubmittedState !== null) ? forceSubmittedState : isAlreadySubmitted
