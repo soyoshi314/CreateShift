@@ -354,7 +354,7 @@
         
         <div class="button-container">
             <button id="sendButton" class="action-button">シフト提出</button>
-            <button id="confirmButton">シフト確認（端末にコピーされるので好きなところに張り付けて）</button>
+            <button id="confirmButton" class="action-button">シフト確認</button>
         </div>
     </div>
 </div>
@@ -439,7 +439,7 @@ function copyShiftsToClipboard() {
 
     navigator.clipboard.writeText(clipboardText.trim())
         .then(() => {
-            showNotification('シフト一覧をクリップボードにコピーしました。', false);
+            showNotification('シフト一覧をクリップボードにコピーしました。好きなところに張り付けてお使いください。', false);
         })
         .catch(err => {
             console.error('コピーに失敗:', err);
@@ -510,7 +510,6 @@ function sendDataToSheet() {
             if (data.status === 'success') {
                 showNotification('シフト提出が完了しました。', false);
                 sendButton.textContent = '提出済み';
-                confirmButton.disabled = false;
                 saveData(true, payload);
                 // フォームを非表示にする代わりに、入力不可にする
                 displaySubmissionResult(payload);
