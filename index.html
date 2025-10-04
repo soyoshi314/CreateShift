@@ -108,18 +108,17 @@
             background-color: #0056b3;
         }
 
-        /* ▼▼▼ 目次に戻る固定ボタン用のCSS ▼▼▼ */
-#back-to-toc-btn {
+     /* ▼▼▼ 目次に戻る固定ボタン用のCSS ▼▼▼ */
+   #back-to-toc-btn {
     position: fixed;      /* 画面に要素を固定する */
     bottom: 20px;         /* 画面の下から20pxの位置 */
-    right: 20px;          /* 画面の右から20pxの位置 */
+    right: 80px;          /* 画面の右から20pxの位置 */
     z-index: 999;         /* 他の要素より常に手前に表示する */
 
     background-color: #6c757d;  /* ボタンの背景色 */
     color: white;               /* 文字色 */
-    width: 60px;                /* ボタンの幅 */
+    width: 80px;                /* ボタンの幅 */
     height: 60px;               /* ボタンの高さ */
-    border-radius: 50%;         /* 円形にする */
     text-decoration: none;      /* テキストの下線を消す */
     text-align: center;         /* 文字を中央揃えにする */
     line-height: 60px;          /* 文字を垂直方向に中央揃えする */
@@ -128,12 +127,31 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.3); /* ボタンに影を付ける */
     transition: background-color 0.2s; /* ホバー時の色変化を滑らかに */
 }
-
 #back-to-toc-btn:hover {
     background-color: #5a6268; /* マウスを乗せたときの色 */
 }
-/* ▲▲▲ ここまで追加 ▲▲▲ */
-        
+
+#submit-shift-btn {
+    position: fixed;      /* 画面に要素を固定する */
+    bottom: 20px;         /* 画面の下から20pxの位置 */
+    right: 60px;          /* 画面の右から20pxの位置 */
+    z-index: 999;         /* 他の要素より常に手前に表示する */
+
+    background-color: #6c757d;  /* ボタンの背景色 */
+    color: white;               /* 文字色 */
+    width: 80px;                /* ボタンの幅 */
+    height: 60px;               /* ボタンの高さ */
+    text-decoration: none;      /* テキストの下線を消す */
+    text-align: center;         /* 文字を中央揃えにする */
+    line-height: 60px;          /* 文字を垂直方向に中央揃えする */
+    font-size: 14px;            /* 文字サイズ */
+    font-weight: bold;          /* 文字を太くする */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3); /* ボタンに影を付ける */
+    transition: background-color 0.2s; /* ホバー時の色変化を滑らかに */
+}
+#submit-shift-btn {
+    background-color: #5a6268; /* マウスを乗せたときの色 */
+}       
     </style>
 </head>
 <body>
@@ -228,10 +246,6 @@
                 <p><span class="block-title" id="section-1-4">【茗荷谷】</span><br>◎築地日本海茗荷谷店<br>◎大翔園<br>金、土</p>
                 <div class="shift-line"><span class="date-entry">1土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">7金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">8土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">21金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">28金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">29土</span>｜<span class="assignee"></span></div>
             </div>
-            <div class="scroll-button-wrapper">
-                <a href="#toc-anchor" class="scroll-button">目次に戻る</a>
-                <a href="#page-bottom-anchor" class="scroll-button">一番下まで移動する</a>
-            </div>
 
             <h2 class="section-title" id="section-2">２．都心ブロック②その他東京</h2>
             <div class="shift-block">
@@ -270,10 +284,6 @@
                 <p><span class="block-title" id="section-2-9">【大井町】</span><br>・大井町バル横丁<br>◎ちゃぶっとりあ（水のみ）<br>金、土、祝、祝前</p>
                 <div class="shift-line"><span class="date-entry">1土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">2日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">3月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">5水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">7金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">8土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">21金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22土祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">24月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">28金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">29土</span>｜<span class="assignee"></span></div>
             </div>
-            <div class="scroll-button-wrapper">
-                <a href="#toc-anchor" class="scroll-button">目次に戻る</a>
-                <a href="#page-bottom-anchor" class="scroll-button">一番下まで移動する</a>
-            </div>
 
             <h2 class="section-title" id="section-3">３．立川町田ブロック</h2>
             <div class="shift-block">
@@ -299,10 +309,6 @@
             <div class="shift-block">
                 <p><span class="block-title" id="section-3-6">【横浜関内】</span><br>・うし極<br>◎トントス<br>◎ミヤオガパオ<br>◎ガールズバーさくら<br>◎バー111<br>・バーりあん<br>・金魚（月～木）未定<br>金、土、祝、祝前</p>
                 <div class="shift-line"><span class="date-entry">1土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">2日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">3月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">7金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">8土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">21金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22土祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">24月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">28金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">29土</span>｜<span class="assignee"></span></div>
-            </div>
-            <div class="scroll-button-wrapper">
-                <a href="#toc-anchor" class="scroll-button">目次に戻る</a>
-                <a href="#page-bottom-anchor" class="scroll-button">一番下まで移動する</a>
             </div>
 
             <h2 class="section-title" id="section-4">４．千葉埼玉ホームブロック</h2>
@@ -338,10 +344,6 @@
                 <p><span class="block-title" id="section-4-8">【船橋南口】</span><br>◎日本海庄や船橋南口店<br>◎庄や馬込沢店<br>金、土、祝、祝前</p>
                 <div class="shift-line"><span class="date-entry">1土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">2日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">3月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">7金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">8土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">14金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">15土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">21金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">22土祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23日祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">24月祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">28金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">29土</span>｜<span class="assignee"></span></div>
             </div>
-        </div>
-
-        <div class="scroll-button-wrapper" style="text-align: center;">
-            <a href="#toc-anchor" class="scroll-button">目次に戻る</a>
         </div>
 
         <div id="page-bottom-anchor"></div>
@@ -678,5 +680,6 @@ function toggleSecondaryOption(clickedElement) {
 }
 </script>
 <a href="#toc-anchor" id="back-to-toc-btn">目次に戻る</a>
+<a href="#page-bottom-anchor" id="submit-shift-btn">これでシフト提出する</a>
 </body>
 </html>
