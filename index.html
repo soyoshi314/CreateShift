@@ -108,16 +108,32 @@
             background-color: #0056b3;
         }
 
-        /* ▼▼▼ 目次を右側に追従させるためのCSSを追加 ▼▼▼ */
-　　　　　@media (min-width: 1100px) {
-    　　.toc {
-　　　        position: fixed; /* 要素を画面に固定する */
-        　　　top: 100px;      /* 画面の上から100pxの位置に配置 */
-        　　　right: 30px;     /* 画面の右から30pxの位置に配置 */
-        　　width: 200px;    /* 幅を200pxに指定 */
-    　　　　　}
-　　　　}
-　　　/* ▲▲▲ ここまで追加 ▲▲▲ */
+        /* ▼▼▼ 目次に戻る固定ボタン用のCSS ▼▼▼ */
+#back-to-toc-btn {
+    position: fixed;      /* 画面に要素を固定する */
+    bottom: 20px;         /* 画面の下から20pxの位置 */
+    right: 20px;          /* 画面の右から20pxの位置 */
+    z-index: 999;         /* 他の要素より常に手前に表示する */
+
+    background-color: #6c757d;  /* ボタンの背景色 */
+    color: white;               /* 文字色 */
+    width: 60px;                /* ボタンの幅 */
+    height: 60px;               /* ボタンの高さ */
+    border-radius: 50%;         /* 円形にする */
+    text-decoration: none;      /* テキストの下線を消す */
+    text-align: center;         /* 文字を中央揃えにする */
+    line-height: 60px;          /* 文字を垂直方向に中央揃えする */
+    font-size: 14px;            /* 文字サイズ */
+    font-weight: bold;          /* 文字を太くする */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3); /* ボタンに影を付ける */
+    transition: background-color 0.2s; /* ホバー時の色変化を滑らかに */
+}
+
+#back-to-toc-btn:hover {
+    background-color: #5a6268; /* マウスを乗せたときの色 */
+}
+/* ▲▲▲ ここまで追加 ▲▲▲ */
+        
     </style>
 </head>
 <body>
@@ -661,5 +677,6 @@ function toggleSecondaryOption(clickedElement) {
     }
 }
 </script>
+<a href="#toc-anchor" id="back-to-toc-btn">目次に戻る</a>
 </body>
 </html>
