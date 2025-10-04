@@ -71,7 +71,6 @@
         #sendButton:hover:not(:disabled) { background-color: #218838; }
         #confirmButton { background-color: #007bff; margin-left: 10px; }
         #confirmButton:hover:not(:disabled) { background-color: #0056b3; }
-        .action-button:disabled { background-color: #cccccc; cursor: not-allowed;}
         #notification {
             position: fixed; bottom: 20px; left: 50%;
             transform: translateX(-50%); background-color: #28a745;
@@ -111,8 +110,8 @@
      /* ▼▼▼ 目次に戻る固定ボタン用のCSS ▼▼▼ */
    #back-to-toc-btn {
     position: fixed;      /* 画面に要素を固定する */
-    bottom: 100px;         /* 画面の下から20pxの位置 */
-    right: 80px;          /* 画面の右から20pxの位置 */
+    bottom: 90px;         /* 画面の下から20pxの位置 */
+    right: 30px;          /* 画面の右から20pxの位置 */
     z-index: 999;         /* 他の要素より常に手前に表示する */
 
     background-color: #6c757d;  /* ボタンの背景色 */
@@ -134,7 +133,7 @@
 #submit-shift-btn {
     position: fixed;      /* 画面に要素を固定する */
     bottom: 20px;         /* 画面の下から20pxの位置 */
-    right: 60px;          /* 画面の右から20pxの位置 */
+    right: 30px;          /* 画面の右から20pxの位置 */
     z-index: 999;         /* 他の要素より常に手前に表示する */
 
     background-color: #6c757d;  /* ボタンの背景色 */
@@ -349,13 +348,13 @@
         <div id="page-bottom-anchor"></div>
 
         <div class="input-group">
-            <label for="commentBox">コメント欄</label>
+            <label for="commentBox">コメント欄（何かあればご記載ください）</label>
             <textarea id="commentBox" rows="3"></textarea>
         </div>
         
         <div class="button-container">
             <button id="sendButton" class="action-button">シフト提出</button>
-            <button id="confirmButton" class="action-button" disabled>シフト確認</button>
+            <button id="confirmButton">シフト確認（端末にコピーされるので好きなところに張り付けて）</button>
         </div>
     </div>
 </div>
