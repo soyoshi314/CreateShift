@@ -464,7 +464,7 @@ function copyShiftsToClipboard() {
         showNotification('マジシャン名が入力されていません。', true);
         return;
     }
-    clipboardText += `提出シフト一覧\n\n`;
+    clipboardText += `11月 提出シフト\n\n`;
 
     const shiftsByStore = new Map();
 
@@ -500,7 +500,7 @@ function copyShiftsToClipboard() {
 
     navigator.clipboard.writeText(clipboardText.trim())
         .then(() => {
-            showNotification('シフト一覧をクリップボードにコピーしました。好きなところに張り付けてお使いください。', false);
+            showNotification('提出シフトをコピーしました。好きなところに張り付けて確認してください。', false);
         })
         .catch(err => {
             console.error('コピーに失敗:', err);
