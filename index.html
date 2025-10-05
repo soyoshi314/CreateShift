@@ -647,7 +647,7 @@ function loadData() {
             displaySubmissionResult(data.submittedPayload);
         }
 
-        if (data.submitted) {
+        if (data.submittedPayload) {
             const sendButton = document.getElementById('sendButton');
             sendButton.disabled = true;
             sendButton.textContent = '提出済み';
