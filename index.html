@@ -387,7 +387,7 @@
         
         <div class="button-container">
             <button id="sendButton" class="action-button">シフト提出</button>
-            <button id="confirmButton" class="action-button">シフト確認</button>
+            <button id="confirmButton" class="action-button" disabled>シフト確認（シフト提出後押せます）</button>
         </div>
     </div>
 </div>
@@ -571,6 +571,7 @@ function sendDataToSheet() {
             if (data.status === 'success') {
                 showNotification('シフト提出が完了しました。', false);
                 sendButton.textContent = '提出済み';
+                confirmButton.disabled = false;
                 saveData(true, payload);
                 // フォームを非表示にする代わりに、入力不可にする
                 displaySubmissionResult(payload);
@@ -647,7 +648,7 @@ function loadData() {
             displaySubmissionResult(data.submittedPayload);
         }
 
-        if (data.submittedPayload) {
+        if (data.submitted) {
             const sendButton = document.getElementById('sendButton');
             sendButton.disabled = true;
             sendButton.textContent = '提出済み';
