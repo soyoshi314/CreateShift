@@ -157,9 +157,44 @@
     cursor: pointer; margin-right: 5px; margin-bottom: 5px;
 }
 .batch-select-btn:hover { background-color: #e0e0e0; }
-    </style>
+#loading-overlay {
+            position: fixed; /* 画面全体を覆う */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* 半透明の黒背景 */
+            display: flex; /* 子要素を中央揃え */
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* 要素を縦に並べる */
+            z-index: 1001; /* 通知より手前に表示 */
+            color: white;
+            font-size: 1.1em;
+            text-align: center;
+            display: none; /* 初期状態では非表示 */
+        }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3); /* 薄いグレーの円 */
+            border-top: 4px solid #fff; /* 上部だけ白 */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite; /* アニメーション設定 */
+            margin-bottom: 15px; /* テキストとの間隔 */
+        }
+        @keyframes spin { /* 回転アニメーションの定義 */
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }        
+</style>
 </head>
 <body>
+
+<div id="loading-overlay">
+    <div class="spinner"></div>
+    <p>シフト提出中～<br>しばらくこのままでお待ちください（40秒ほどかかる場合があります）～</p>
+</div>
 
 <div class="container">
     <h1 class="page-title">25年11月シフト</h1>
@@ -430,6 +465,8 @@
 const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwmD-V9LWDQ7edPKsUwC9QWszCzJ-JYGT_vQ-nU6S75VnddpsQBRG91c90ZZymi7rP5yg/exec';
 const STORAGE_KEY = 'shiftAppData_2025_11';
 
+const loadingOverlay = document.getElementById('loading-overlay');
+    
 document.addEventListener('DOMContentLoaded', function() {
     loadData();
     const itemStr = localStorage.getItem(STORAGE_KEY);
@@ -595,6 +632,8 @@ function sendDataToSheet() {
         }
         sendButton.disabled = true;
         sendButton.textContent = '送信中...';
+        loadingOverlay.style.display = 'flex'; // ローディング画面を表示
+        
         fetch(GAS_WEB_APP_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -620,6 +659,9 @@ function sendDataToSheet() {
             showNotification('送信中にエラーが発生しました。', true);
             sendButton.disabled = false;
             sendButton.textContent = 'シフト提出';
+        })
+        .finally(() => { // ▼▼▼ 成功・失敗問わずローディング非表示 ▼▼▼
+            loadingOverlay.style.display = 'none'; // ローディング画面を非表示
         });
     }
 }
