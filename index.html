@@ -597,7 +597,7 @@ function displaySubmissionResult(payload) {
 }
 
 function sendDataToSheet() {
-    if (confirm('シフトを提出します。よろしいですか？（提出後はフォームから修正できなくなります）')) {
+    if (confirm('シフトを提出します。よろしいですか？\n（提出後はフォームから修正できなくなります）')) {
         const sendButton = document.getElementById('sendButton');
         const confirmButton = document.getElementById('confirmButton');
         const nameSelect = document.getElementById('mainTextBox');
