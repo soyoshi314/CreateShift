@@ -597,9 +597,7 @@ function displaySubmissionResult(payload) {
 }
 
 function sendDataToSheet() {
-    if (confirm('シフトを提出します。よろしいですか？\n（提出後はフォームから修正できなくなります）')) == false {
-        return;
-    }
+    if (confirm('シフトを提出します。よろしいですか？\n（提出後はフォームから修正できなくなります）')) {
         const sendButton = document.getElementById('sendButton');
         const confirmButton = document.getElementById('confirmButton');
         const nameSelect = document.getElementById('mainTextBox');
@@ -664,8 +662,7 @@ function sendDataToSheet() {
         .finally(() => { // ▼▼▼ 成功・失敗問わずローディング非表示 ▼▼▼
             loadingOverlay.style.display = 'none'; // ローディング画面を非表示
         });
-    
-}
+    }
 
 function showNotification(message, isError = false) {
     const notification = document.getElementById('notification');
