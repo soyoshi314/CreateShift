@@ -183,8 +183,40 @@
 
     <div id="shift-input-form">
         <div class="input-group">
-            <label for="mainTextBox">マジシャン名（最初に入力してください）</label>
-            <input type="text" id="mainTextBox" placeholder="ここに名前を入力">
+        <label for="mainTextBox">マジシャン名（選択してください）</label>
+            <select id="mainTextBox">
+                <option value="" disabled selected>名前を選択してください</option>
+                <option value="ダイキチ">ダイキチ</option>
+                <option value="藤本明義">藤本明義</option>
+                <option value="おはぎ。">おはぎ。</option>
+                <option value="カンジ">カンジ</option>
+                <option value="しゅん">しゅん</option>
+                <option value="雅">雅</option>
+                <option value="ピーロ">ピーロ</option>
+                <option value="ガク">ガク</option>
+                <option value="翔">翔</option>
+                <option value="美羽">美羽</option>
+                <option value="とん">とん</option>
+                <option value="暁">暁</option>
+                <option value="バードマン">バードマン</option>
+                <option value="ルート">ルート</option>
+                <option value="NANA">NANA</option>
+                <option value="原山進">原山進</option>
+                <option value="NAOKO">NAOKO</option>
+                <option value="ヒラク">ヒラク</option>
+                <option value="ふなはし">ふなはし</option>
+                <option value="SEID">SEID</option>
+                <option value="mirror">mirror</option>
+                <option value="オーイズミ">オーイズミ</option>
+                <option value="とっぴ">とっぴ</option>
+                <option value="key">key</option>
+                <option value="とも">とも</option>
+                <option value="Aiki">Aiki</option>
+                <option value="Sho-Ta">Sho-Ta</option>
+                <option value="ヒカル">ヒカル</option>
+                <option value="やみ">やみ</option>
+            </select>       
+            </div>
         </div>
 
         <p class="note-red" style="margin-top: -10px; margin-bottom: 20px;">
@@ -418,7 +450,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.secondary-option').forEach(el => {
             el.addEventListener('click', () => { toggleSecondaryOption(el); saveData(); });
         });
-        document.getElementById('mainTextBox').addEventListener('input', () => {
+        document.getElementById('mainTextBox').addEventListener('change', () => {
             updateAllAssigneeNames();
             saveData();
         });
@@ -459,9 +491,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function copyShiftsToClipboard() {
     let clipboardText = '';
-    const magicianName = document.getElementById('mainTextBox').value.trim();
-    if (!magicianName) {
-        showNotification('マジシャン名が入力されていません。', true);
+   const nameSelect = document.getElementById('mainTextBox');
+    const magicianName = nameSelect.value;
+    if (magicianName === '') { // プレースホルダーが選択されている場合
+        showNotification('マジシャン名が選択されていません。', true);
         return;
     }
     clipboardText += `11月 提出シフト\n\n`;
@@ -531,8 +564,9 @@ function sendDataToSheet() {
     if (confirm('シフトを提出します。よろしいですか？（提出後はフォームから修正できなくなります）')) {
         const sendButton = document.getElementById('sendButton');
         const confirmButton = document.getElementById('confirmButton');
-        if (document.getElementById('mainTextBox').value.trim() === '') {
-            alert('マジシャン名を入力してください。');
+        const nameSelect = document.getElementById('mainTextBox');
+        if (nameSelect.value === '') { // プレースホルダーが選択されている場合
+            alert('マジシャン名を選択してください。');
             return;
         }
         const comment = document.getElementById('commentBox').value.trim();
@@ -700,7 +734,8 @@ function updateAllAssigneeNames() {
 }
 
 function toggleSelection(clickedElement) {
-    const name = document.getElementById('mainTextBox').value;
+    const nameSelect = document.getElementById('mainTextBox');
+    const name = nameSelect.value;
     const assigneeSpan = clickedElement.parentElement.querySelector('.assignee');
     const secondaryOptions = clickedElement.parentElement.querySelectorAll('.secondary-option');
     if (clickedElement.classList.contains('selected')) {
@@ -715,8 +750,8 @@ function toggleSelection(clickedElement) {
             if (appendedTextSpan) appendedTextSpan.textContent = '';
         }
     } else {
-        if (name.trim() === '') {
-            alert('マジシャン名を入力してください。');
+        if (name === '') { // プレースホルダーが選択されている場合
+            alert('先にマジシャン名を選択してください。');
             return;
         }
         clickedElement.classList.add('selected');
