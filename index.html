@@ -39,14 +39,9 @@
             margin-bottom: 25px; padding: 15px; background-color: #f8f9fa;
             border: 1px solid #dee2e6; border-radius: 5px;
         }
-        @media (min-width: 1100px) {
-            .toc {
-                position: fixed;
-                top: 100px;
-                right: 30px;
-                width: 200px;
-            }
-        }
+        /* ▼▼▼ 目次固定のCSSを削除 ▼▼▼ */
+        /* ( @media (min-width: 1100px) { ... } を削除 ) */
+        /* ▲▲▲ ここまで ▲▲▲ */
         .toc h3 { margin-top: 0; }
         .toc ul { list-style-type: none; padding-left: 0; margin-bottom: 0; }
         .toc li { margin-bottom: 5px; }
@@ -117,27 +112,9 @@
             background-color: #0056b3;
         }
 
-        #back-to-toc-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 999;
-            background-color: #6c757d;
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            text-decoration: none;
-            text-align: center;
-            line-height: 60px;
-            font-size: 14px;
-            font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            transition: background-color 0.2s;
-        }
-        #back-to-toc-btn:hover {
-            background-color: #5a6268;
-        }
+        /* ▼▼▼ 固定ボタンのCSSを削除 ▼▼▼ */
+        /* (#back-to-toc-btn と #submit-shift-btn のスタイルを削除) */
+        /* ▲▲▲ ここまで ▲▲▲ */
         
         .batch-select-container {
             margin-top: 8px;
@@ -193,21 +170,7 @@
     <h1 class="page-title">25年12月シフト</h1>
 
     <div id="submission-result" style="display: none;">
-        <h2 class="section-title">提出済みのシフト</h2>
-        <p><strong id="result-magician-name"></strong>さんの提出内容は以下の通りです。</p>
-        <div id="result-shifts-list"></div>
-        <div id="result-comment-area" style="display: none;">
-            <h3 style="margin-top: 30px; font-size: 1.2em;">コメント</h3>
-            <p id="result-comment"></p>
         </div>
-        <div style="text-align: center;">
-            <button id="copyButton">シフト一覧をクリップボードにコピー</button>
-        </div>
-        <p style="margin-top: 25px; color: #6c757d; font-size: 0.9em; text-align: center;">
-            ※この内容は、このブラウザに保存された控えです。<br>
-            ※提出後に修正が必要な場合は、大吉の個別LINEまでお願いします。
-        </p>
-    </div>
 
     <div id="shift-input-form">
         <div class="input-group">
@@ -282,7 +245,7 @@
                 <li><a href="#section-4-1">　　【南行徳】</a></li>
                 <li><a href="#section-4-2">　　【千葉】</a></li>
                 <li><a href="#section-4-3">　　【西千葉】</a></li>
-                <li><a href="#section-4-4">　　【津田沼】</a></li>
+                <li><a href="#section-4-4">_　　【津田沼】</a></li>
                 <li><a href="#section-4-5">　　【赤羽】</a></li>
                 <li><a href="#section-4-6">　　【新小岩】</a></li>
                 <li><a href="#section-4-7">　　【柏西口】</a></li>
@@ -328,6 +291,10 @@
                     <button class="batch-select-btn" data-day="土">土一括</button>
                 </div>
                 <div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">30火祝前</span>｜<span class="assignee"></span>（築地日本海のみ）</div><div class="shift-line"><span class="date-entry">31水祝</span>｜<span class="assignee"></span>（築地日本海のみ）</div><div class="shift-line"><span class="date-entry">1/1木祝</span>｜<span class="assignee"></span>（築地日本海のみ）</div><div class="shift-line"><span class="date-entry">1/2金祝</span>｜<span class="assignee"></span>（築地日本海のみ）</div><div class="shift-line"><span class="date-entry">1/3土祝</span>｜<span class="assignee"></span>（築地日本海のみ）</div><div class="shift-line"><span class="date-entry">1/4日</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">9金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">10土</span>｜<span class="assignee"></span></div>
+            </div>
+            <div class="scroll-button-wrapper">
+                <a href="#toc-anchor" class="scroll-button">目次に戻る</a>
+                <a href="#page-bottom-anchor" class="scroll-button">一番下まで移動する</a>
             </div>
 
             <h2 class="section-title" id="section-2">２．都心ブロック②その他東京</h2>
@@ -402,6 +369,10 @@
                 </div>
                 <div class="shift-line"><span class="date-entry">3水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">10水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">17水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">24水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">28日</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">29月</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">30火</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">31水祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">1/1木祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">1/2金祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">1/3土祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">1/4日</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">7水</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">9金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">10土</span>｜<span class="assignee"></span></div>
             </div>
+            <div class="scroll-button-wrapper">
+                <a href="#toc-anchor" class="scroll-button">目次に戻る</a>
+                <a href="#page-bottom-anchor" class="scroll-button">一番下まで移動する</a>
+            </div>
 
             <h2 class="section-title" id="section-3">３．立川町田ブロック</h2>
             <div class="shift-block">
@@ -457,6 +428,10 @@
                     <button class="batch-select-btn" data-day="土">土一括</button>
                 </div>
                 <div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">23火祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">9金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">10土</span>｜<span class="assignee"></span></div>
+            </div>
+            <div class="scroll-button-wrapper">
+                <a href="#toc-anchor" class="scroll-button">目次に戻る</a>
+                <a href="#page-bottom-anchor" class="scroll-button">一番下まで移動する</a>
             </div>
 
             <h2 class="section-title" id="section-4">４．千葉埼玉ホームブロック</h2>
@@ -524,7 +499,11 @@
                 </div>
                 <div class="shift-line"><span class="date-entry">5金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">6土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">12金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">13土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">19金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">20土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">26金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">27土</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">28日</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">29月</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">30火祝前</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">31水祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">1/1木祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">1/2金祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">1/3土祝</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">1/4日</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">9金</span>｜<span class="assignee"></span></div><div class="shift-line"><span class="date-entry">10土</span>｜<span class="assignee"></span></div>
             </div>
+            <div class="scroll-button-wrapper" style="text-align: center;">
+                <a href="#toc-anchor" class="scroll-button">目次に戻る</a>
+            </div>
         </div>
+
         <div id="page-bottom-anchor"></div>
 
         <div class="input-group">
@@ -661,9 +640,17 @@ function copyShiftsToClipboard() {
 }
 
 function displaySubmissionResult(payload) {
+    // (JavaScriptの機能自体は変更なし)
     const formElement = document.getElementById('shift-input-form');
     const resultElement = document.getElementById('submission-result');
     if (!payload || payload.length === 0) return;
+
+    // ▼▼▼ 提出完了時はフォーム非表示ではなく、入力不可にする ▼▼▼
+    // formElement.style.display = 'none'; // この行をコメントアウトまたは削除
+    // resultElement.style.display = 'block'; // この行をコメントアウトまたは削除
+
+    const magicianName = payload[0].value.split(' ')[0];
+    const comment = payload[0].comment;
 
     // フォーム要素を無効化
     document.getElementById('mainTextBox').disabled = true;
@@ -708,7 +695,7 @@ function sendDataToSheet() {
         }
         sendButton.disabled = true;
         sendButton.textContent = '送信中...';
-        loadingOverlay.style.display = 'flex'; // ローディング画面を表示
+        loadingOverlay.style.display = 'flex';
         
         fetch(GAS_WEB_APP_URL, {
             method: 'POST',
@@ -890,6 +877,6 @@ function toggleSecondaryOption(clickedElement) {
     }
 }
 </script>
-<a href="#toc-anchor" id="back-to-toc-btn">目次に戻る</a>
+
 </body>
 </html>
