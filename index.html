@@ -158,9 +158,8 @@
             bottom: 20px;
             right: 10px;
             z-index: 999;
-            background-color: #007bff; /* 色を青に変更 */
             color: white;
-            width: 150px;
+            width: 100px;
             height: 50px;
             text-decoration: none;
             text-align: center;
@@ -725,14 +724,7 @@ function displaySubmissionResult(payload) {
     document.querySelectorAll('.date-entry').forEach(el => el.style.pointerEvents = 'none');
     document.querySelectorAll('.secondary-option').forEach(el => el.style.pointerEvents = 'none');
     document.querySelectorAll('.batch-select-btn').forEach(btn => btn.disabled = true);
-    
-    // ▼▼▼ 提出完了時に元の提出ボタンを非表示にし、固定ボタンも非表示にする ▼▼▼
-    document.querySelector('.button-container').style.display = 'none';
-    document.getElementById('submit-shift-btn').style.display = 'none';
-    
-    // ▼▼▼ 提出結果を表示する ▼▼▼
-    resultElement.style.display = 'block';
-    
+        
     const magicianName = payload[0].value.split(' ')[0];
     const comment = payload[0].comment;
 
@@ -794,7 +786,6 @@ function sendDataToSheet() {
         }
         sendButton.disabled = true;
         sendButton.textContent = '送信中...';
-        confirmButton.disabled = true; // 確認ボタンも無効化
         document.getElementById('submit-shift-btn').style.display = 'none'; // 固定提出ボタンを非表示
         loadingOverlay.style.display = 'flex';
         
@@ -808,14 +799,13 @@ function sendDataToSheet() {
             if (data.status === 'success') {
                 showNotification('シフト提出が完了しました。', false);
                 sendButton.textContent = '提出済み';
-                // confirmButton.disabled = false; // ページ内ボタンは非表示になるので不要
+                confirmButton.disabled = false; 
                 saveData(true, payload);
                 displaySubmissionResult(payload);
             } else {
                 showNotification(`送信に失敗しました: ${data.message || '不明なエラー'}`, true);
                 sendButton.disabled = false;
                 sendButton.textContent = 'シフト提出';
-                confirmButton.disabled = false; // 失敗したら確認ボタンは戻す
                 document.getElementById('submit-shift-btn').style.display = 'block'; // 固定提出ボタンを戻す
             }
         })
@@ -824,7 +814,6 @@ function sendDataToSheet() {
             showNotification('送信中にエラーが発生しました。', true);
             sendButton.disabled = false;
             sendButton.textContent = 'シフト提出';
-            confirmButton.disabled = false;
             document.getElementById('submit-shift-btn').style.display = 'block';
         })
         .finally(() => { 
