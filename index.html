@@ -39,9 +39,7 @@
             margin-bottom: 25px; padding: 15px; background-color: #f8f9fa;
             border: 1px solid #dee2e6; border-radius: 5px;
         }
-        /* ▼▼▼ 目次固定のCSSを削除 ▼▼▼ */
-        /* ( @media (min-width: 1100px) { ... } を削除 ) */
-        /* ▲▲▲ ここまで ▲▲▲ */
+        /* ▼▼▼ 目次固定のCSSを削除しました ▼▼▼ */
         .toc h3 { margin-top: 0; }
         .toc ul { list-style-type: none; padding-left: 0; margin-bottom: 0; }
         .toc li { margin-bottom: 5px; }
@@ -112,8 +110,49 @@
             background-color: #0056b3;
         }
 
-        /* ▼▼▼ 固定ボタンのCSSを削除 ▼▼▼ */
-        /* (#back-to-toc-btn と #submit-shift-btn のスタイルを削除) */
+        /* ▼▼▼ 固定ボタンのCSSを復活 ▼▼▼ */
+        #back-to-toc-btn {
+            position: fixed;
+            bottom: 80px;
+            right: 10px;
+            z-index: 999;
+            background-color: #6c757d;
+            color: white;
+            width: 150px;
+            height: 50px;
+            text-decoration: none;
+            text-align: center;
+            line-height: 50px; /* 高さと合わせる */
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            transition: background-color 0.2s;
+            border-radius: 5px;
+        }
+        #back-to-toc-btn:hover {
+            background-color: #5a6268;
+        }
+        #submit-shift-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 10px;
+            z-index: 999;
+            background-color: #007bff; /* 色を青に変更 */
+            color: white;
+            width: 150px;
+            height: 50px;
+            text-decoration: none;
+            text-align: center;
+            line-height: 50px; /* 高さと合わせる */
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            transition: background-color 0.2s;
+            border-radius: 5px;
+        }
+        #submit-shift-btn:hover {
+            background-color: #0056b3; /* ホバー色も青系に */
+        }
         /* ▲▲▲ ここまで ▲▲▲ */
         
         .batch-select-container {
@@ -170,7 +209,21 @@
     <h1 class="page-title">25年12月シフト</h1>
 
     <div id="submission-result" style="display: none;">
+        <h2 class="section-title">提出済みのシフト</h2>
+        <p><strong id="result-magician-name"></strong>さんの提出内容は以下の通りです。</p>
+        <div id="result-shifts-list"></div>
+        <div id="result-comment-area" style="display: none;">
+            <h3 style="margin-top: 30px; font-size: 1.2em;">コメント</h3>
+            <p id="result-comment"></p>
         </div>
+        <div style="text-align: center;">
+            <button id="copyButton">シフト一覧をクリップボードにコピー</button>
+        </div>
+        <p style="margin-top: 25px; color: #6c757d; font-size: 0.9em; text-align: center;">
+            ※この内容は、このブラウザに保存された控えです。<br>
+            ※提出後に修正が必要な場合は、大吉の個別LINEまでお願いします。
+        </p>
+    </div>
 
     <div id="shift-input-form">
         <div class="input-group">
@@ -245,7 +298,7 @@
                 <li><a href="#section-4-1">　　【南行徳】</a></li>
                 <li><a href="#section-4-2">　　【千葉】</a></li>
                 <li><a href="#section-4-3">　　【西千葉】</a></li>
-                <li><a href="#section-4-4">_　　【津田沼】</a></li>
+                <li><a href="#section-4-4">　　【津田沼】</a></li>
                 <li><a href="#section-4-5">　　【赤羽】</a></li>
                 <li><a href="#section-4-6">　　【新小岩】</a></li>
                 <li><a href="#section-4-7">　　【柏西口】</a></li>
@@ -503,7 +556,6 @@
                 <a href="#toc-anchor" class="scroll-button">目次に戻る</a>
             </div>
         </div>
-
         <div id="page-bottom-anchor"></div>
 
         <div class="input-group">
@@ -520,6 +572,8 @@
 
 <div id="notification"></div>
 
+<a href="#toc-anchor" id="back-to-toc-btn">目次に戻る</a>
+<a href="#page-bottom-anchor" id="submit-shift-btn">これでシフト提出する</a>
 <script>
 const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwmD-V9LWDQ7edPKsUwC9QWszCzJ-JYGT_vQ-nU6S75VnddpsQBRG91c90ZZymi7rP5yg/exec';
 // ▼▼▼ 保存キーを12月に変更 ▼▼▼
@@ -640,17 +694,9 @@ function copyShiftsToClipboard() {
 }
 
 function displaySubmissionResult(payload) {
-    // (JavaScriptの機能自体は変更なし)
     const formElement = document.getElementById('shift-input-form');
     const resultElement = document.getElementById('submission-result');
     if (!payload || payload.length === 0) return;
-
-    // ▼▼▼ 提出完了時はフォーム非表示ではなく、入力不可にする ▼▼▼
-    // formElement.style.display = 'none'; // この行をコメントアウトまたは削除
-    // resultElement.style.display = 'block'; // この行をコメントアウトまたは削除
-
-    const magicianName = payload[0].value.split(' ')[0];
-    const comment = payload[0].comment;
 
     // フォーム要素を無効化
     document.getElementById('mainTextBox').disabled = true;
@@ -658,6 +704,38 @@ function displaySubmissionResult(payload) {
     document.querySelectorAll('.date-entry').forEach(el => el.style.pointerEvents = 'none');
     document.querySelectorAll('.secondary-option').forEach(el => el.style.pointerEvents = 'none');
     document.querySelectorAll('.batch-select-btn').forEach(btn => btn.disabled = true);
+    
+    // ▼▼▼ 提出完了時に元の提出ボタンを非表示にし、固定ボタンも非表示にする ▼▼▼
+    document.querySelector('.button-container').style.display = 'none';
+    document.getElementById('submit-shift-btn').style.display = 'none';
+    
+    // ▼▼▼ 提出結果を表示する ▼▼▼
+    resultElement.style.display = 'block';
+    
+    const magicianName = payload[0].value.split(' ')[0];
+    const comment = payload[0].comment;
+
+    document.getElementById('result-magician-name').textContent = magicianName;
+
+    const shiftsByStore = payload.reduce((acc, shift) => {
+        if (!acc[shift.store]) {
+            acc[shift.store] = [];
+        }
+        acc[shift.store].push(`${shift.date}${shift.value.replace(magicianName, '').trim()}`);
+        return acc;
+    }, {});
+
+    let shiftsHtml = '<ul>';
+    for (const store in shiftsByStore) {
+        shiftsHtml += `<li><h4>${store}</h4>${shiftsByStore[store].join('、 ')}</li>`;
+    }
+    shiftsHtml += '</ul>';
+    document.getElementById('result-shifts-list').innerHTML = shiftsHtml;
+
+    if (comment && comment.trim() !== '') {
+        document.getElementById('result-comment-area').style.display = 'block';
+        document.getElementById('result-comment').textContent = comment;
+    }
 }
 
 function sendDataToSheet() {
@@ -695,6 +773,8 @@ function sendDataToSheet() {
         }
         sendButton.disabled = true;
         sendButton.textContent = '送信中...';
+        confirmButton.disabled = true; // 確認ボタンも無効化
+        document.getElementById('submit-shift-btn').style.display = 'none'; // 固定提出ボタンを非表示
         loadingOverlay.style.display = 'flex';
         
         fetch(GAS_WEB_APP_URL, {
@@ -707,13 +787,15 @@ function sendDataToSheet() {
             if (data.status === 'success') {
                 showNotification('シフト提出が完了しました。', false);
                 sendButton.textContent = '提出済み';
-                confirmButton.disabled = false;
+                // confirmButton.disabled = false; // ページ内ボタンは非表示になるので不要
                 saveData(true, payload);
                 displaySubmissionResult(payload);
             } else {
                 showNotification(`送信に失敗しました: ${data.message || '不明なエラー'}`, true);
                 sendButton.disabled = false;
                 sendButton.textContent = 'シフト提出';
+                confirmButton.disabled = false; // 失敗したら確認ボタンは戻す
+                document.getElementById('submit-shift-btn').style.display = 'block'; // 固定提出ボタンを戻す
             }
         })
         .catch(error => {
@@ -721,6 +803,8 @@ function sendDataToSheet() {
             showNotification('送信中にエラーが発生しました。', true);
             sendButton.disabled = false;
             sendButton.textContent = 'シフト提出';
+            confirmButton.disabled = false;
+            document.getElementById('submit-shift-btn').style.display = 'block';
         })
         .finally(() => { 
             loadingOverlay.style.display = 'none';
@@ -781,7 +865,6 @@ function loadData() {
         const data = item.value;
 
         if (data.submitted && data.submittedPayload) {
-             // フォームは表示したまま入力不可にする
             displaySubmissionResult(data.submittedPayload);
         }
 
@@ -789,7 +872,7 @@ function loadData() {
             const sendButton = document.getElementById('sendButton');
             sendButton.disabled = true;
             sendButton.textContent = '提出済み';
-            document.getElementById('confirmButton').disabled = false;
+            document.getElementById('confirmButton').disabled = true; // ページ内ボタンは非表示になるので無効
         }
         const name = data.magicianName || '';
         document.getElementById('mainTextBox').value = name;
