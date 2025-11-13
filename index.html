@@ -39,7 +39,7 @@
             margin-bottom: 25px; padding: 15px; background-color: #f8f9fa;
             border: 1px solid #dee2e6; border-radius: 5px;
         }
-        /* ▼▼▼ 目次固定のCSSを削除 ▼▼▼ */
+        /* ▼▼▼ 目次固定のCSSを削除しました ▼▼▼ */
         .toc h3 { margin-top: 0; }
         .toc ul { list-style-type: none; padding-left: 0; margin-bottom: 0; }
         .toc li { margin-bottom: 5px; }
@@ -556,7 +556,6 @@
                 <a href="#toc-anchor" class="scroll-button">目次に戻る</a>
             </div>
         </div>
-
         <div id="page-bottom-anchor"></div>
 
         <div class="input-group">
@@ -574,9 +573,10 @@
 <div id="notification"></div>
 
 <a href="#toc-anchor" id="back-to-toc-btn">目次に戻る</a>
-<a href="#page-bottom-anchor" class="scroll-button">一番下まで移動する</a>
+<a href="#page-bottom-anchor" id="submit-shift-btn">これでシフト提出する</a>
 <script>
 const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwmD-V9LWDQ7edPKsUwC9QWszCzJ-JYGT_vQ-nU6S75VnddpsQBRG91c90ZZymi7rP5yg/exec';
+// ▼▼▼ 保存キーを12月に変更 ▼▼▼
 const STORAGE_KEY = 'shiftAppData_2025_12';
 
 const loadingOverlay = document.getElementById('loading-overlay');
@@ -607,12 +607,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         document.getElementById('commentBox').addEventListener('input', saveData);
         document.getElementById('sendButton').addEventListener('click', sendDataToSheet);
-        
-        // ▼▼▼ 固定提出ボタンにもクリックイベントを割り当て ▼▼▼
-        document.getElementById('submit-shift-btn').addEventListener('click', (e) => {
-            e.preventDefault(); // リンクとしての動作をキャンセル
-            sendDataToSheet(); // 通常の提出ボタンと同じ関数を呼ぶ
-        });
 
         document.querySelectorAll('.batch-select-btn').forEach(button => {
             button.addEventListener('click', function() {
@@ -623,9 +617,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         });
-    } else {
-        // ▼▼▼ 提出済みの場合、固定提出ボタンを非表示にする ▼▼▼
-        document.getElementById('submit-shift-btn').style.display = 'none';
     }
     
     document.getElementById('confirmButton').addEventListener('click', copyShiftsToClipboard);
@@ -640,12 +631,13 @@ function batchSelectByDay(shiftBlock, day) {
     
     const dateEntries = shiftBlock.querySelectorAll('.date-entry');
     dateEntries.forEach(dateEntry => {
+        // 正規表現を使い、日付の末尾が指定の曜日かチェック（例：「30火祝前」「1/1木祝」にも対応）
         const regex = new RegExp(day + '($|祝)');
         if (regex.test(dateEntry.innerText) && !dateEntry.classList.contains('selected')) {
             toggleSelection(dateEntry);
         }
     });
-    saveData();
+    saveData(); // 変更を保存
 }
 
 function copyShiftsToClipboard() {
@@ -656,6 +648,7 @@ function copyShiftsToClipboard() {
         showNotification('マジシャン名が選択されていません。', true);
         return;
     }
+    // ▼▼▼ タイトルを12月/1月に変更 ▼▼▼
     clipboardText += `12月・1月 提出シフト\n\n`;
 
     const shiftsByStore = new Map();
@@ -701,6 +694,7 @@ function copyShiftsToClipboard() {
 }
 
 function displaySubmissionResult(payload) {
+    const formElement = document.getElementById('shift-input-form');
     const resultElement = document.getElementById('submission-result');
     if (!payload || payload.length === 0) return;
 
@@ -711,15 +705,11 @@ function displaySubmissionResult(payload) {
     document.querySelectorAll('.secondary-option').forEach(el => el.style.pointerEvents = 'none');
     document.querySelectorAll('.batch-select-btn').forEach(btn => btn.disabled = true);
     
-    // ▼▼▼ ページ内ボタンの状態を制御 ▼▼▼
-    document.getElementById('sendButton').disabled = true;
-    document.getElementById('sendButton').textContent = '提出済み';
-    document.getElementById('confirmButton').disabled = false;
-
-    // ▼▼▼ 固定提出ボタンを非表示にする ▼▼▼
+    // ▼▼▼ 提出完了時に元の提出ボタンを非表示にし、固定ボタンも非表示にする ▼▼▼
+    document.querySelector('.button-container').style.display = 'none';
     document.getElementById('submit-shift-btn').style.display = 'none';
     
-    // 提出結果を表示する（フォームは非表示にしない）
+    // ▼▼▼ 提出結果を表示する ▼▼▼
     resultElement.style.display = 'block';
     
     const magicianName = payload[0].value.split(' ')[0];
@@ -752,8 +742,6 @@ function sendDataToSheet() {
     if (confirm('シフトを提出します。よろしいですか？\n（提出後はフォームから修正できなくなります）')) {        
         const sendButton = document.getElementById('sendButton');
         const confirmButton = document.getElementById('confirmButton');
-        const submitShiftBtn = document.getElementById('submit-shift-btn'); // 固定ボタン
-        
         const nameSelect = document.getElementById('mainTextBox');
         if (nameSelect.value === '') { 
             alert('マジシャン名を選択してください。');
@@ -761,7 +749,6 @@ function sendDataToSheet() {
         }
         const comment = document.getElementById('commentBox').value.trim();
         const payload = [];
-        // (ペイロード作成処理は変更なし)
         document.querySelectorAll('.shift-block').forEach(block => {
             const blockTitleEl = block.querySelector('.block-title');
             if (!blockTitleEl) return;
@@ -780,20 +767,15 @@ function sendDataToSheet() {
                 }
             });
         });
-        
         if (GAS_WEB_APP_URL === 'ここにウェブアプリのURLを貼り付けてください') {
             alert('HTMLファイル内の「GAS_WEB_APP_URL」が設定されていません。\n設定手順を確認してください。');
             return;
         }
-
-        // ▼▼▼ ボタンを無効化し、ローディング表示 ▼▼▼
         sendButton.disabled = true;
         sendButton.textContent = '送信中...';
-        confirmButton.disabled = true;
-        submitShiftBtn.style.pointerEvents = 'none'; // クリック不可に
-        submitShiftBtn.style.backgroundColor = '#cccccc'; // 色をグレーに
+        confirmButton.disabled = true; // 確認ボタンも無効化
+        document.getElementById('submit-shift-btn').style.display = 'none'; // 固定提出ボタンを非表示
         loadingOverlay.style.display = 'flex';
-        // ▲▲▲ ここまで変更 ▲▲▲
         
         fetch(GAS_WEB_APP_URL, {
             method: 'POST',
@@ -804,29 +786,25 @@ function sendDataToSheet() {
         .then(data => {
             if (data.status === 'success') {
                 showNotification('シフト提出が完了しました。', false);
+                sendButton.textContent = '提出済み';
+                // confirmButton.disabled = false; // ページ内ボタンは非表示になるので不要
                 saveData(true, payload);
-                displaySubmissionResult(payload); // 成功時のボタン処理はここに集約
+                displaySubmissionResult(payload);
             } else {
                 showNotification(`送信に失敗しました: ${data.message || '不明なエラー'}`, true);
-                // ▼▼▼ 失敗時はボタンを元に戻す ▼▼▼
                 sendButton.disabled = false;
                 sendButton.textContent = 'シフト提出';
-                confirmButton.disabled = false;
-                submitShiftBtn.style.pointerEvents = 'auto';
-                submitShiftBtn.style.backgroundColor = '#007bff';
-                // ▲▲▲ ここまで変更 ▲▲▲
+                confirmButton.disabled = false; // 失敗したら確認ボタンは戻す
+                document.getElementById('submit-shift-btn').style.display = 'block'; // 固定提出ボタンを戻す
             }
         })
         .catch(error => {
             console.error('送信エラー:', error);
             showNotification('送信中にエラーが発生しました。', true);
-            // ▼▼▼ 失敗時はボタンを元に戻す ▼▼▼
             sendButton.disabled = false;
             sendButton.textContent = 'シフト提出';
             confirmButton.disabled = false;
-            submitShiftBtn.style.pointerEvents = 'auto';
-            submitShiftBtn.style.backgroundColor = '#007bff';
-            // ▲▲▲ ここまで変更 ▲▲▲
+            document.getElementById('submit-shift-btn').style.display = 'block';
         })
         .finally(() => { 
             loadingOverlay.style.display = 'none';
@@ -842,7 +820,6 @@ function showNotification(message, isError = false) {
 }
 
 function saveData(forceSubmittedState = null, submittedPayload = null) {
-    // (JavaScriptの機能自体は変更なし)
     let isAlreadySubmitted = false;
     const itemStr = localStorage.getItem(STORAGE_KEY);
     if (itemStr) {
@@ -878,33 +855,25 @@ function saveData(forceSubmittedState = null, submittedPayload = null) {
 
 function loadData() {
     const itemStr = localStorage.getItem(STORAGE_KEY);
-    if (!itemStr) {
-        // ▼▼▼ 未提出時は「シフト確認」ボタンを無効化 ▼▼▼
-        document.getElementById('confirmButton').disabled = true;
-        return;
-    }
+    if (!itemStr) return;
     try {
         const item = JSON.parse(itemStr);
         if (!item || !item.expiry || !item.value || new Date().getTime() > item.expiry) {
             localStorage.removeItem(STORAGE_KEY);
-            document.getElementById('confirmButton').disabled = true; // データ無効時も無効化
             return;
         }
         const data = item.value;
 
         if (data.submitted && data.submittedPayload) {
             displaySubmissionResult(data.submittedPayload);
-        } else if (data.submitted) {
-             // payload がない古いデータでもボタン状態を制御
-            document.getElementById('sendButton').disabled = true;
-            document.getElementById('sendButton').textContent = '提出済み';
-            document.getElementById('confirmButton').disabled = false;
-            document.getElementById('submit-shift-btn').style.display = 'none';
-        } else {
-            // 未提出時は「シフト確認」ボタンを無効化
-             document.getElementById('confirmButton').disabled = true;
         }
 
+        if (data.submitted) {
+            const sendButton = document.getElementById('sendButton');
+            sendButton.disabled = true;
+            sendButton.textContent = '提出済み';
+            document.getElementById('confirmButton').disabled = true; // ページ内ボタンは非表示になるので無効
+        }
         const name = data.magicianName || '';
         document.getElementById('mainTextBox').value = name;
         document.getElementById('commentBox').value = data.comment || '';
@@ -937,7 +906,6 @@ function loadData() {
         }
     } catch (e) {
         localStorage.removeItem(STORAGE_KEY);
-        document.getElementById('confirmButton').disabled = true;
     }
 }
 
