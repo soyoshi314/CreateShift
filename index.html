@@ -888,7 +888,7 @@ function loadData() {
             const sendButton = document.getElementById('sendButton');
             sendButton.disabled = true;
             sendButton.textContent = '提出済み';
-            document.getElementById('confirmButton').disabled = true; // ページ内ボタンは非表示になるので無効
+            // document.getElementById('confirmButton').disabled = true; // ページ内ボタンは非表示になるので無効
         }
         const name = data.magicianName || '';
         document.getElementById('mainTextBox').value = name;
