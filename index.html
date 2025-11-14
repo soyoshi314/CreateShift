@@ -132,6 +132,27 @@
         #back-to-toc-btn:hover {
             background-color: #5a6268;
         }
+        #back-to-toc-btn2 {
+            position: fixed;
+            bottom: 80px;
+            right: 10px;
+            z-index: 999;
+            background-color: #6c757d;
+            color: white;
+            width: 150px;
+            height: 100px;
+            text-decoration: none;
+            text-align: center;
+            line-height: 50px; /* 高さと合わせる */
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            transition: background-color 0.2s;
+            border-radius: 5px;
+        }
+        #back-to-toc-btn2:hover {
+            background-color: #5a6268;
+        }
          #submit-shift-btn {
             position: fixed;
             bottom: 20px;
@@ -228,23 +249,6 @@
 <div class="container">
     <h1 class="page-title">25年12月シフト</h1>
 
-    <div id="submission-result" style="display: none;">
-        <h2 class="section-title">提出済みのシフト</h2>
-        <p><strong id="result-magician-name"></strong>さんの提出内容は以下の通りです。</p>
-        <div id="result-shifts-list"></div>
-        <div id="result-comment-area" style="display: none;">
-            <h3 style="margin-top: 30px; font-size: 1.2em;">コメント</h3>
-            <p id="result-comment"></p>
-        </div>
-        <div style="text-align: center;">
-            <button id="copyButton">シフト一覧をクリップボードにコピー</button>
-        </div>
-        <p style="margin-top: 25px; color: #6c757d; font-size: 0.9em; text-align: center;">
-            ※この内容は、このブラウザに保存された控えです。<br>
-            ※提出後に修正が必要な場合は、大吉の個別LINEまでお願いします。
-        </p>
-    </div>
-
     <div id="shift-input-form">
         <div class="input-group">
         <label for="mainTextBox">マジシャン名（選択してください）</label>
@@ -285,7 +289,7 @@
         </div>
 
         <p class="note-red" style="margin-top: -10px; margin-bottom: 20px;">
-            すべてのシフト入力が完了したら、ページ一番下の「シフト提出」ボタンを押してください。<br>また、提出後に修正が必要な場合は、大吉の個別LINEまでお願いします。
+            すべてのシフト入力が完了したら、ページ一番下の「シフト提出」ボタンを押してください。<br>また、提出後に修正が必要な場合は、ダイキチの個別LINEまでお願いします。
         </p>
 
         <div class="toc" id="toc-anchor">
@@ -595,7 +599,7 @@
 <div id="notification"></div>
 
 <a href="#toc-anchor" id="back-to-toc-btn">目次に戻る</a>
-<a href="#page-bottom-anchor" id="submit-shift-btn" class="scroll-button">一番下まで移動する</a>
+<a href="#page-bottom-anchor" id="back-to-toc-btn2">一番下まで移動する</a>
 <script>
 const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwmD-V9LWDQ7edPKsUwC9QWszCzJ-JYGT_vQ-nU6S75VnddpsQBRG91c90ZZymi7rP5yg/exec';
 // ▼▼▼ 保存キーを12月に変更 ▼▼▼
@@ -884,7 +888,6 @@ function loadData() {
             const sendButton = document.getElementById('sendButton');
             sendButton.disabled = true;
             sendButton.textContent = '提出済み';
-            document.getElementById('confirmButton').disabled = true; // ページ内ボタンは非表示になるので無効
         }
         const name = data.magicianName || '';
         document.getElementById('mainTextBox').value = name;
