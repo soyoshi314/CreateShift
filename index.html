@@ -770,10 +770,10 @@ function sendDataToSheet() {
                 }
             });
         });
-        if (GAS_WEB_APP_URL === 'ここにウェブアプリのURLを貼り付けてください') {
-            alert('HTMLファイル内の「GAS_WEB_APP_URL」が設定されていません。\n設定手順を確認してください。');
-            return;
-        }
+
+        if(payload.Length == 0 && comment != '')
+             payload.push({ store: '', date: '', value: '', comment: comment });
+        
         sendButton.disabled = true;
         sendButton.textContent = '送信中...';
         document.getElementById('submit-shift-btn').style.display = 'none'; // 固定提出ボタンを非表示
