@@ -752,7 +752,6 @@ function sendDataToSheet() {
         }
         const comment = document.getElementById('commentBox').value.trim();
         const payload = [];
-        boolean payloadPushed = false;
         document.querySelectorAll('.shift-block').forEach(block => {
             const blockTitleEl = block.querySelector('.block-title');
             if (!blockTitleEl) return;
@@ -768,12 +767,11 @@ function sendDataToSheet() {
                     }
                     const valueString = assigneeSpan.innerText + appendedText;
                     payload.push({ store: storeName, date: dateText, value: valueString, comment: comment });
-                    payloadPushed = true;
                 }
             });
         });
 
-        if(payloadPushed === false)
+        if (payload.length === 0)
              payload.push({ store: '', date: '', value: '', comment: comment });
         
         sendButton.disabled = true;
