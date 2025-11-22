@@ -772,7 +772,7 @@ function sendDataToSheet() {
         });
 
         if (payload.length === 0)
-             payload.push({ store: '', date: '', value: '', comment: comment });
+             payload.push({ store: '', date: '', value: line.querySelector('.assignee').innerText, comment: comment });
         
         sendButton.disabled = true;
         sendButton.textContent = '送信中...';
