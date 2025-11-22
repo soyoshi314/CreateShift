@@ -771,7 +771,7 @@ function sendDataToSheet() {
             });
         });
 
-        if(payload === [] && comment != '')
+        if(payload === [] && comment !== '')
              payload.push({ store: '', date: '', value: '', comment: comment });
         
         sendButton.disabled = true;
