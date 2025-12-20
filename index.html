@@ -626,7 +626,7 @@ document.addEventListener('DOMContentLoaded', function() {
             updateAllAssigneeNames();
             saveData();
         });
-        document.getElementById('commentBox').addEventListener('input', saveData);
+        document.getElementById('commentBox').addEventListener('input', () => saveData());
         document.getElementById('sendButton').addEventListener('click', sendDataToSheet);
 
         document.querySelectorAll('.batch-select-btn').forEach(button => {
