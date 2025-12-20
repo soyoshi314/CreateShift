@@ -627,14 +627,34 @@ function batchSelectByDay(shiftBlock, day) {
         return;
     }
     
-    const dateEntries = shiftBlock.querySelectorAll('.date-entry');
-    dateEntries.forEach(dateEntry => {
-        // 正規表現を使い、日付の末尾が指定の曜日かチェック（例：「30火祝前」「1/1木祝」にも対応）
+    // そのブロック内の日付エントリをすべて取得
+    const dateEntries = Array.from(shiftBlock.querySelectorAll('.date-entry'));
+    
+    // 対象となる曜日（例：「金」が含まれるもの）だけを抽出
+    const targetEntries = dateEntries.filter(el => {
         const regex = new RegExp(day + '($|祝)');
-        if (regex.test(dateEntry.innerText) && !dateEntry.classList.contains('selected')) {
-            toggleSelection(dateEntry);
+        return regex.test(el.innerText);
+    });
+
+    if (targetEntries.length === 0) return;
+
+    // 「対象の曜日がすべて選択済みかどうか」を判定
+    const isAllSelected = targetEntries.every(el => el.classList.contains('selected'));
+
+    targetEntries.forEach(dateEntry => {
+        if (isAllSelected) {
+            // すべて選択されている場合は、一括解除
+            if (dateEntry.classList.contains('selected')) {
+                toggleSelection(dateEntry);
+            }
+        } else {
+            // 一つでも未選択がある場合は、すべて選択（未選択のもののみ処理）
+            if (!dateEntry.classList.contains('selected')) {
+                toggleSelection(dateEntry);
+            }
         }
     });
+
     saveData(); // 変更を保存
 }
 
