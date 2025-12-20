@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1月シフト入力アプリ</title>
+    <title>シフト入力アプリ</title>
     <style>
         html { scroll-behavior: smooth; }
         body {
@@ -39,6 +39,7 @@
             margin-bottom: 25px; padding: 15px; background-color: #f8f9fa;
             border: 1px solid #dee2e6; border-radius: 5px;
         }
+        /* ▼▼▼ 目次固定のCSSを削除しました ▼▼▼ */
         .toc h3 { margin-top: 0; }
         .toc ul { list-style-type: none; padding-left: 0; margin-bottom: 0; }
         .toc li { margin-bottom: 5px; }
@@ -109,6 +110,7 @@
             background-color: #0056b3;
         }
 
+        /* ▼▼▼ 固定ボタンのCSSを復活 ▼▼▼ */
         #back-to-toc-btn {
             position: fixed;
             bottom: 80px;
@@ -120,7 +122,7 @@
             height: 50px;
             text-decoration: none;
             text-align: center;
-            line-height: 50px;
+            line-height: 50px; /* 高さと合わせる */
             font-size: 14px;
             font-weight: bold;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
@@ -135,13 +137,13 @@
             bottom: 20px;
             right: 10px;
             z-index: 999;
-            background-color: #007bff;
+            background-color: #007bff; /* 色を青に変更 */
             color: white;
             width: 150px;
             height: 50px;
             text-decoration: none;
             text-align: center;
-            line-height: 50px;
+            line-height: 50px; /* 高さと合わせる */
             font-size: 14px;
             font-weight: bold;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
@@ -149,8 +151,29 @@
             border-radius: 5px;
         }
         #submit-shift-btn:hover {
-            background-color: #0056b3;
+            background-color: #0056b3; /* ホバー色も青系に */
         }
+        #submit-shift-btn2 {
+            position: fixed;
+            bottom: 20px;
+            right: 10px;
+            z-index: 999;
+            color: white;
+            width: 100px;
+            height: 50px;
+            text-decoration: none;
+            text-align: center;
+            line-height: 50px; /* 高さと合わせる */
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            transition: background-color 0.2s;
+            border-radius: 5px;
+        }
+        #submit-shift-btn2:hover {
+            background-color: #0056b3; /* ホバー色も青系に */
+        }
+        /* ▲▲▲ ここまで ▲▲▲ */
         
         .batch-select-container {
             margin-top: 8px;
@@ -203,7 +226,7 @@
 </div>
 
 <div class="container">
-    <h1 class="page-title">1月シフト</h1>
+    <h1 class="page-title">25年12月シフト</h1>
 
     <div id="submission-result" style="display: none;">
         <h2 class="section-title">提出済みのシフト</h2>
@@ -264,7 +287,7 @@
 
         <p class="note-red" style="margin-top: -10px; margin-bottom: 20px;">
             ●シフト入力完了したら、ページ一番下の「シフト提出」ボタンを押してください。
-            <br>●シフト提出後の修正は大吉の個別LINEまでお願いします。
+            <br>●シフト提出後、修正時は大吉の個別LINEまでお願いします。
             <br>●シフト希望なしの場合、コメントに「シフト希望なし」と記載してシフト提出をお願いします。
         </p>
 
@@ -646,8 +669,8 @@ function copyShiftsToClipboard() {
         showNotification('マジシャン名が選択されていません。', true);
         return;
     }
-    // ▼▼▼ タイトルを1月に変更 ▼▼▼
-    clipboardText += `1月 提出シフト\n\n`;
+    // ▼▼▼ タイトルを12月/1月に変更 ▼▼▼
+    clipboardText += `12月・1月 提出シフト\n\n`;
 
     const shiftsByStore = new Map();
 
