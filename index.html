@@ -1,10 +1,11 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>シフト入力アプリ</title>
     <style>
+        /* 以前のCSSをそのまま維持 */
         html { scroll-behavior: smooth; }
         body {
             font-family: sans-serif; padding: 20px;
@@ -21,14 +22,14 @@
             font-size: 1em;
         }
         textarea#commentBox { width: 95%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
-        .shift-block { margin-top: 25px; }
+        .shift-block { margin-top: 25px; border-bottom: 1px dashed #eee; padding-bottom: 20px;}
         .block-title { font-size: 1.2em; font-weight: bold; }
-        .shift-line { display: flex; align-items: center; flex-wrap: wrap; }
+        .shift-line { display: flex; align-items: center; flex-wrap: wrap; margin-bottom: 5px; }
         .date-entry {
             cursor: pointer; padding: 2px 5px; border-radius: 3px;
-            transition: background-color 0.2s;
+            transition: background-color 0.2s; min-width: 80px; display:inline-block;
         }
-        .date-entry.selected { background-color: #fffacd; }
+        .date-entry.selected { background-color: #fffacd; border: 1px solid #f0e68c;}
         .assignee { color: #d9534f; font-weight: bold; margin: 0 5px; }
         .page-title { text-align: center; margin-bottom: 25px; }
         .section-title {
@@ -45,22 +46,20 @@
         .toc a { text-decoration: none; color: #0056b3; font-weight: bold; }
         .toc a:hover { text-decoration: underline; }
         .note-red { color: #dc3545; font-weight: bold; }
-        .scroll-button-wrapper {
-            text-align: right; margin-top: 20px; margin-bottom: 20px;
-        }
+        
+        /* ボタン等のスタイル */
         .scroll-button {
             display: inline-block; padding: 8px 16px; background-color: #6c757d;
             color: white; text-decoration: none; border-radius: 4px;
             font-size: 0.9em; transition: background-color 0.2s;
         }
         .scroll-button:hover { background-color: #5a6268; }
-        .scroll-button + .scroll-button { margin-left: 8px; }
         .secondary-option {
             margin-left: 8px; padding: 2px 5px; border-radius: 3px;
-            transition: background-color 0.2s, color 0.2s; cursor: pointer;
+            transition: background-color 0.2s, color 0.2s; cursor: pointer; border: 1px solid transparent;
         }
         .secondary-option.disabled { color: #aaa; cursor: not-allowed; background-color: transparent; }
-        .secondary-option.selected { background-color: #d4edda; color: #155724; }
+        .secondary-option.selected { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .appended-text { color: #155724; font-weight: bold; margin-left: 8px; }
         .button-container { text-align: center; margin-top: 30px; }
         .action-button {
@@ -73,6 +72,8 @@
         #confirmButton { background-color: #007bff; margin-left: 10px; }
         #confirmButton:hover:not(:disabled) { background-color: #0056b3; }
         .action-button:disabled { background-color: #cccccc; cursor: not-allowed;}
+        
+        /* 通知・ローディング */
         #notification {
             position: fixed; bottom: 20px; left: 50%;
             transform: translateX(-50%); background-color: #28a745;
@@ -82,128 +83,65 @@
         }
         #notification.show { opacity: 1; }
         #notification.error { background-color: #dc3545; }
+        #loading-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); display: flex;
+            justify-content: center; align-items: center; flex-direction: column;
+            z-index: 1001; color: white; font-size: 1.1em; text-align: center; display: none;
+        }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3); border-top: 4px solid #fff;
+            border-radius: 50%; width: 40px; height: 40px;
+            animation: spin 1s linear infinite; margin-bottom: 15px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* 結果表示・その他 */
         #result-shifts-list ul { list-style-type: none; padding-left: 0; }
         #result-shifts-list li {
             background-color: #f8f9fa; border: 1px solid #dee2e6;
             padding: 10px 15px; margin-bottom: 10px; border-radius: 5px;
         }
-        #result-shifts-list h4 {
-            margin-top: 0; margin-bottom: 8px; font-size: 1.1em; color: #0056b3;
-        }
+        #result-shifts-list h4 { margin-top: 0; margin-bottom: 8px; font-size: 1.1em; color: #0056b3; }
         #result-comment {
             white-space: pre-wrap; background-color: #f8f9fa; border: 1px solid #dee2e6;
             padding: 10px; border-radius: 5px;
         }
         #copyButton {
-            padding: 10px 20px;
-            font-size: 1em;
-            cursor: pointer;
-            color: white;
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-            transition: background-color 0.2s;
-            margin-top: 20px;
+            padding: 10px 20px; font-size: 1em; cursor: pointer; color: white;
+            background-color: #007bff; border: none; border-radius: 5px;
+            transition: background-color 0.2s; margin-top: 20px;
         }
-        #copyButton:hover {
-            background-color: #0056b3;
+        #copyButton:hover { background-color: #0056b3; }
+        #back-to-toc-btn, #submit-shift-btn {
+            position: fixed; right: 10px; z-index: 999;
+            background-color: #6c757d; color: white; width: 150px; height: 50px;
+            text-decoration: none; text-align: center; line-height: 50px;
+            font-size: 14px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            border-radius: 5px; transition: background-color 0.2s;
         }
+        #back-to-toc-btn { bottom: 80px; }
+        #submit-shift-btn { bottom: 20px; }
+        #back-to-toc-btn:hover, #submit-shift-btn:hover { background-color: #5a6268; }
 
-        #back-to-toc-btn {
-            position: fixed;
-            bottom: 80px;
-            right: 10px;
-            z-index: 999;
-            background-color: #6c757d;
-            color: white;
-            width: 150px;
-            height: 50px;
-            text-decoration: none;
-            text-align: center;
-            line-height: 50px;
-            font-size: 14px;
-            font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            transition: background-color 0.2s;
-            border-radius: 5px;
-        }
-        #back-to-toc-btn:hover {
-            background-color: #5a6268;
-        }
-         #submit-shift-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 10px;
-            z-index: 999;
-            background-color: #6c757d;
-            color: white;
-            width: 150px;
-            height: 50px;
-            text-decoration: none;
-            text-align: center;
-            line-height: 50px;
-            font-size: 14px;
-            font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            transition: background-color 0.2s;
-            border-radius: 5px;
-        }
-        #submit-shift-btn:hover {
-            background-color: #5a6268;
-        }
-        
-        .batch-select-container {
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px dashed #ccc;
-        }
+        .batch-select-container { margin-top: 8px; padding-top: 8px; border-top: 1px dashed #ccc; }
         .batch-select-btn {
             background-color: #f0f0f0; border: 1px solid #ccc;
             padding: 3px 8px; font-size: 0.8em; border-radius: 4px;
             cursor: pointer; margin-right: 5px; margin-bottom: 5px;
         }
         .batch-select-btn:hover { background-color: #e0e0e0; }
-        #loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            z-index: 1001;
-            color: white;
-            font-size: 1.1em;
-            text-align: center;
-            display: none;
-        }
-        .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid #fff;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin-bottom: 15px;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body>
 
 <div id="loading-overlay">
     <div class="spinner"></div>
-    <p>シフト提出中<br>提出ありがとうございました。画面から離れても大丈夫です。提出は裏で行われます。</p>
+    <p>シフト提出中<br>提出ありがとうございました。画面から離れても大丈夫です。</p>
 </div>
 
 <div class="container">
-    <h1 class="page-title">2026年2月シフト</h1>
+    <h1 class="page-title" id="page-title-display">シフト入力</h1>
 
     <div id="submission-result" style="display: none;">
         <h2 class="section-title">提出済みのシフト</h2>
@@ -216,15 +154,11 @@
         <div style="text-align: center;">
             <button id="copyButton">シフト一覧をクリップボードにコピー</button>
         </div>
-        <p style="margin-top: 25px; color: #6c757d; font-size: 0.9em; text-align: center;">
-            ※この内容は、このブラウザに保存された控えです。<br>
-            ※提出後に修正が必要な場合は、大吉の個別LINEまでお願いします。
-        </p>
     </div>
 
     <div id="shift-input-form">
         <div class="input-group">
-        <label for="mainTextBox">マジシャン名</label>
+            <label for="mainTextBox">マジシャン名</label>
             <select id="mainTextBox">
                 <option value="" disabled selected>選択してください</option>
                 <option value="翔">翔</option>
@@ -273,689 +207,166 @@
             <h3>目次</h3>
             <ul>
                 <li><a href="#section-1">１．都心ブロック①新宿周辺</a></li>
-                <li><a href="#section-1-1">　　【新宿】</a></li>
-                <li><a href="#section-1-2">　　【トニーローマ】</a></li>
-                <li><a href="#section-1-3">　　【目黒】</a></li>
-                <li><a href="#section-1-4">　　【茗荷谷】</a></li>
-                
                 <li><a href="#section-2">２．都心ブロック②その他東京</a></li>
-                <li><a href="#section-2-1">　　【門前仲町+木場】</a></li>
-                <li><a href="#section-2-2">　　【門前仲町+水道橋】</a></li>
-                <li><a href="#section-2-3">　　【錦糸町】</a></li>
-                <li><a href="#section-2-4">　　【蒲田A】</a></li>
-                <li><a href="#section-2-5">　　【蒲田B】</a></li>
-                <li><a href="#section-2-6">　　【蒲田水曜日】</a></li>
-                <li><a href="#section-2-7">　　【赤坂】</a></li>
-                <li><a href="#section-2-8">　　【上野】</a></li>
-                <li><a href="#section-2-9">　　【大井町】</a></li>
-                
                 <li><a href="#section-3">３．立川町田ブロック</a></li>
-                <li><a href="#section-3-1">　　【立川A】</a></li>
-                <li><a href="#section-3-2">　　【立川B】</a></li>
-                <li><a href="#section-3-3">　　【国立+新小平】</a></li>
-                <li><a href="#section-3-4">　　【町田+小田急相模原】</a></li>
-                <li><a href="#section-3-5">　　【町田＋登戸】</a></li>
-                <li><a href="#section-3-6">　　【横浜関内】</a></li>
-                
                 <li><a href="#section-4">４．千葉埼玉ホームブロック</a></li>
-                <li><a href="#section-4-1">　　【南行徳】</a></li>
-                <li><a href="#section-4-2">　　【千葉】</a></li>
-                <li><a href="#section-4-3">　　【西千葉】</a></li>
-                <li><a href="#section-4-4">　　【津田沼】</a></li>
-                <li><a href="#section-4-5">　　【赤羽】</a></li>
-                <li><a href="#section-4-6">　　【柏西口A】</a></li>
-                <li><a href="#section-4-7">　　【柏西口B】</a></li>
-                <li><a href="#section-4-8">　　【船橋南口】</a></li>
-                <li><a href="#section-4-9">　　【新小岩】</a></li>
             </ul>
         </div>
         <hr>
         
         <div id="shift-content">
-          <h2 class="section-title" id="section-1">１．都心ブロック①新宿周辺</h2>
-            <div class="shift-block">
-    <p><span class="block-title" id="section-1-1">【新宿】</span><br>◎沖縄料理一(いち)新宿店<br>◎築地日本海新宿西口店</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="水">水一括</button>
-        <button class="batch-select-btn" data-day="金">金一括</button>
-        <button class="batch-select-btn" data-day="土">土一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">4水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">6金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">7土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">10火祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">14土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">18水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">21土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">22日祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">23月祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">25水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">28土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
+            <h2 class="section-title" id="section-1">１．都心ブロック①新宿周辺</h2>
 
-<div class="shift-block">
-    <p><span class="block-title" id="section-1-2">【トニーローマ】</span><br><span class="note-red">⚠️門前仲町、いつでも追加OK(＋￥500)</span><br>◎トニーローマ三番町店</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="水">水一括</button>
-        <button class="batch-select-btn" data-day="金">金一括</button>
-        <button class="batch-select-btn" data-day="土">土一括</button>
-        <button class="batch-select-btn" data-day="日">日一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">1日</span><span class="secondary-option disabled">門前仲町も追加</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">4水</span><span class="secondary-option disabled">門前仲町も追加</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">6金</span><span class="secondary-option disabled">門前仲町も追加</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">7土</span><span class="secondary-option disabled">門前仲町も追加</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">8日</span><span class="secondary-option disabled">門前仲町も追加</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">10火祝前</span><span class="secondary-option disabled">門前仲町も追加</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span><span class="secondary-option disabled">門前仲町も追加</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span><span class="secondary-option disabled">門前仲町も追加</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">14土</span><span class="secondary-option disabled">門前仲町も追加</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">15日</span><span class="secondary-option disabled">門前仲町も追加</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">18水</span><span class="secondary-option disabled">門前仲町も追加</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span><span class="secondary-option disabled">門前仲町も追加</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">21土</span><span class="secondary-option disabled">門前仲町も追加</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">22日祝前</span><span class="secondary-option disabled">門前仲町も追加</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">23月祝</span><span class="secondary-option disabled">門前仲町も追加</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">25水</span><span class="secondary-option disabled">門前仲町も追加</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span><span class="secondary-option disabled">門前仲町も追加</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">28土</span><span class="secondary-option disabled">門前仲町も追加</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
+            <div class="shift-block" data-days="2,3,5,6" data-extra="22">
+                <p><span class="block-title" id="section-1-1">【新宿】</span><br>◎沖縄料理一(いち)新宿店<br>◎築地日本海新宿西口店</p>
+                <div class="generated-area"></div>
+            </div>
 
-<div class="shift-block">
-    <p><span class="block-title" id="section-1-3">【目黒】</span><br>◎庄や 目黒408店<br>・博多天神もつ鍋お多福（日祝休）</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="水">水一括</button>
-        <button class="batch-select-btn" data-day="金">金一括</button>
-        <button class="batch-select-btn" data-day="土">土一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">4水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">6金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">7土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">10火祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">14土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">18水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">21土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">22日祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">23月祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">25水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">28土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
+            <div class="shift-block" data-days="0,1,3,5,6" data-option="monnaka" data-extra="10,22">
+                <p><span class="block-title" id="section-1-2">【トニーローマ】</span><br><span class="note-red">⚠️門前仲町、いつでも追加OK(＋￥500)</span><br>◎トニーローマ三番町店</p>
+                <div class="generated-area"></div>
+            </div>
 
-<div class="shift-block">
-    <p><span class="block-title" id="section-1-4">【茗荷谷】</span><br>◎築地日本海茗荷谷<br>◎大翔園</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="金">金一括</button>
-        <button class="batch-select-btn" data-day="土">土一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">6金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">7土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">14土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">21土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">28土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
+            <div class="shift-block" data-days="0,1,2,3,5,6" data-extra="10">
+                <p><span class="block-title" id="section-1-3">【目黒】</span><br>◎庄や 目黒408店<br>・博多天神もつ鍋お多福（日祝休）</p>
+                <div class="generated-area"></div>
+            </div>
+
+            <div class="shift-block" data-days="5,6">
+                <p><span class="block-title" id="section-1-4">【茗荷谷】</span><br>◎築地日本海茗荷谷<br>◎大翔園</p>
+                <div class="generated-area"></div>
+            </div>
 
 
+            <h2 class="section-title" id="section-2">２．都心ブロック②その他東京</h2>
 
-<h2 class="section-title" id="section-2">２．都心ブロック②その他東京</h2>
+            <div class="shift-block" data-days="0,1,5" data-extra="10,11">
+                <p><span class="block-title" id="section-2-1">【門前仲町+木場】</span><br>◎庄や門前仲町店<br>◎とらまい（不定休）<br>◎庄や木場店<br>◎39Bar（月休み、祝不定休）</p>
+                <div class="generated-area"></div>
+            </div>
 
-<div class="shift-block">
-    <p><span class="block-title" id="section-2-1">【門前仲町+木場】</span><br>◎庄や門前仲町店<br>◎とらまい（不定休）<br>◎庄や木場店<br>◎39Bar（月休み、祝不定休）</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="金">金一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">6金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">10火祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">22日祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">23月祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
+            <div class="shift-block" data-days="0,1,5,6" data-extra="10,11">
+                <p><span class="block-title" id="section-2-2">【門前仲町+水道橋】</span><br>◎庄や門前仲町店<br>◎庄や水道橋店<br>◎とらまい（不定休）</p>
+                <div class="generated-area"></div>
+            </div>
 
-<div class="shift-block">
-    <p><span class="block-title" id="section-2-2">【門前仲町+水道橋】</span><br>◎庄や門前仲町店<br>◎庄や水道橋店<br>◎とらまい（不定休）</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="金">金一括</button>
-        <button class="batch-select-btn" data-day="土">土一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">6金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">7土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">10火祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">14土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">21土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">22日祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">23月祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">28土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
+            <div class="shift-block" data-days="0,1,2,3,5,6">
+                <p><span class="block-title" id="section-2-3">【錦糸町】</span><br>◎庄や錦糸町店<br>◎錦糸町横丁<br>＋ 金土：◎庄や神田東口店 or フジサンデリ<br>＋ 日：◎庄や新小岩南口店 or フジサンデリ<br><span class="note-red">⚠️庄やとフジサンデリどちらを回るか→バランス見て運営が決める</span></p>
+                <div class="generated-area"></div>
+            </div>
 
-<div class="shift-block">
-    <p><span class="block-title" id="section-2-3">【錦糸町】</span><br>◎庄や錦糸町店<br>◎錦糸町横丁<br>＋ 金土：◎庄や神田東口店 or フジサンデリ<br>＋ 日：◎庄や新小岩南口店 or フジサンデリ<br><span class="note-red">⚠️庄やとフジサンデリどちらを回るか→バランス見て運営が決める</span></p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="金">金一括</button>
-        <button class="batch-select-btn" data-day="土">土一括</button>
-        <button class="batch-select-btn" data-day="日">日一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">1日</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">6金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">7土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">8日</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">10火祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">14土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">15日</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">21土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">22日祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">23月祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">28土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
+            <div class="shift-block" data-days="0,1,2,3,5,6">
+                <p><span class="block-title" id="section-2-4">【蒲田A】</span><br><span class="note-red">⚠️ワルンバリ→外2テーブルのみ実演OK</span><br>◎築地日本海蒲田店<br>...</p>
+                <div class="generated-area"></div>
+            </div>
 
-<div class="shift-block">
-    <p><span class="block-title" id="section-2-4">【蒲田A】</span><br><span class="note-red">⚠️ワルンバリ→外2テーブルのみ実演OK</span><br>◎築地日本海蒲田店<br>・花火・夜明けぜよ<br>・ナンバーニク<br>・バーヒロ<br>・カウンターバーRAPU RAPU<br>・居酒屋RAPU RAPU<br>・ワルンバリ（外2テーブルのみ）<br>・築地日本海糀谷店 (希望者のみ)</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="金">金一括</button>
-        <button class="batch-select-btn" data-day="土">土一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">6金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">7土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">10火祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">14土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">21土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">22日祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">23月祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">28土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
+            <div class="shift-block" data-days="0,1,2,3,5,6">
+                <p><span class="block-title" id="section-2-5">【蒲田B】</span><br>・串幸 (日休)<br>◎お好み焼きとしちゃん<br>...</p>
+                <div class="generated-area"></div>
+            </div>
 
-<div class="shift-block">
-    <p><span class="block-title" id="section-2-5">【蒲田B】</span><br>・串幸 (日休)<br>◎お好み焼きとしちゃん<br>・ぼっけもん<br>・パズリング<br>・魚浜・うなぎ屋（翔、とんのみ）<br>・豚番長・路地一献◯まる</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="金">金一括</button>
-        <button class="batch-select-btn" data-day="土">土一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">6金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">7土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">10火祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">14土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">21土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">22日祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">23月祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">28土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
+            <div class="shift-block" data-days="3">
+                <p><span class="block-title" id="section-2-6">【蒲田水曜日】</span><br>◎築地日本海蒲田店<br>...</p>
+                <div class="generated-area"></div>
+            </div>
 
-<div class="shift-block">
-    <p><span class="block-title" id="section-2-6">【蒲田水曜日】</span><br>◎築地日本海蒲田店<br>・串幸・夜明けぜよ<br>・ぼっけもん<br>・居酒屋RAPU RAPU<br>・豚番長◎お好み焼きとしちゃん</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="水">水一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">4水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">18水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">25水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
+            <div class="shift-block" data-days="3,5" data-extra="11">
+                <p><span class="block-title" id="section-2-7">【赤坂】</span><br>◎庄や赤坂店<br>◎Irish Pub Craic</p>
+                <div class="generated-area"></div>
+            </div>
 
-<div class="shift-block">
-    <p><span class="block-title" id="section-2-7">【赤坂】</span><br>◎庄や赤坂店<br>◎Irish Pub Craic</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="水">水一括</button>
-        <button class="batch-select-btn" data-day="金">金一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">4水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">6金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">18水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">25水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
+            <div class="shift-block" data-days="0,1,2,3,5,6">
+                <p><span class="block-title" id="section-2-8">【上野】</span><br><span class="note-red">⚠️金→◎日本海庄や 上野浅草口店も回る</span><br>◎庄や上野駅前店<br>◎エソラ上野駅前店</p>
+                <div class="generated-area"></div>
+            </div>
 
-<div class="shift-block">
-    <p><span class="block-title" id="section-2-8">【上野】</span><br><span class="note-red">⚠️金→◎日本海庄や 上野浅草口店も回る</span><br>◎庄や上野駅前店<br>◎エソラ上野駅前店</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="水">水一括</button>
-        <button class="batch-select-btn" data-day="金">金一括</button>
-        <button class="batch-select-btn" data-day="土">土一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">4水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">6金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">7土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">10火祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">14土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">18水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">21土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">22日祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">23月祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">25水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">28土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
-
-<div class="shift-block">
-    <p><span class="block-title" id="section-2-9">【大井町】</span><br>・大井町バル横丁</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="水">水一括</button>
-        <button class="batch-select-btn" data-day="金">金一括</button>
-        <button class="batch-select-btn" data-day="土">土一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">4水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">6金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">7土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">10火祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">14土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">18水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">21土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">22日祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">23月祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">25水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">28土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
-            
-
-<h2 class="section-title" id="section-3">３．立川町田ブロック</h2>
-
-<div class="shift-block">
-    <p><span class="block-title" id="section-3-1">【立川A】</span>
-        <br><span class="note-red">⚠️南口、マルミヤは行ける曜日を超！確認！ミス多発！</span>
-        <br>◎GB立川店
-        <br>◎ここにこんね<br>◎立川南口（日〜木）
-        <br>・フレンチ酒場こづ
-        <br>・マルミヤ（水金土）</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="火">火一括</button>
-        <button class="batch-select-btn" data-day="水">水一括</button>
-        <button class="batch-select-btn" data-day="金">金一括</button>
-        <button class="batch-select-btn" data-day="土">土一括</button>
-        <button class="batch-select-btn" data-day="日">日一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">1日</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">3火</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">4水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">6金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">7土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">8日</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">10火祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">14土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">15日</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">17火</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">18水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">21土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">22日祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">23月祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">24火</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">25水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">28土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
-
-<div class="shift-block">
-    <p><span class="block-title" id="section-3-2">【立川B】</span>
-        <br>◎庄や立川南諏訪通り
-        <br>・おっ魚
-        <br>・和海（なごみ）</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="水">水一括</button>
-        <button class="batch-select-btn" data-day="金">金一括</button>
-        <button class="batch-select-btn" data-day="土">土一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">4水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">6金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">7土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">10火祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">14土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">18水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">21土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">22日祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">23月祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">25水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">28土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
-
-<div class="shift-block">
-    <p><span class="block-title" id="section-3-3">【国立+新小平】</span><br>◎庄や国立店<br>◎庄や新小平店<br>◎クラフト酒場クニタチカ（1・4・7・10月予定で各月1回）<br>金、土、祝、祝前</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="金">金一括</button>
-        <button class="batch-select-btn" data-day="土">土一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">6金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">7土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">10火祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">14土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">21土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">22日祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">23月祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">28土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
-
-<div class="shift-block">
-    <p><span class="block-title" id="section-3-4">【町田+小田急相模原】</span>
-        <br><span class="note-red">⚠️町田にシフトあり→オダサガのみ</span>
-        <br>◎庄や町田本家店
-        <br>◎庄や小田急相模原店
-        <br>・ManiMani
-        <br>・いくどん
-        <br>・とりいちず
-        <br>・明月苑（水休み）
-        <br>・えびす
-        <br>・お祭りさっちゃん
-        <br><br>以下は直近の報告書を見る→連続で入りすぎないように
-        <br>・スナックライブリー
-        <br>・キャバクラグロス
-        <br>・スポット
-        <br>・マリアンナ</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="水">水一括</button>
-        <button class="batch-select-btn" data-day="金">金一括</button>
-        <button class="batch-select-btn" data-day="土">土一括</button>
-        <button class="batch-select-btn" data-day="日">日一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">1日</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">4水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">6金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">7土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">8日</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">10火祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">14土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">15日</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">18水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">21土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">22日祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">23月祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">25水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">28土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
-
-<div class="shift-block">
-    <p><span class="block-title" id="section-3-5">【町田＋登戸】</span><br>◎庄や町田本家店<br>◎日本海庄や登戸店</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="水">水一括</button>
-        <button class="batch-select-btn" data-day="金">金一括</button>
-        <button class="batch-select-btn" data-day="土">土一括</button>
-        <button class="batch-select-btn" data-day="日">日一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">1日</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">4水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">6金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">7土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">8日</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">10火祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">14土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">15日</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">18水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">21土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">22日祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">23月祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">25水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">28土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
-
-<div class="shift-block">
-    <p><span class="block-title" id="section-3-6">【横浜関内】</span>
-        <br><span class="note-red">⚠️弊社からのマージン0円(紹介者の取り分の10%のみ)</span>
-        <br>・うし極
-        <br>◎トントス
-        <br>◎ミヤオガパオ
-        <br>◎ガールズバーさくら
-        <br>◎バー111
-        <br>・バーりあん
-        <br>・金魚（月～木）</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="金">金一括</button>
-        <button class="batch-select-btn" data-day="土">土一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">6金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">7土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">10火祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">14土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">21土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">22日祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">23月祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">28土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
-
-            
-        
-<h2 class="section-title" id="section-4">４．千葉埼玉ホームブロック</h2>
-
-<div class="shift-block">
-    <p><span class="block-title" id="section-4-1">【南行徳】</span><br>◎庄や南行徳店<br>◎やる気酒場アトレ新浦安店</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="金">金一括</button>
-        <button class="batch-select-btn" data-day="土">土一括</button>
-        <button class="batch-select-btn" data-day="日">日一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">1日</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">6金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">7土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">8日</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">10火祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">14土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">15日</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">21土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">22日祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">23月祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">28土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
-
-<div class="shift-block">
-    <p><span class="block-title" id="section-4-2">【千葉】</span><br>◎築地日本海千葉駅前店<br>◎築地日本海千葉中央店</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="金">金一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">6金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
-
-<div class="shift-block">
-    <p><span class="block-title" id="section-4-3">【西千葉】</span><br><span class="note-red">⚠️土・日→◎築地日本海千葉中央店も回る</span><br>◎庄や西千葉店<br>◎ドラム缶</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="金">金一括</button>
-        <button class="batch-select-btn" data-day="土">土一括</button>
-        <button class="batch-select-btn" data-day="日">日一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">1日</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">6金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">7土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">8日</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">10火祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">14土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">15日</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">21土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">22日祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">23月祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">28土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
-
-<div class="shift-block">
-    <p><span class="block-title" id="section-4-4">【津田沼】</span><br>◎庄や京成津田沼店<br>◎庄や本八幡店<br>◎絶好鳥</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="金">金一括</button>
-        <button class="batch-select-btn" data-day="土">土一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">6金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">7土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">10火祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">14土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">21土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">22日祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">23月祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">28土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
-
-<div class="shift-block">
-    <p><span class="block-title" id="section-4-5">【赤羽】</span><br>◎日本海庄や赤羽西口店<br>◎築地日本海赤羽店<br>・赤羽満点酒場<br>・ときわ台満点酒場</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="金">金一括</button>
-        <button class="batch-select-btn" data-day="土">土一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">6金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">7土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">10火祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">14土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">21土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">22日祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">23月祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">28土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
-
-<div class="shift-block">
-    <p><span class="block-title" id="section-4-6">【柏西口A】</span><br>◎庄や柏西口店<br>◎庄や新八柱南口店<br>◎日昇</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="水">水一括</button>
-        <button class="batch-select-btn" data-day="金">金一括</button>
-        <button class="batch-select-btn" data-day="土">土一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">4水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">6金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">7土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">10火祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">14土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">18水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">21土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">22日祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">23月祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">25水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">28土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
-
-<div class="shift-block">
-    <p><span class="block-title" id="section-4-7">【柏西口B】</span><br>◎庄や柏西口店<br>◎庄や増尾店<br>◎庄や我孫子店</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="水">水一括</button>
-        <button class="batch-select-btn" data-day="金">金一括</button>
-        <button class="batch-select-btn" data-day="土">土一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">4水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">6金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">7土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">10火祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">14土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">18水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">21土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">22日祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">23月祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">25水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">28土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
-
-<div class="shift-block">
-    <p><span class="block-title" id="section-4-8">【船橋南口】</span><br>◎日本海庄や船橋南口店<br>◎庄や馬込沢店</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="金">金一括</button>
-        <button class="batch-select-btn" data-day="土">土一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">6金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">7土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">10火祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">13金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">14土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">20金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">21土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">22日祝前</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">23月祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">27金</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">28土</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
-
-<div class="shift-block">
-    <p><span class="block-title" id="section-4-9">【新小岩】</span><br>◎庄や新小岩南口<br>◎庄や本八幡店</p>
-    <div class="batch-select-container">
-        <button class="batch-select-btn" data-day="水">水一括</button>
-    </div>
-    <div class="shift-line"><span class="date-entry">4水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">11水祝</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">18水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-    <div class="shift-line"><span class="date-entry">25水</span>｜<span class="assignee"></span><span class="appended-text"></span></div>
-</div>
-            
+            <div class="shift-block" data-days="0,1,2,3,5,6">
+                <p><span class="block-title" id="section-2-9">【大井町】</span><br>・大井町バル横丁</p>
+                <div class="generated-area"></div>
+            </div>
 
 
-            
+            <h2 class="section-title" id="section-3">３．立川町田ブロック</h2>
+
+            <div class="shift-block" data-days="0,1,2,3,5,6">
+                <p><span class="block-title" id="section-3-1">【立川A】</span><br><span class="note-red">⚠️南口、マルミヤは行ける曜日を超！確認！ミス多発！</span><br>◎GB立川店...</p>
+                <div class="generated-area"></div>
+            </div>
+
+            <div class="shift-block" data-days="0,1,2,3,5,6">
+                <p><span class="block-title" id="section-3-2">【立川B】</span><br>◎庄や立川南諏訪通り...</p>
+                <div class="generated-area"></div>
+            </div>
+
+            <div class="shift-block" data-days="0,1,2,3,5,6">
+                <p><span class="block-title" id="section-3-3">【国立+新小平】</span><br>◎庄や国立店<br>...</p>
+                <div class="generated-area"></div>
+            </div>
+
+            <div class="shift-block" data-days="0,1,2,3,5,6">
+                <p><span class="block-title" id="section-3-4">【町田+小田急相模原】</span><br><span class="note-red">⚠️町田にシフトあり→オダサガのみ</span><br>◎庄や町田本家店...</p>
+                <div class="generated-area"></div>
+            </div>
+
+            <div class="shift-block" data-days="0,1,2,3,5,6">
+                <p><span class="block-title" id="section-3-5">【町田＋登戸】</span><br>◎庄や町田本家店<br>◎日本海庄や登戸店</p>
+                <div class="generated-area"></div>
+            </div>
+
+            <div class="shift-block" data-days="0,1,2,3,5,6">
+                <p><span class="block-title" id="section-3-6">【横浜関内】</span><br><span class="note-red">⚠️弊社からのマージン0円(紹介者の取り分の10%のみ)</span><br>...</p>
+                <div class="generated-area"></div>
+            </div>
+
+
+            <h2 class="section-title" id="section-4">４．千葉埼玉ホームブロック</h2>
+
+            <div class="shift-block" data-days="0,1,2,3,5,6">
+                <p><span class="block-title" id="section-4-1">【南行徳】</span><br>◎庄や南行徳店<br>◎やる気酒場アトレ新浦安店</p>
+                <div class="generated-area"></div>
+            </div>
+
+            <div class="shift-block" data-days="5">
+                <p><span class="block-title" id="section-4-2">【千葉】</span><br>◎築地日本海千葉駅前店<br>◎築地日本海千葉中央店</p>
+                <div class="generated-area"></div>
+            </div>
+
+            <div class="shift-block" data-days="0,1,2,3,5,6">
+                <p><span class="block-title" id="section-4-3">【西千葉】</span><br><span class="note-red">⚠️土・日→◎築地日本海千葉中央店も回る</span><br>◎庄や西千葉店...</p>
+                <div class="generated-area"></div>
+            </div>
+
+            <div class="shift-block" data-days="0,1,2,3,5,6">
+                <p><span class="block-title" id="section-4-4">【津田沼】</span><br>◎庄や京成津田沼店...</p>
+                <div class="generated-area"></div>
+            </div>
+
+            <div class="shift-block" data-days="0,1,2,3,5,6">
+                <p><span class="block-title" id="section-4-5">【赤羽】</span><br>◎日本海庄や赤羽西口店...</p>
+                <div class="generated-area"></div>
+            </div>
+
+            <div class="shift-block" data-days="0,1,2,3,5,6">
+                <p><span class="block-title" id="section-4-6">【柏西口A】</span><br>◎庄や柏西口店<br>◎庄や新八柱南口店<br>◎日昇</p>
+                <div class="generated-area"></div>
+            </div>
+
+            <div class="shift-block" data-days="0,1,2,3,5,6">
+                <p><span class="block-title" id="section-4-7">【柏西口B】</span><br>◎庄や柏西口店<br>◎庄や増尾店<br>◎庄や我孫子店</p>
+                <div class="generated-area"></div>
+            </div>
+
+            <div class="shift-block" data-days="0,1,2,3,5,6">
+                <p><span class="block-title" id="section-4-8">【船橋南口】</span><br>◎日本海庄や船橋南口店<br>◎庄や馬込沢店</p>
+                <div class="generated-area"></div>
+            </div>
+
+            <div class="shift-block" data-days="3">
+                <p><span class="block-title" id="section-4-9">【新小岩】</span><br>◎庄や新小岩南口<br>◎庄や本八幡店</p>
+                <div class="generated-area"></div>
+            </div>
         </div>
         <div id="page-bottom-anchor"></div>
-
         <div class="input-group">
             <br><br>
             <label for="commentBox">コメント欄（自由にご記載ください）</label>
@@ -970,112 +381,177 @@
 </div>
 
 <div id="notification"></div>
-
 <a href="#toc-anchor" id="back-to-toc-btn">目次に戻る</a>
 <a href="#page-bottom-anchor" id="submit-shift-btn" class="scroll-button">一番下まで移動する</a>
+
 <script>
+// ▼▼▼ 設定エリア（毎月ここだけ変えればOK！） ▼▼▼
+const CONFIG = {
+    YEAR: 2026,
+    MONTH: 3,         // 2月なら2、3月なら3
+    HOLIDAYS: [20], // 祝日の日付（数値で指定）
+    PRE_HOLIDAYS: [19] // 祝前日の日付（必要なら指定。カレンダー上で「祝前」と表示されます）
+};
+// ▲▲▲ 設定エリアここまで ▲▲▲
+
 const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwmD-V9LWDQ7edPKsUwC9QWszCzJ-JYGT_vQ-nU6S75VnddpsQBRG91c90ZZymi7rP5yg/exec';
-// 毎月修正箇所
-const STORAGE_KEY = 'shiftAppData_2026_1V3';
+const STORAGE_KEY = `shiftAppData_${CONFIG.YEAR}_${CONFIG.MONTH}V1`; // 月ごとにキーを自動変更
 
 const loadingOverlay = document.getElementById('loading-overlay');
-    
+
+// ページロード時の初期化処理
 document.addEventListener('DOMContentLoaded', function() {
+    // タイトル更新
+    document.getElementById('page-title-display').textContent = `${CONFIG.YEAR}年${CONFIG.MONTH}月シフト`;
+    
+    // シフト表の自動生成実行
+    generateShiftTables();
+
+    // データの読み込み
     loadData();
+
+    // イベントリスナ設定
     const itemStr = localStorage.getItem(STORAGE_KEY);
     let isSubmitted = false;
     if (itemStr) {
-        try {
-            const item = JSON.parse(itemStr);
-            if (item && item.value && item.value.submitted) {
-                isSubmitted = true;
-            }
-        } catch(e) {}
+        try { const item = JSON.parse(itemStr); if (item?.value?.submitted) isSubmitted = true; } catch(e) {}
     }
 
     if (!isSubmitted) {
-        document.querySelectorAll('.date-entry').forEach(el => {
-            el.addEventListener('click', () => { toggleSelection(el); saveData(); });
+        // イベント委譲（動的に生成された要素に対応するため）
+        document.getElementById('shift-content').addEventListener('click', function(e) {
+            // 日付クリック
+            if (e.target.classList.contains('date-entry')) {
+                toggleSelection(e.target);
+                saveData();
+            }
+            // オプションクリック
+            if (e.target.classList.contains('secondary-option')) {
+                toggleSecondaryOption(e.target);
+                saveData();
+            }
+            // 一括ボタンクリック
+            if (e.target.classList.contains('batch-select-btn')) {
+                const day = e.target.getAttribute('data-day');
+                const shiftBlock = e.target.closest('.shift-block');
+                batchSelectByDay(shiftBlock, day);
+            }
         });
-        document.querySelectorAll('.secondary-option').forEach(el => {
-            el.addEventListener('click', () => { toggleSecondaryOption(el); saveData(); });
-        });
+
         document.getElementById('mainTextBox').addEventListener('change', () => {
             updateAllAssigneeNames();
             saveData();
         });
         document.getElementById('commentBox').addEventListener('input', () => saveData());
         document.getElementById('sendButton').addEventListener('click', sendDataToSheet);
-
-        document.querySelectorAll('.batch-select-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const day = this.getAttribute('data-day');
-                const shiftBlock = this.closest('.shift-block');
-                if (day && shiftBlock) {
-                    batchSelectByDay(shiftBlock, day);
-                }
-            });
-        });
     }
     
     document.getElementById('confirmButton').addEventListener('click', copyShiftsToClipboard);
 });
 
-function batchSelectByDay(shiftBlock, day) {
+// ▼▼▼ 自動生成ロジック ▼▼▼
+function generateShiftTables() {
+    const daysInMonth = new Date(CONFIG.YEAR, CONFIG.MONTH, 0).getDate();
+    const dayChars = ["日", "月", "火", "水", "木", "金", "土"];
+    
+    document.querySelectorAll('.shift-block').forEach(block => {
+        const allowedDaysStr = block.getAttribute('data-days') || "";
+        const allowedDays = allowedDaysStr.split(',').map(Number);
+        const extraDatesStr = block.getAttribute('data-extra') || "";
+        const extraDates = extraDatesStr ? extraDatesStr.split(',').map(Number) : [];
+        const optionType = block.getAttribute('data-option');
+        
+        let html = '';
+        
+        // 1. 一括ボタンの生成
+        let btnHtml = '<div class="batch-select-container">';
+        const daysFound = new Set();
+        // 月内の該当曜日をスキャンしてボタンを表示するか決める
+        for (let d = 1; d <= daysInMonth; d++) {
+            const dateObj = new Date(CONFIG.YEAR, CONFIG.MONTH - 1, d);
+            const dayIdx = dateObj.getDay();
+            if (allowedDays.includes(dayIdx) || extraDates.includes(d)) {
+                daysFound.add(dayIdx);
+            }
+        }
+        // 曜日順にボタン配置 (月〜土、日)
+        [1,2,3,4,5,6,0].forEach(dIdx => {
+            if (daysFound.has(dIdx)) {
+                btnHtml += `<button class="batch-select-btn" data-day="${dayChars[dIdx]}">${dayChars[dIdx]}一括</button>`;
+            }
+        });
+        btnHtml += '</div>';
+        
+        // 2. 日付行の生成
+        let linesHtml = '';
+        for (let d = 1; d <= daysInMonth; d++) {
+            const dateObj = new Date(CONFIG.YEAR, CONFIG.MONTH - 1, d);
+            const dayIdx = dateObj.getDay();
+            
+            // 表示条件：data-daysに含まれる曜日 OR data-extraに含まれる日付
+            if (allowedDays.includes(dayIdx) || extraDates.includes(d)) {
+                let dayLabel = dayChars[dayIdx];
+                let suffix = "";
+                if (CONFIG.HOLIDAYS.includes(d)) { suffix += "祝"; }
+                else if (CONFIG.PRE_HOLIDAYS.includes(d)) { suffix += "祝前"; }
+                
+                const dateText = `${d}${dayLabel}${suffix}`;
+                
+                // オプションボタンのHTML作成
+                let optionHtml = '';
+                if (optionType === 'monnaka') {
+                    optionHtml = '<span class="secondary-option disabled">門前仲町も追加</span>';
+                }
+
+                // data-date属性を持たせて一意に識別可能にする
+                linesHtml += `
+                <div class="shift-line" data-date="${d}">
+                    <span class="date-entry">${dateText}</span>${optionHtml}｜<span class="assignee"></span><span class="appended-text"></span>
+                </div>`;
+            }
+        }
+
+        block.querySelector('.generated-area').innerHTML = btnHtml + linesHtml;
+    });
+}
+
+function batchSelectByDay(shiftBlock, dayChar) {
     const name = document.getElementById('mainTextBox').value;
-    if (name.trim() === '') {
-        alert('先にマジシャン名を選択してください。');
-        return;
-    }
+    if (name.trim() === '') { alert('先にマジシャン名を選択してください。'); return; }
     
-    // そのブロック内の日付エントリをすべて取得
-    const dateEntries = Array.from(shiftBlock.querySelectorAll('.date-entry'));
-    
-    // 対象となる曜日（例：「金」が含まれるもの）だけを抽出
-    const targetEntries = dateEntries.filter(el => {
-        const regex = new RegExp(day + '($|祝)');
-        return regex.test(el.innerText);
+    // 生成された行から対象を探す
+    const targetEntries = Array.from(shiftBlock.querySelectorAll('.date-entry')).filter(el => {
+        // "4水", "11水祝" などを "水" でマッチさせる
+        // 曜日文字がその文字を含んでいるか判定
+        return el.innerText.includes(dayChar);
     });
 
     if (targetEntries.length === 0) return;
-
-    // 「対象の曜日がすべて選択済みかどうか」を判定
     const isAllSelected = targetEntries.every(el => el.classList.contains('selected'));
 
     targetEntries.forEach(dateEntry => {
         if (isAllSelected) {
-            // すべて選択されている場合は、一括解除
-            if (dateEntry.classList.contains('selected')) {
-                toggleSelection(dateEntry);
-            }
+            if (dateEntry.classList.contains('selected')) toggleSelection(dateEntry);
         } else {
-            // 一つでも未選択がある場合は、すべて選択（未選択のもののみ処理）
-            if (!dateEntry.classList.contains('selected')) {
-                toggleSelection(dateEntry);
-            }
+            if (!dateEntry.classList.contains('selected')) toggleSelection(dateEntry);
         }
     });
-
-    saveData(); // 変更を保存
+    saveData();
 }
 
+// ▼▼▼ 以下、既存ロジック（saveData等は変更なし） ▼▼▼
 function copyShiftsToClipboard() {
     let clipboardText = '';
     const nameSelect = document.getElementById('mainTextBox');
     const magicianName = nameSelect.value;
-    if (magicianName === '') {
-        showNotification('マジシャン名が選択されていません。', true);
-        return;
-    }
-    // ▼▼▼ タイトルを12月/1月に変更 ▼▼▼
-    clipboardText += `12月・1月 提出シフト\n\n`;
+    if (magicianName === '') { showNotification('マジシャン名が選択されていません。', true); return; }
+    
+    clipboardText += `${CONFIG.MONTH}月 提出シフト\n\n`; // タイトルを現在の設定月に
 
     const shiftsByStore = new Map();
-
     document.querySelectorAll('.shift-block').forEach(block => {
         const storeName = block.querySelector('.block-title').innerText.trim();
         let datesForStore = [];
-
         block.querySelectorAll('.shift-line').forEach(line => {
             const assigneeSpan = line.querySelector('.assignee');
             if (assigneeSpan && assigneeSpan.innerText.trim() !== '') {
@@ -1083,41 +559,28 @@ function copyShiftsToClipboard() {
                 datesForStore.push(dateText);
             }
         });
-
         if (datesForStore.length > 0) {
-            if (!shiftsByStore.has(storeName)) {
-                shiftsByStore.set(storeName, []);
-            }
+            if (!shiftsByStore.has(storeName)) shiftsByStore.set(storeName, []);
             shiftsByStore.get(storeName).push(...datesForStore);
         }
     });
 
-    if (shiftsByStore.size === 0) {
-        showNotification('コピーするシフトがありません。', true);
-        return;
-    }
-
+    if (shiftsByStore.size === 0) { showNotification('コピーするシフトがありません。', true); return; }
     shiftsByStore.forEach((dates, store) => {
         clipboardText += `${store}\n`;
         clipboardText += dates.join(', ') + '\n\n';
     });
 
     navigator.clipboard.writeText(clipboardText.trim())
-        .then(() => {
-            showNotification('提出シフトをコピーしました。好きなところに張り付けて確認してください。', false);
-        })
-        .catch(err => {
-            console.error('コピーに失敗:', err);
-            showNotification('コピーに失敗しました。', true);
-        });
+        .then(() => showNotification('提出シフトをコピーしました。', false))
+        .catch(err => showNotification('コピーに失敗しました。', true));
 }
 
 function displaySubmissionResult(payload) {
     const formElement = document.getElementById('shift-input-form');
-    const resultElement = document.getElementById('submission-result');
-    if (!payload || payload.length === 0) return;
-
-    // フォーム要素を無効化
+    document.getElementById('submission-result').style.display = 'block'; // 結果表示
+    
+    // 入力を無効化
     document.getElementById('mainTextBox').disabled = true;
     document.getElementById('commentBox').disabled = true;
     document.querySelectorAll('.date-entry').forEach(el => el.style.pointerEvents = 'none');
@@ -1126,13 +589,11 @@ function displaySubmissionResult(payload) {
         
     const magicianName = payload[0].value.split(' ')[0];
     const comment = payload[0].comment;
-
     document.getElementById('result-magician-name').textContent = magicianName;
 
     const shiftsByStore = payload.reduce((acc, shift) => {
-        if (!acc[shift.store]) {
-            acc[shift.store] = [];
-        }
+        if (!shift.store) return acc;
+        if (!acc[shift.store]) acc[shift.store] = [];
         acc[shift.store].push(`${shift.date}${shift.value.replace(magicianName, '').trim()}`);
         return acc;
     }, {});
@@ -1151,14 +612,12 @@ function displaySubmissionResult(payload) {
 }
 
 function sendDataToSheet() {
-    if (confirm('シフトを提出します。よろしいですか？\n（提出後はフォームから修正できなくなります）')) {        
+    if (confirm('シフトを提出します。よろしいですか？')) {        
         const sendButton = document.getElementById('sendButton');
         const confirmButton = document.getElementById('confirmButton');
         const nameSelect = document.getElementById('mainTextBox');
-        if (nameSelect.value === '') { 
-            alert('マジシャン名を選択してください。');
-            return;
-        }
+        if (nameSelect.value === '') { alert('マジシャン名を選択してください。'); return; }
+        
         const comment = document.getElementById('commentBox').value.trim();
         const payload = [];
         document.querySelectorAll('.shift-block').forEach(block => {
@@ -1171,21 +630,17 @@ function sendDataToSheet() {
                     const dateText = line.querySelector('.date-entry').innerText;
                     let appendedText = '';
                     const appendedEl = line.querySelector('.appended-text');
-                    if (appendedEl && appendedEl.innerText) {
-                        appendedText = ' ' + appendedEl.innerText;
-                    }
-                    const valueString = assigneeSpan.innerText + appendedText;
-                    payload.push({ store: storeName, date: dateText, value: valueString, comment: comment });
+                    if (appendedEl && appendedEl.innerText) appendedText = ' ' + appendedEl.innerText;
+                    payload.push({ store: storeName, date: dateText, value: assigneeSpan.innerText + appendedText, comment: comment });
                 }
             });
         });
 
-        if (payload.length === 0)
-             payload.push({ store: '', date: '', value: document.getElementById('mainTextBox').value, comment: comment });
+        if (payload.length === 0) payload.push({ store: '', date: '', value: nameSelect.value, comment: comment });
         
         sendButton.disabled = true;
         sendButton.textContent = '送信中...';
-        document.getElementById('submit-shift-btn').style.display = 'none'; // 固定提出ボタンを非表示
+        document.getElementById('submit-shift-btn').style.display = 'none';
         loadingOverlay.style.display = 'flex';
         
         fetch(GAS_WEB_APP_URL, {
@@ -1205,7 +660,7 @@ function sendDataToSheet() {
                 showNotification(`送信に失敗しました: ${data.message || '不明なエラー'}`, true);
                 sendButton.disabled = false;
                 sendButton.textContent = 'シフト提出';
-                document.getElementById('submit-shift-btn').style.display = 'block'; // 固定提出ボタンを戻す
+                document.getElementById('submit-shift-btn').style.display = 'block';
             }
         })
         .catch(error => {
@@ -1215,9 +670,7 @@ function sendDataToSheet() {
             sendButton.textContent = 'シフト提出';
             document.getElementById('submit-shift-btn').style.display = 'block';
         })
-        .finally(() => { 
-            loadingOverlay.style.display = 'none';
-        });
+        .finally(() => { loadingOverlay.style.display = 'none'; });
     }
 }
 function showNotification(message, isError = false) {
@@ -1228,16 +681,13 @@ function showNotification(message, isError = false) {
     setTimeout(() => { notification.classList.remove('show'); }, 4000);
 }
 
+// データの保存処理（日付の文字列ではなく、ブロックごとのindexと日付データで保存するように微調整も可能だが、
+// 既存ロジック「lineIndex」は自動生成後であればDOM順序は保証されるため、そのまま利用する）
 function saveData(forceSubmittedState = null, submittedPayload = null) {
     let isAlreadySubmitted = false;
     const itemStr = localStorage.getItem(STORAGE_KEY);
     if (itemStr) {
-        try {
-            const item = JSON.parse(itemStr);
-            if (item && item.value && item.value.submitted) {
-                isAlreadySubmitted = true;
-            }
-        } catch (e) {}
+        try { const item = JSON.parse(itemStr); if (item?.value?.submitted) isAlreadySubmitted = true; } catch (e) {}
     }
 
     const data = {
@@ -1248,17 +698,16 @@ function saveData(forceSubmittedState = null, submittedPayload = null) {
         submittedPayload: submittedPayload
     };
 
+    // DOM順序に基づいて保存（自動生成後なので順序は固定）
     document.querySelectorAll('.shift-line').forEach((line, index) => {
         const dateEntry = line.querySelector('.date-entry');
         if (dateEntry && dateEntry.classList.contains('selected')) {
             const secondaryOptions = [];
-            line.querySelectorAll('.secondary-option.selected').forEach(opt => {
-                secondaryOptions.push(opt.innerText);
-            });
+            line.querySelectorAll('.secondary-option.selected').forEach(opt => secondaryOptions.push(opt.innerText));
             data.selections.push({ lineIndex: index, options: secondaryOptions });
         }
     });
-    const item = { value: data, expiry: new Date().getTime() + (10 * 24 * 60 * 60 * 1000) };
+    const item = { value: data, expiry: new Date().getTime() + (45 * 24 * 60 * 60 * 1000) }; // 45日に延長
     localStorage.setItem(STORAGE_KEY, JSON.stringify(item));
 }
 
@@ -1273,49 +722,40 @@ function loadData() {
         }
         const data = item.value;
 
-        if (data.submitted && data.submittedPayload) {
-            displaySubmissionResult(data.submittedPayload);
-        }
-
+        if (data.submitted && data.submittedPayload) displaySubmissionResult(data.submittedPayload);
         if (data.submitted) {
             const sendButton = document.getElementById('sendButton');
             sendButton.disabled = true;
             sendButton.textContent = '提出済み';
-            document.getElementById('confirmButton').disabled = false; // ページ内ボタンは非表示になるので無効
+            document.getElementById('confirmButton').disabled = false;
         }
-        const name = data.magicianName || '';
-        document.getElementById('mainTextBox').value = name;
+        
+        document.getElementById('mainTextBox').value = data.magicianName || '';
         document.getElementById('commentBox').value = data.comment || '';
+
+        // 生成されたDOMに対して選択状態を復元
         if (Array.isArray(data.selections)) {
             const allLines = document.querySelectorAll('.shift-line');
             data.selections.forEach(sel => {
-                if (sel && typeof sel.lineIndex === 'number') {
-                    const line = allLines[sel.lineIndex];
-                    if (line) {
-                        const dateEntry = line.querySelector('.date-entry');
-                        if (dateEntry) {
-                            dateEntry.classList.add('selected');
-                            line.querySelector('.assignee').textContent = name;
-                            const secondaryOpts = line.querySelectorAll('.secondary-option');
-                            secondaryOpts.forEach(opt => opt.classList.remove('disabled'));
-                            if (sel.options && sel.options.length > 0) {
-                                let appendedText = '';
-                                secondaryOpts.forEach(opt => {
-                                    if (sel.options.includes(opt.innerText)) {
-                                        opt.classList.add('selected');
-                                        
-                                        // ▼▼▼ 読み込み時も表記を変換するロジックを追加 ▼▼▼
-                                        let textToAdd = opt.innerText;
-                                        let formattedText = `（${textToAdd}）`;
-                                        if (textToAdd === '門前仲町も追加') {
-                                            formattedText = '（＋門前仲町）';
-                                        }
-                                        appendedText += formattedText + ' ';
-                                    }
-                                });
-                                line.querySelector('.appended-text').textContent = appendedText.trim();
+                const line = allLines[sel.lineIndex];
+                if (line) {
+                    const dateEntry = line.querySelector('.date-entry');
+                    if (dateEntry) {
+                        dateEntry.classList.add('selected');
+                        line.querySelector('.assignee').textContent = data.magicianName;
+                        const secondaryOpts = line.querySelectorAll('.secondary-option');
+                        secondaryOpts.forEach(opt => opt.classList.remove('disabled'));
+                        
+                        let appendedText = '';
+                        secondaryOpts.forEach(opt => {
+                            if (sel.options && sel.options.includes(opt.innerText)) {
+                                opt.classList.add('selected');
+                                let textToAdd = opt.innerText;
+                                let formattedText = (textToAdd === '門前仲町も追加') ? '（＋門前仲町）' : `（${textToAdd}）`;
+                                appendedText += formattedText + ' ';
                             }
-                        }
+                        });
+                        line.querySelector('.appended-text').textContent = appendedText.trim();
                     }
                 }
             });
@@ -1328,52 +768,37 @@ function loadData() {
 function updateAllAssigneeNames() {
     const newName = document.getElementById('mainTextBox').value;
     document.querySelectorAll('.date-entry.selected').forEach(selectedDate => {
-        const assigneeSpan = selectedDate.parentElement.querySelector('.assignee');
-        if (assigneeSpan) {
-            assigneeSpan.textContent = newName;
-        }
+        selectedDate.parentElement.querySelector('.assignee').textContent = newName;
     });
 }
 
 function toggleSelection(clickedElement) {
-    const nameSelect = document.getElementById('mainTextBox');
-    const name = nameSelect.value;
-    const assigneeSpan = clickedElement.parentElement.querySelector('.assignee');
-    const secondaryOptions = clickedElement.parentElement.querySelectorAll('.secondary-option');
+    const name = document.getElementById('mainTextBox').value;
+    const parent = clickedElement.parentElement;
+    const assigneeSpan = parent.querySelector('.assignee');
+    const secondaryOptions = parent.querySelectorAll('.secondary-option');
+    
     if (clickedElement.classList.contains('selected')) {
         clickedElement.classList.remove('selected');
         assigneeSpan.textContent = '';
-        if (secondaryOptions.length > 0) {
-            secondaryOptions.forEach(option => {
-                option.classList.remove('selected');
-                option.classList.add('disabled');
-            });
-            const appendedTextSpan = clickedElement.parentElement.querySelector('.appended-text');
-            if (appendedTextSpan) appendedTextSpan.textContent = '';
-        }
+        secondaryOptions.forEach(opt => {
+            opt.classList.remove('selected');
+            opt.classList.add('disabled');
+        });
+        parent.querySelector('.appended-text').textContent = '';
     } else {
-        if (name === '') { // プレースホルダーが選択されている場合
-            alert('先にマジシャン名を選択してください。');
-            return;
-        }
+        if (name === '') { alert('先にマジシャン名を選択してください。'); return; }
         clickedElement.classList.add('selected');
         assigneeSpan.textContent = name;
-        secondaryOptions.forEach(option => option.classList.remove('disabled'));
+        secondaryOptions.forEach(opt => opt.classList.remove('disabled'));
     }
 }
 
 function toggleSecondaryOption(clickedElement) {
     if (clickedElement.classList.contains('disabled')) return;
     const appendedTextSpan = clickedElement.parentElement.querySelector('.appended-text');
-    
-    // ▼▼▼ 表記を変換するロジックを追加 ▼▼▼
     let textToAdd = clickedElement.innerText;
-    let formattedText = `（${textToAdd}）`; // デフォルト
-    
-    // 「門前仲町も追加」の場合は、特別な表記にする
-    if (textToAdd === '門前仲町も追加') {
-        formattedText = '（＋門前仲町）';
-    }
+    let formattedText = (textToAdd === '門前仲町も追加') ? '（＋門前仲町）' : `（${textToAdd}）`;
 
     if (clickedElement.classList.contains('selected')) {
         clickedElement.classList.remove('selected');
@@ -1385,4 +810,4 @@ function toggleSecondaryOption(clickedElement) {
 }
 </script>
 </body>
-</html> -->
+</html>
