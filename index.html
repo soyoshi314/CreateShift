@@ -947,7 +947,7 @@
                     <div class="shift-block"  data-days="0,3,4.5,6" data-option="kobuchi" data-extra="19,20>
                         <span class="block-title" id="section-3-6">【古淵】</span>
                         <div class="block-description">
-                            <span class="note-red">⚠️町田と登戸、いつでも追加OK 町田のみ(＋￥300) 登戸のみ(＋￥300)</span><br>
+                            <span class="note-red">⚠️登戸と町田、いつでも追加OK 登戸のみ(＋￥300) 町田のみ(＋￥300)</span><br>
                             ◎庄や古淵店<br>
                             ・とりいちず古淵店
                         </div>
@@ -1185,32 +1185,36 @@
             },
 
             createDateLines(daysInMonth, allowedDays, extraDates, optionType) {
-                let html = '';
-                
-                for (let d = 1; d <= daysInMonth; d++) {
-                    const dateObj = new Date(CONFIG.YEAR, CONFIG.MONTH - 1, d);
-                    const dayIdx = dateObj.getDay();
-                    
-                    if (allowedDays.includes(dayIdx) || extraDates.includes(d)) {
-                        const dateText = Utils.formatDateText(d, dayIdx);
-                        const optionHtml = optionType === 'monnaka' 
-                            ? '<span class="secondary-option disabled">門前仲町も追加</span>' 
-                            : '';
-                        
-                        html += `
-                            <div class="shift-line" data-date="${d}">
-                                <span class="date-entry">${dateText}</span>
-                                ${optionHtml}
-                                ｜
-                                <span class="assignee"></span>
-                                <span class="appended-text"></span>
-                            </div>
-                        `;
-                    }
-                }
-                
-                return html;
+             let html = '';
+            
+        for (let d = 1; d <= daysInMonth; d++) {
+        const dateObj = new Date(CONFIG.YEAR, CONFIG.MONTH - 1, d);
+        const dayIdx = dateObj.getDay();
+        
+        if (allowedDays.includes(dayIdx) || extraDates.includes(d)) {
+            const dateText = Utils.formatDateText(d, dayIdx);
+            let optionHtml = '';
+            
+            if (optionType === 'monnaka') {
+                optionHtml = '<span class="secondary-option disabled">門前仲町も追加</span>';
+            } else if (optionType === 'kobuchi') {
+                optionHtml = '<span class="secondary-option disabled">登戸を追加</span><span class="secondary-option disabled">町田を追加</span>';
             }
+            
+            html += `
+                <div class="shift-line" data-date="${d}">
+                    <span class="date-entry">${dateText}</span>
+                    ${optionHtml}
+                    ｜
+                    <span class="assignee"></span>
+                    <span class="appended-text"></span>
+                </div>
+            `;
+        }
+    }
+    
+    return html;
+}
         };
 
         // ==================== シフト選択 ====================
@@ -1241,22 +1245,30 @@
             },
 
             toggleSecondaryOption(option) {
-                if (option.classList.contains('disabled')) return;
-                
-                const appendedTextSpan = option.parentElement.querySelector('.appended-text');
-                const textToAdd = option.innerText;
-                const formattedText = textToAdd === '門前仲町も追加' 
-                    ? '（＋門前仲町）' 
-                    : `（${textToAdd}）`;
+    if (option.classList.contains('disabled')) return;
+    
+    const appendedTextSpan = option.parentElement.querySelector('.appended-text');
+    const textToAdd = option.innerText;
+    let formattedText;
+    
+    if (textToAdd === '門前仲町も追加') {
+        formattedText = '（＋門前仲町）';
+    } else if (textToAdd === '登戸を追加') {
+        formattedText = '（＋登戸）';
+    } else if (textToAdd === '町田を追加') {
+        formattedText = '（＋町田）';
+    } else {
+        formattedText = `（${textToAdd}）`;
+    }
 
-                if (option.classList.contains('selected')) {
-                    option.classList.remove('selected');
-                    appendedTextSpan.textContent = appendedTextSpan.textContent.replace(formattedText, '').trim();
-                } else {
-                    option.classList.add('selected');
-                    appendedTextSpan.textContent = (appendedTextSpan.textContent + ' ' + formattedText).trim();
-                }
-            },
+    if (option.classList.contains('selected')) {
+        option.classList.remove('selected');
+        appendedTextSpan.textContent = appendedTextSpan.textContent.replace(formattedText, '').trim();
+    } else {
+        option.classList.add('selected');
+        appendedTextSpan.textContent = (appendedTextSpan.textContent + ' ' + formattedText).trim();
+    }
+},
 
             batchSelect(shiftBlock, dayChar) {
                 const name = DOM.mainTextBox.value;
@@ -1639,15 +1651,24 @@
                                 secondaryOpts.forEach(opt => opt.classList.remove('disabled'));
 
                                 let appendedText = '';
-                                secondaryOpts.forEach(opt => {
-                                    if (sel.options && sel.options.includes(opt.innerText)) {
-                                        opt.classList.add('selected');
-                                        let textToAdd = opt.innerText;
-                                        let formattedText = textToAdd === '門前仲町も追加'
-                                            ? '（＋門前仲町）'
-                                            : `（${textToAdd}）`;
-                                        appendedText += formattedText + ' ';
-                                    }
+secondaryOpts.forEach(opt => {
+    if (sel.options && sel.options.includes(opt.innerText)) {
+        opt.classList.add('selected');
+        let textToAdd = opt.innerText;
+        let formattedText;
+        
+        if (textToAdd === '門前仲町も追加') {
+            formattedText = '（＋門前仲町）';
+        } else if (textToAdd === '登戸を追加') {
+            formattedText = '（＋登戸）';
+        } else if (textToAdd === '町田を追加') {
+            formattedText = '（＋町田）';
+        } else {
+            formattedText = `（${textToAdd}）`;
+        }
+        
+        appendedText += formattedText + ' ';
+    }
                                 });
                                 line.querySelector('.appended-text').textContent = appendedText.trim();
                             }
