@@ -944,10 +944,10 @@
                         <div class="generated-area"></div>
                     </div>
 
-                    <div class="shift-block"  data-days="0,3,4.5,6" data-option="kobuchi" data-extra="19,20>
+                    <div class="shift-block" id="kobuchi-block" data-days="0,3,4,5,6" data-option="kobuchi" data-extra="19,20" style="display: none;">
                         <span class="block-title" id="section-3-6">【古淵】</span>
                         <div class="block-description">
-                            <span class="note-red">⚠️登戸と町田、いつでも追加OK 登戸のみ(＋￥300) 町田のみ(＋￥300)</span><br>
+                            <span class="note-red">⚠️登戸と町田、いつでも追加OK 登戸のみ(￥2500) 町田のみ(￥2500) 登戸も町田も(￥3500)</span><br>
                             ◎庄や古淵店<br>
                             ・とりいちず古淵店
                         </div>
@@ -1608,7 +1608,23 @@
                 }
 
                 DOM.confirmButton.addEventListener('click', () => ClipboardManager.copyShifts());
+
+                // 追加: マジシャン名変更時に古淵ブロックの表示を制御
+                DOM.mainTextBox.addEventListener('change', () => {ShiftSelector.updateAllAssigneeNames();
+                                                                this.toggleKobuchiBlock(); // 追加
+                                                                StorageManager.save();
+                });
             }
+
+            toggleKobuchiBlock() {
+    const allowedNames = ['翔', 'ダイキチ', '美羽', 'NANA', 'オーイズミ'];
+    const selectedName = DOM.mainTextBox.value;
+    const kobuchiBlock = document.getElementById('kobuchi-block');
+    
+    if (kobuchiBlock) {
+        kobuchiBlock.style.display = allowedNames.includes(selectedName) ? 'block' : 'none';
+    }
+}
         };
 
         // ==================== 初期化 ====================
@@ -1679,7 +1695,15 @@ secondaryOpts.forEach(opt => {
         };
 
         // ==================== 起動 ====================
-        document.addEventListener('DOMContentLoaded', () => App.init());
+        document.addEventListener('DOMContentLoaded', () => App.init()
+                                  {
+                                      DOM.pageTitle.textContent = `${CONFIG.YEAR}年${CONFIG.MONTH}月シフト`;
+                                        CalendarGenerator.generate();
+                                        this.loadSavedData();
+                                        EventListeners.setup();
+                                        EventListeners.toggleKobuchiBlock(); // 追加（初期表示制御）
+                                  }
+                                 );
     </script>
 </body>
 </html>
