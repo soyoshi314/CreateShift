@@ -1056,7 +1056,13 @@
             MONTH: 4,
             HOLIDAYS: [29],
             PRE_HOLIDAYS: [28],
-            EXTRA_DATES: [28, 29] 
+            EXTRA_DATES: [28, 29] ,
+            // 翌月分（不要な月はnullにする）
+            EXTRA_NEXT_MONTH: {   
+                days: [1, 2, 3, 4, 5, 6],  
+                holidays: [3, 4, 5, 6],
+                preHolidays: [2]
+                }
         };
 
         const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwmD-V9LWDQ7edPKsUwC9QWszCzJ-JYGT_vQ-nU6S75VnddpsQBRG91c90ZZymi7rP5yg/exec';
@@ -1132,7 +1138,11 @@
             },
 
             getExtraDates(block) {
-                return block.hasAttribute('data-extra') ? CONFIG.EXTRA_DATES : [];
+                if (!block.hasAttribute('data-extra')) return [];
+                const current = CONFIG.EXTRA_DATES.map(d => ({ month: CONFIG.MONTH, day: d }));
+                const next = CONFIG.EXTRA_NEXT_MONTH
+                ? CONFIG.EXTRA_NEXT_MONTH.days.map(d => ({ month: CONFIG.MONTH + 1, day: d })): [];
+                return [...current, ...next];
             },
 
             createBatchButtons(daysInMonth, allowedDays, extraDates) {
@@ -1158,37 +1168,51 @@
                 return html;
             },
 
-            createDateLines(daysInMonth, allowedDays, extraDates, optionType) {
-             let html = '';
-            
-        for (let d = 1; d <= daysInMonth; d++) {
+           createDateLines(daysInMonth, allowedDays, extraDates, optionType) {
+    let html = '';
+
+    for (let d = 1; d <= daysInMonth; d++) {
         const dateObj = new Date(CONFIG.YEAR, CONFIG.MONTH - 1, d);
         const dayIdx = dateObj.getDay();
-        
-        if (allowedDays.includes(dayIdx) || extraDates.includes(d)) {
-            const dateText = Utils.formatDateText(d, dayIdx);
-            let optionHtml = '';
-            
-            if (optionType === 'monnaka') {
-                optionHtml = '<span class="secondary-option disabled">門前仲町も追加</span>';
-            } else if (optionType === 'kobuchi') {
-                optionHtml = '<span class="secondary-option disabled">登戸を追加</span><span class="secondary-option disabled">町田を追加</span>';
-            }
-            
-            html += `
-                <div class="shift-line" data-date="${d}">
-                    <span class="date-entry">${dateText}</span>
-                    ${optionHtml}
-                    ｜
-                    <span class="assignee"></span>
-                    <span class="appended-text"></span>
-                </div>
-            `;
+
+        if (allowedDays.includes(dayIdx) || extraDates.some(e => e.month === CONFIG.MONTH && e.day === d)) {
+            const dateText = Utils.formatDateText(d, dayIdx, CONFIG.MONTH);
+            html += this.buildShiftLine(d, CONFIG.MONTH, dateText, optionType);
         }
     }
-    
+
+    // 翌月分
+    extraDates
+        .filter(e => e.month !== CONFIG.MONTH)
+        .forEach(({ month, day }) => {
+            const dateObj = new Date(CONFIG.YEAR, month - 1, day);
+            const dayIdx = dateObj.getDay();
+            const dateText = Utils.formatDateText(day, dayIdx, month);
+            html += this.buildShiftLine(day, month, dateText, optionType);
+        });
+
     return html;
-}
+},
+
+// 共通のshift-line生成を分離
+buildShiftLine(day, month, dateText, optionType) {
+    let optionHtml = '';
+    if (optionType === 'monnaka') {
+        optionHtml = '<span class="secondary-option disabled">門前仲町も追加</span>';
+    } else if (optionType === 'kobuchi') {
+        optionHtml = '<span class="secondary-option disabled">登戸を追加</span><span class="secondary-option disabled">町田を追加</span>';
+    }
+
+    return `
+        <div class="shift-line" data-date="${day}" data-month="${month}">
+            <span class="date-entry">${dateText}</span>
+            ${optionHtml}
+            ｜
+            <span class="assignee"></span>
+            <span class="appended-text"></span>
+        </div>
+    `;
+},
         };
 
         // ==================== シフト選択 ====================
