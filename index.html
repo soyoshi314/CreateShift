@@ -1102,16 +1102,25 @@
             },
 
             formatDateText(day, dayIndex) {
-                let dayLabel = this.getDayLabel(dayIndex);
-                let suffix = "";
-                
-                if (CONFIG.HOLIDAYS.includes(day)) {
-                    suffix += "祝";
-                } else if (CONFIG.PRE_HOLIDAYS.includes(day)) {
-                    suffix += "祝前";
-                }
-                
-                return `${day}${dayLabel}${suffix}`;
+              let dayLabel = this.getDayLabel(dayIndex);
+    let suffix = "";
+    
+    const isHoliday = month === CONFIG.MONTH
+        ? CONFIG.HOLIDAYS.includes(day)
+        : CONFIG.EXTRA_NEXT_MONTH?.holidays?.includes(day);
+
+    const isPreHoliday = month === CONFIG.MONTH
+        ? CONFIG.PRE_HOLIDAYS.includes(day)
+        : CONFIG.EXTRA_NEXT_MONTH?.preHolidays?.includes(day);
+
+    if (isHoliday) {
+        suffix += "祝";
+    } else if (isPreHoliday) {
+        suffix += "祝前";
+    }
+    
+    const monthPrefix = month !== CONFIG.MONTH ? `${month}/` : "";
+    return `${monthPrefix}${day}${dayLabel}${suffix}`;
             }
         };
 
