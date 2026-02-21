@@ -1101,8 +1101,8 @@
                 return days[dayIndex];
             },
 
-            formatDateText(day, dayIndex) {
-              let dayLabel = this.getDayLabel(dayIndex);
+         formatDateText(day, dayIndex, month = CONFIG.MONTH) {
+    let dayLabel = this.getDayLabel(dayIndex);
     let suffix = "";
     
     const isHoliday = month === CONFIG.MONTH
@@ -1118,10 +1118,10 @@
     } else if (isPreHoliday) {
         suffix += "祝前";
     }
-    
+
     const monthPrefix = month !== CONFIG.MONTH ? `${month}/` : "";
     return `${monthPrefix}${day}${dayLabel}${suffix}`;
-            }
+},  
         };
 
         // ==================== カレンダー生成 ====================
