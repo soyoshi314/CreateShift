@@ -863,7 +863,7 @@
 
                     <h2 class="section-title" id="section-3">３．立川町田ブロック</h2>
 
-                    <div class="shift-block" data-days="0,2,3,5,6" data-extra>
+                    <div class="shift-block" data-days="0,2,3,5,6" data-option="kunitachi" data-extra>
                         <span class="block-title" id="section-3-1">【立川A】</span>
                         <div class="block-description">
                             <span class="note-red">⚠️南口、マルミヤは行ける曜日を超！確認！ミス多発！</span><br>
@@ -876,7 +876,7 @@
                         <div class="generated-area"></div>
                     </div>
 
-                    <div class="shift-block" data-days="3,5,6" data-extra>
+                    <div class="shift-block" data-days="3,5,6" data-option="kunitachi" data-extra>
                         <span class="block-title" id="section-3-2">【立川B】</span>
                         <div class="block-description">
                             ◎庄や立川南諏訪通り<br>
@@ -1208,10 +1208,15 @@ buildShiftLine(day, month, dateText, optionType) {
     let optionHtml = '';
     if (optionType === 'monnaka') {
         optionHtml = '<span class="secondary-option disabled">門前仲町も追加</span>';
-    } else if (optionType === 'kobuchi') {
+    } 
+    else if (optionType === 'kobuchi') {
         optionHtml = '<span class="secondary-option disabled">登戸を追加</span><span class="secondary-option disabled">町田を追加</span>';
     }
+    else if (optionType === 'kunitachi') {
+        optionHtml = '<span class="secondary-option disabled">国立も追加</span>';
+    }
 
+    
     return `
         <div class="shift-line" data-date="${day}" data-month="${month}">
             <span class="date-entry">${dateText}</span>
