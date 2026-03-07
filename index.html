@@ -618,9 +618,9 @@
     <div id="loading-overlay">
         <div class="spinner"></div>
         <div class="loading-text">
-            シフト提出中<br>
-            提出ありがとうございました。<br>
-            画面から離れても大丈夫です。
+            ～シフト提出中～<br>
+            画面から離れても大丈夫です。<br>
+            シフト内容は、自動的にコピーされます。
         </div>
     </div>
 
@@ -1360,7 +1360,7 @@
 
                 const item = {
                     value: data,
-                    expiry: new Date().getTime() + (45 * 24 * 60 * 60 * 1000)
+                    expiry: new Date().getTime() + (1 * 20 * 60 * 60 * 1000)
                 };
                 
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(item));
