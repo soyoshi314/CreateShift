@@ -737,7 +737,7 @@
                 <div id="shift-content">
                     <h2 class="section-title" id="section-1">１．都心ブロック①新宿周辺</h2>
 
-                    <div class="shift-block" data-days="3,5,6" data-extra data-specific-dates="30">
+                    <div class="shift-block" data-days="3,5,6" data-extra>
                         <span class="block-title" id="section-1-1">【新宿】</span>
                         <div class="block-description">
                             ◎沖縄料理一(いち)新宿店<br>
@@ -1177,28 +1177,11 @@
             },
 
             getExtraDates(block) {
-                let extraDates = [];
-
-                // 1. 既存の全体共通追加日（data-extra属性がある場合）
-                if (block.hasAttribute('data-extra')) {
-                    const current = CONFIG.EXTRA_DATES.map(d => ({ month: CONFIG.MONTH, day: d }));
-                    const next = CONFIG.EXTRA_NEXT_MONTH
-                        ? CONFIG.EXTRA_NEXT_MONTH.days.map(d => ({ month: CONFIG.MONTH + 1, day: d })) : [];
-                    extraDates = [...current, ...next];
-                }
-
-                // 2. このブロック専用の追加日（data-specific-dates属性がある場合）
-                if (block.hasAttribute('data-specific-dates')) {
-                    const specificStr = block.getAttribute('data-specific-dates');
-                    if (specificStr) {
-                        // カンマ区切りの数字を配列にして当月の日付として追加
-                        const specificDays = specificStr.split(',').map(Number);
-                        const specificDatesObj = specificDays.map(d => ({ month: CONFIG.MONTH, day: d }));
-                        extraDates = [...extraDates, ...specificDatesObj];
-                    }
-                }
-
-                return extraDates;
+                if (!block.hasAttribute('data-extra')) return [];
+                const current = CONFIG.EXTRA_DATES.map(d => ({ month: CONFIG.MONTH, day: d }));
+                const next = CONFIG.EXTRA_NEXT_MONTH
+                    ? CONFIG.EXTRA_NEXT_MONTH.days.map(d => ({ month: CONFIG.MONTH + 1, day: d })) : [];
+                return [...current, ...next];
             },
 
             createBatchButtons(daysInMonth, allowedDays, extraDates) {
