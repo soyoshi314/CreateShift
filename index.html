@@ -395,20 +395,42 @@
             background: var(--success-hover);
         }
 
-        #confirmButton {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        #confirmButton:hover:not(:disabled) {
-            background: var(--primary-hover);
-        }
-
         .action-button:disabled {
             background: var(--gray-300);
             cursor: not-allowed;
             box-shadow: none;
             transform: none;
+        }
+
+        /* コピー完了バナー（常時表示） */
+        #copy-success-banner {
+            display: none;
+            background: linear-gradient(135deg, var(--success-color) 0%, #059669 100%);
+            color: white;
+            padding: 20px 24px;
+            border-radius: var(--border-radius);
+            margin-top: 24px;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+        }
+
+        #copy-success-banner .banner-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        #copy-success-banner .banner-title {
+            font-size: 1.2rem;
+            margin-bottom: 6px;
+        }
+
+        #copy-success-banner .banner-sub {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 400;
         }
 
         /* 通知 */
@@ -598,7 +620,8 @@
         <div class="loading-text">
             シフト提出中<br>
             提出ありがとうございました。<br>
-            画面から離れても大丈夫です。
+            画面から離れても大丈夫です。<br>
+            完了後、自動的にシフトがクリップボードにコピーされます。
         </div>
     </div>
 
@@ -617,8 +640,11 @@
                     <h3 style="margin-top: 30px; font-size: 1.2rem;">コメント</h3>
                     <p id="result-comment"></p>
                 </div>
-                <div style="text-align: center;">
-                    <button id="confirmButton">シフト一覧をクリップボードにコピー</button>
+                <!-- コピー完了バナー（常時表示） -->
+                <div id="copy-success-banner">
+                    <span class="banner-icon">✅</span>
+                    <div class="banner-title">クリップボードにコピーしました！</div>
+                    <div class="banner-sub">そのままLINEやメモに貼り付けてご利用ください</div>
                 </div>
             </div>
 
@@ -1042,7 +1068,6 @@
 
                 <div class="button-container">
                     <button id="sendButton" class="action-button">シフト提出</button>
-                    <button id="confirmButton" class="action-button" disabled>シフト確認（提出後押せます）</button>
                 </div>
             </div>
         </div>
@@ -1059,13 +1084,13 @@
             MONTH: 4,
             HOLIDAYS: [29],
             PRE_HOLIDAYS: [28],
-            EXTRA_DATES: [28, 29] ,
+            EXTRA_DATES: [28, 29],
             // 翌月分（不要な月はnullにする）
             EXTRA_NEXT_MONTH: {   
                 days: [1, 2, 3, 4, 5, 6],  
                 holidays: [3, 4, 5, 6],
                 preHolidays: [2]
-                }
+            }
         };
 
         const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwmD-V9LWDQ7edPKsUwC9QWszCzJ-JYGT_vQ-nU6S75VnddpsQBRG91c90ZZymi7rP5yg/exec';
@@ -1078,12 +1103,12 @@
             mainTextBox: document.getElementById('mainTextBox'),
             commentBox: document.getElementById('commentBox'),
             sendButton: document.getElementById('sendButton'),
-            confirmButton: document.getElementById('confirmButton'),
             notification: document.getElementById('notification'),
             shiftContent: document.getElementById('shift-content'),
             submissionResult: document.getElementById('submission-result'),
             shiftInputForm: document.getElementById('shift-input-form'),
-            submitShiftBtn: document.getElementById('submit-shift-btn')
+            submitShiftBtn: document.getElementById('submit-shift-btn'),
+            copySuccessBanner: document.getElementById('copy-success-banner')
         };
 
         // ==================== ユーティリティ ====================
@@ -1104,27 +1129,27 @@
                 return days[dayIndex];
             },
 
-         formatDateText(day, dayIndex, month = CONFIG.MONTH) {
-    let dayLabel = this.getDayLabel(dayIndex);
-    let suffix = "";
-    
-    const isHoliday = month === CONFIG.MONTH
-        ? CONFIG.HOLIDAYS.includes(day)
-        : CONFIG.EXTRA_NEXT_MONTH?.holidays?.includes(day);
+            formatDateText(day, dayIndex, month = CONFIG.MONTH) {
+                let dayLabel = this.getDayLabel(dayIndex);
+                let suffix = "";
+                
+                const isHoliday = month === CONFIG.MONTH
+                    ? CONFIG.HOLIDAYS.includes(day)
+                    : CONFIG.EXTRA_NEXT_MONTH?.holidays?.includes(day);
 
-    const isPreHoliday = month === CONFIG.MONTH
-        ? CONFIG.PRE_HOLIDAYS.includes(day)
-        : CONFIG.EXTRA_NEXT_MONTH?.preHolidays?.includes(day);
+                const isPreHoliday = month === CONFIG.MONTH
+                    ? CONFIG.PRE_HOLIDAYS.includes(day)
+                    : CONFIG.EXTRA_NEXT_MONTH?.preHolidays?.includes(day);
 
-    if (isHoliday) {
-        suffix += "祝";
-    } else if (isPreHoliday) {
-        suffix += "祝前";
-    }
+                if (isHoliday) {
+                    suffix += "祝";
+                } else if (isPreHoliday) {
+                    suffix += "祝前";
+                }
 
-    const monthPrefix = month !== CONFIG.MONTH ? `${month}/` : "";
-    return `${monthPrefix}${day}${dayLabel}${suffix}`;
-},  
+                const monthPrefix = month !== CONFIG.MONTH ? `${month}/` : "";
+                return `${monthPrefix}${day}${dayLabel}${suffix}`;
+            },  
         };
 
         // ==================== カレンダー生成 ====================
@@ -1153,7 +1178,7 @@
                 if (!block.hasAttribute('data-extra')) return [];
                 const current = CONFIG.EXTRA_DATES.map(d => ({ month: CONFIG.MONTH, day: d }));
                 const next = CONFIG.EXTRA_NEXT_MONTH
-                ? CONFIG.EXTRA_NEXT_MONTH.days.map(d => ({ month: CONFIG.MONTH + 1, day: d })): [];
+                    ? CONFIG.EXTRA_NEXT_MONTH.days.map(d => ({ month: CONFIG.MONTH + 1, day: d })) : [];
                 return [...current, ...next];
             },
 
@@ -1180,56 +1205,54 @@
                 return html;
             },
 
-           createDateLines(daysInMonth, allowedDays, extraDates, optionType) {
-    let html = '';
+            createDateLines(daysInMonth, allowedDays, extraDates, optionType) {
+                let html = '';
 
-    for (let d = 1; d <= daysInMonth; d++) {
-        const dateObj = new Date(CONFIG.YEAR, CONFIG.MONTH - 1, d);
-        const dayIdx = dateObj.getDay();
+                for (let d = 1; d <= daysInMonth; d++) {
+                    const dateObj = new Date(CONFIG.YEAR, CONFIG.MONTH - 1, d);
+                    const dayIdx = dateObj.getDay();
 
-        if (allowedDays.includes(dayIdx) || extraDates.some(e => e.month === CONFIG.MONTH && e.day === d)) {
-            const dateText = Utils.formatDateText(d, dayIdx, CONFIG.MONTH);
-            html += this.buildShiftLine(d, CONFIG.MONTH, dateText, optionType);
-        }
-    }
+                    if (allowedDays.includes(dayIdx) || extraDates.some(e => e.month === CONFIG.MONTH && e.day === d)) {
+                        const dateText = Utils.formatDateText(d, dayIdx, CONFIG.MONTH);
+                        html += this.buildShiftLine(d, CONFIG.MONTH, dateText, optionType);
+                    }
+                }
 
-    // 翌月分
-    extraDates
-        .filter(e => e.month !== CONFIG.MONTH)
-        .forEach(({ month, day }) => {
-            const dateObj = new Date(CONFIG.YEAR, month - 1, day);
-            const dayIdx = dateObj.getDay();
-            const dateText = Utils.formatDateText(day, dayIdx, month);
-            html += this.buildShiftLine(day, month, dateText, optionType);
-        });
+                // 翌月分
+                extraDates
+                    .filter(e => e.month !== CONFIG.MONTH)
+                    .forEach(({ month, day }) => {
+                        const dateObj = new Date(CONFIG.YEAR, month - 1, day);
+                        const dayIdx = dateObj.getDay();
+                        const dateText = Utils.formatDateText(day, dayIdx, month);
+                        html += this.buildShiftLine(day, month, dateText, optionType);
+                    });
 
-    return html;
-},
+                return html;
+            },
 
-// 共通のshift-line生成を分離
-buildShiftLine(day, month, dateText, optionType) {
-    let optionHtml = '';
-    if (optionType === 'monnaka') {
-        optionHtml = '<span class="secondary-option disabled">門前仲町も追加</span>';
-    } 
-    else if (optionType === 'kobuchi') {
-        optionHtml = '<span class="secondary-option disabled">登戸を追加</span><span class="secondary-option disabled">町田を追加</span>';
-    }
-    else if (optionType === 'kunitachi') {
-        optionHtml = '<span class="secondary-option disabled">国立も追加</span>';
-    }
+            buildShiftLine(day, month, dateText, optionType) {
+                let optionHtml = '';
+                if (optionType === 'monnaka') {
+                    optionHtml = '<span class="secondary-option disabled">門前仲町も追加</span>';
+                } 
+                else if (optionType === 'kobuchi') {
+                    optionHtml = '<span class="secondary-option disabled">登戸を追加</span><span class="secondary-option disabled">町田を追加</span>';
+                }
+                else if (optionType === 'kunitachi') {
+                    optionHtml = '<span class="secondary-option disabled">国立も追加</span>';
+                }
 
-    
-    return `
-        <div class="shift-line" data-date="${day}" data-month="${month}">
-            <span class="date-entry">${dateText}</span>
-            ${optionHtml}
-            ｜
-            <span class="assignee"></span>
-            <span class="appended-text"></span>
-        </div>
-    `;
-},
+                return `
+                    <div class="shift-line" data-date="${day}" data-month="${month}">
+                        <span class="date-entry">${dateText}</span>
+                        ${optionHtml}
+                        ｜
+                        <span class="assignee"></span>
+                        <span class="appended-text"></span>
+                    </div>
+                `;
+            },
         };
 
         // ==================== シフト選択 ====================
@@ -1260,30 +1283,30 @@ buildShiftLine(day, month, dateText, optionType) {
             },
 
             toggleSecondaryOption(option) {
-    if (option.classList.contains('disabled')) return;
-    
-    const appendedTextSpan = option.parentElement.querySelector('.appended-text');
-    const textToAdd = option.innerText;
-    let formattedText;
-    
-    if (textToAdd === '門前仲町も追加') {
-        formattedText = '（＋門前仲町）';
-    } else if (textToAdd === '登戸を追加') {
-        formattedText = '（＋登戸）';
-    } else if (textToAdd === '町田を追加') {
-        formattedText = '（＋町田）';
-    } else {
-        formattedText = `（${textToAdd}）`;
-    }
+                if (option.classList.contains('disabled')) return;
+                
+                const appendedTextSpan = option.parentElement.querySelector('.appended-text');
+                const textToAdd = option.innerText;
+                let formattedText;
+                
+                if (textToAdd === '門前仲町も追加') {
+                    formattedText = '（＋門前仲町）';
+                } else if (textToAdd === '登戸を追加') {
+                    formattedText = '（＋登戸）';
+                } else if (textToAdd === '町田を追加') {
+                    formattedText = '（＋町田）';
+                } else {
+                    formattedText = `（${textToAdd}）`;
+                }
 
-    if (option.classList.contains('selected')) {
-        option.classList.remove('selected');
-        appendedTextSpan.textContent = appendedTextSpan.textContent.replace(formattedText, '').trim();
-    } else {
-        option.classList.add('selected');
-        appendedTextSpan.textContent = (appendedTextSpan.textContent + ' ' + formattedText).trim();
-    }
-},
+                if (option.classList.contains('selected')) {
+                    option.classList.remove('selected');
+                    appendedTextSpan.textContent = appendedTextSpan.textContent.replace(formattedText, '').trim();
+                } else {
+                    option.classList.add('selected');
+                    appendedTextSpan.textContent = (appendedTextSpan.textContent + ' ' + formattedText).trim();
+                }
+            },
 
             batchSelect(shiftBlock, dayChar) {
                 const name = DOM.mainTextBox.value;
@@ -1471,11 +1494,11 @@ buildShiftLine(day, month, dateText, optionType) {
             },
 
             handleSuccess(payload) {
-                Utils.showNotification('シフト提出が完了しました。', false);
                 DOM.sendButton.textContent = '提出済み';
-                DOM.confirmButton.disabled = false;
                 StorageManager.save(true, payload);
                 ResultDisplay.show(payload);
+                // 提出完了後、自動でクリップボードにコピー
+                ClipboardManager.copyShiftsAuto();
             },
 
             handleError(message) {
@@ -1536,32 +1559,53 @@ buildShiftLine(day, month, dateText, optionType) {
 
         // ==================== クリップボード ====================
         const ClipboardManager = {
-            async copyShifts() {
+            // 提出完了後に自動コピー（バナー常時表示）
+            async copyShiftsAuto() {
                 const magicianName = DOM.mainTextBox.value;
-                if (!magicianName) {
-                    Utils.showNotification('マジシャン名が選択されていません。', true);
-                    return;
-                }
+                if (!magicianName) return;
 
-                let clipboardText = `${CONFIG.MONTH}月 提出シフト\n\n`;
+                const clipboardText = this.buildClipboardText();
+
+                try {
+                    await navigator.clipboard.writeText(clipboardText.trim());
+                    // コピー完了バナーを常時表示
+                    DOM.copySuccessBanner.style.display = 'block';
+                } catch (err) {
+                    // クリップボードAPIが失敗した場合はフォールバック
+                    this.fallbackCopy(clipboardText.trim());
+                }
+            },
+
+            fallbackCopy(text) {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    DOM.copySuccessBanner.style.display = 'block';
+                } catch (e) {
+                    // フォールバックも失敗した場合はバナーのメッセージを変更
+                    DOM.copySuccessBanner.querySelector('.banner-title').textContent = 'シフト提出が完了しました！';
+                    DOM.copySuccessBanner.querySelector('.banner-sub').textContent = '自動コピーに失敗しました。上記の内容を手動でコピーしてください。';
+                    DOM.copySuccessBanner.style.display = 'block';
+                } finally {
+                    document.body.removeChild(textarea);
+                }
+            },
+
+            buildClipboardText() {
                 const shiftsByStore = this.getShiftsByStore();
-
-                if (shiftsByStore.size === 0) {
-                    Utils.showNotification('コピーするシフトがありません。', true);
-                    return;
-                }
+                let clipboardText = `${CONFIG.MONTH}月 提出シフト\n\n`;
 
                 shiftsByStore.forEach((dates, store) => {
                     clipboardText += `${store}\n`;
                     clipboardText += dates.join(', ') + '\n\n';
                 });
 
-                try {
-                    await navigator.clipboard.writeText(clipboardText.trim());
-                    Utils.showNotification('提出シフトをコピーしました。', false);
-                } catch (err) {
-                    Utils.showNotification('コピーに失敗しました。', true);
-                }
+                return clipboardText;
             },
 
             getShiftsByStore() {
@@ -1621,8 +1665,6 @@ buildShiftLine(day, month, dateText, optionType) {
                     DOM.commentBox.addEventListener('input', () => StorageManager.save());
                     DOM.sendButton.addEventListener('click', () => DataSubmitter.submit());
                 }
-
-                DOM.confirmButton.addEventListener('click', () => ClipboardManager.copyShifts());
             }
         };
 
@@ -1641,12 +1683,13 @@ buildShiftLine(day, month, dateText, optionType) {
 
                 if (data.submitted && data.submittedPayload) {
                     ResultDisplay.show(data.submittedPayload);
+                    // 提出済みの場合もバナーを表示
+                    DOM.copySuccessBanner.style.display = 'block';
                 }
 
                 if (data.submitted) {
                     DOM.sendButton.disabled = true;
                     DOM.sendButton.textContent = '提出済み';
-                    DOM.confirmButton.disabled = false;
                 }
 
                 DOM.mainTextBox.value = data.magicianName || '';
@@ -1666,24 +1709,24 @@ buildShiftLine(day, month, dateText, optionType) {
                                 secondaryOpts.forEach(opt => opt.classList.remove('disabled'));
 
                                 let appendedText = '';
-secondaryOpts.forEach(opt => {
-    if (sel.options && sel.options.includes(opt.innerText)) {
-        opt.classList.add('selected');
-        let textToAdd = opt.innerText;
-        let formattedText;
-        
-        if (textToAdd === '門前仲町も追加') {
-            formattedText = '（＋門前仲町）';
-        } else if (textToAdd === '登戸を追加') {
-            formattedText = '（＋登戸）';
-        } else if (textToAdd === '町田を追加') {
-            formattedText = '（＋町田）';
-        } else {
-            formattedText = `（${textToAdd}）`;
-        }
-        
-        appendedText += formattedText + ' ';
-    }
+                                secondaryOpts.forEach(opt => {
+                                    if (sel.options && sel.options.includes(opt.innerText)) {
+                                        opt.classList.add('selected');
+                                        let textToAdd = opt.innerText;
+                                        let formattedText;
+                                        
+                                        if (textToAdd === '門前仲町も追加') {
+                                            formattedText = '（＋門前仲町）';
+                                        } else if (textToAdd === '登戸を追加') {
+                                            formattedText = '（＋登戸）';
+                                        } else if (textToAdd === '町田を追加') {
+                                            formattedText = '（＋町田）';
+                                        } else {
+                                            formattedText = `（${textToAdd}）`;
+                                        }
+                                        
+                                        appendedText += formattedText + ' ';
+                                    }
                                 });
                                 line.querySelector('.appended-text').textContent = appendedText.trim();
                             }
