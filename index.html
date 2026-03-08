@@ -402,35 +402,72 @@
             transform: none;
         }
 
-        /* コピー完了バナー（常時表示） */
-        #copy-success-banner {
+        /* ===== コピーボタンエリア ===== */
+        #copy-button-area {
             display: none;
-            background: linear-gradient(135deg, var(--success-color) 0%, #059669 100%);
-            color: white;
-            padding: 20px 24px;
+            margin-top: 40px;
+            padding: 28px 24px;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 2px solid #86efac;
             border-radius: var(--border-radius);
-            margin-top: 32px;
             text-align: center;
-            font-size: 1rem;
-            font-weight: 600;
-            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
         }
 
-        #copy-success-banner .banner-icon {
-            font-size: 2rem;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        #copy-success-banner .banner-title {
-            font-size: 1.2rem;
+        #copy-button-area .copy-area-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #166534;
             margin-bottom: 6px;
         }
 
-        #copy-success-banner .banner-sub {
-            font-size: 0.9rem;
-            opacity: 0.9;
-            font-weight: 400;
+        #copy-button-area .copy-area-sub {
+            font-size: 0.88rem;
+            color: #4b7c5e;
+            margin-bottom: 20px;
+        }
+
+        #copyShiftButton {
+            background: var(--success-color);
+            color: white;
+            border: none;
+            padding: 14px 36px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #copyShiftButton:hover {
+            background: var(--success-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.45);
+        }
+
+        #copyShiftButton:active {
+            transform: translateY(0);
+        }
+
+        #copyShiftButton.copied {
+            background: #0d9488;
+            cursor: default;
+            transform: none;
+        }
+
+        #copy-done-msg {
+            display: none;
+            margin-top: 14px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #166534;
+        }
+
+        #copy-done-msg .check-icon {
+            margin-right: 4px;
         }
 
         /* 通知 */
@@ -610,6 +647,11 @@
 
             #submit-shift-btn::before {
                 content: '↓';
+            }
+
+            #copyShiftButton {
+                padding: 12px 24px;
+                font-size: 0.95rem;
             }
         }
     </style>
@@ -1064,12 +1106,16 @@
                     <button id="sendButton" class="action-button">シフト提出</button>
                 </div>
 
-                <!-- コピー完了バナー（提出後・常時表示） -->
-                <div id="copy-success-banner">
-                    <span class="banner-icon">✅</span>
-                    <div class="banner-title">クリップボードにコピーしました！</div>
-                    <div class="banner-sub">そのままLINEやメモに貼り付けてご利用ください</div>
+                <!-- ===== コピーボタンエリア（提出後に表示） ===== -->
+                <div id="copy-button-area">
+                    <div class="copy-area-title">✅ シフトの提出が完了しました！</div>
+                    <div class="copy-area-sub">下のボタンを押すと、提出したシフトをコピーできます</div>
+                    <button id="copyShiftButton">📋 提出したシフトをコピーする</button>
+                    <div id="copy-done-msg">
+                        <span class="check-icon">✅</span>コピーしました！LINEやメモに貼り付けてください
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -1109,7 +1155,10 @@
             submissionResult: document.getElementById('submission-result'),
             shiftInputForm: document.getElementById('shift-input-form'),
             submitShiftBtn: document.getElementById('submit-shift-btn'),
-            copySuccessBanner: document.getElementById('copy-success-banner')
+            // コピー関連
+            copyButtonArea: document.getElementById('copy-button-area'),
+            copyShiftButton: document.getElementById('copyShiftButton'),
+            copyDoneMsg: document.getElementById('copy-done-msg')
         };
 
         // ==================== ユーティリティ ====================
@@ -1498,8 +1547,8 @@
                 DOM.sendButton.textContent = '提出済み';
                 StorageManager.save(true, payload);
                 ResultDisplay.show(payload);
-                // 提出完了後、自動でクリップボードにコピー
-                ClipboardManager.copyShiftsAuto();
+                // コピーボタンエリアを表示（自動コピーはしない）
+                ClipboardManager.showCopyButton();
             },
 
             handleError(message) {
@@ -1560,21 +1609,30 @@
 
         // ==================== クリップボード ====================
         const ClipboardManager = {
-            // 提出完了後に自動コピー（バナー常時表示）
-            async copyShiftsAuto() {
-                const magicianName = DOM.mainTextBox.value;
-                if (!magicianName) return;
+            // コピーボタンを表示するだけ（自動コピーはしない）
+            showCopyButton() {
+                DOM.copyButtonArea.style.display = 'block';
+            },
 
+            // コピーボタン押下時の処理
+            async copyOnClick() {
                 const clipboardText = this.buildClipboardText();
 
                 try {
                     await navigator.clipboard.writeText(clipboardText.trim());
-                    // コピー完了バナーを常時表示
-                    DOM.copySuccessBanner.style.display = 'block';
+                    this.onCopySuccess();
                 } catch (err) {
-                    // クリップボードAPIが失敗した場合はフォールバック
                     this.fallbackCopy(clipboardText.trim());
                 }
+            },
+
+            onCopySuccess() {
+                // ボタンの見た目を「コピー済み」に変更
+                DOM.copyShiftButton.textContent = '✅ コピー済み！';
+                DOM.copyShiftButton.classList.add('copied');
+                DOM.copyShiftButton.disabled = true;
+                // 完了メッセージを表示
+                DOM.copyDoneMsg.style.display = 'block';
             },
 
             fallbackCopy(text) {
@@ -1586,12 +1644,9 @@
                 textarea.select();
                 try {
                     document.execCommand('copy');
-                    DOM.copySuccessBanner.style.display = 'block';
+                    this.onCopySuccess();
                 } catch (e) {
-                    // フォールバックも失敗した場合はバナーのメッセージを変更
-                    DOM.copySuccessBanner.querySelector('.banner-title').textContent = 'シフト提出が完了しました！';
-                    DOM.copySuccessBanner.querySelector('.banner-sub').textContent = '自動コピーに失敗しました。上記の内容を手動でコピーしてください。';
-                    DOM.copySuccessBanner.style.display = 'block';
+                    Utils.showNotification('コピーに失敗しました。手動でコピーしてください。', true);
                 } finally {
                     document.body.removeChild(textarea);
                 }
@@ -1639,6 +1694,11 @@
         // ==================== イベントリスナー ====================
         const EventListeners = {
             setup() {
+                // コピーボタンは常に登録（提出済み再表示時も使えるように）
+                DOM.copyShiftButton.addEventListener('click', () => {
+                    ClipboardManager.copyOnClick();
+                });
+
                 if (!StorageManager.isSubmitted()) {
                     DOM.shiftContent.addEventListener('click', (e) => {
                         if (e.target.classList.contains('date-entry')) {
@@ -1684,8 +1744,8 @@
 
                 if (data.submitted && data.submittedPayload) {
                     ResultDisplay.show(data.submittedPayload);
-                    // 提出済みの場合もバナーを表示
-                    DOM.copySuccessBanner.style.display = 'block';
+                    // 提出済みで再訪問した場合もコピーボタンを表示
+                    ClipboardManager.showCopyButton();
                 }
 
                 if (data.submitted) {
