@@ -402,9 +402,8 @@
             transform: none;
         }
 
-        /* ===== コピーボタンエリア ===== */
-        #copy-button-area {
-            display: none;
+        /* ===== コピーボタンエリア（上部・下部共通） ===== */
+        .copy-button-area-shared {
             margin-top: 40px;
             padding: 28px 24px;
             background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
@@ -413,20 +412,20 @@
             text-align: center;
         }
 
-        #copy-button-area .copy-area-title {
+        .copy-button-area-shared .copy-area-title {
             font-size: 1.1rem;
             font-weight: 700;
             color: #166534;
             margin-bottom: 6px;
         }
 
-        #copy-button-area .copy-area-sub {
+        .copy-button-area-shared .copy-area-sub {
             font-size: 0.88rem;
             color: #4b7c5e;
             margin-bottom: 20px;
         }
 
-        #copyShiftButton {
+        .copyShiftButtonShared {
             background: var(--success-color);
             color: white;
             border: none;
@@ -442,24 +441,23 @@
             gap: 8px;
         }
 
-        #copyShiftButton:hover {
+        .copyShiftButtonShared:hover {
             background: var(--success-hover);
             transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(16, 185, 129, 0.45);
         }
 
-        #copyShiftButton:active {
+        .copyShiftButtonShared:active {
             transform: translateY(0);
         }
 
-        #copyShiftButton.copied {
+        .copyShiftButtonShared.copied {
             background: #0d9488;
             cursor: default;
             transform: none;
         }
 
-        #copy-done-msg {
-            display: none;
+        .copy-done-msg-shared {
             margin-top: 14px;
             font-size: 0.95rem;
             font-weight: 600;
@@ -679,6 +677,16 @@
                 <div id="result-comment-area" style="display: none;">
                     <h3 style="margin-top: 30px; font-size: 1.2rem;">コメント</h3>
                     <p id="result-comment"></p>
+                </div>
+            </div>
+
+            <!-- ===== ページ上部コピーボタン（提出後に表示） ===== -->
+            <div id="copy-button-area-top" style="display:none;" class="copy-button-area-shared">
+                <div class="copy-area-title">✅ シフトの提出が完了しました！</div>
+                <div class="copy-area-sub">下のボタンを押すと、提出したシフトをコピーできます</div>
+                <button class="copyShiftButtonShared">📋 提出したシフトをコピーする</button>
+                <div class="copy-done-msg-shared" style="display:none;">
+                    <span class="check-icon">✅</span>コピーしました！LINEやメモに貼り付けてください
                 </div>
             </div>
 
@@ -1106,12 +1114,12 @@
                     <button id="sendButton" class="action-button">シフト提出</button>
                 </div>
 
-                <!-- ===== コピーボタンエリア（提出後に表示） ===== -->
-                <div id="copy-button-area">
+                <!-- ===== ページ下部コピーボタン（提出後に表示） ===== -->
+                <div id="copy-button-area" class="copy-button-area-shared" style="display:none;">
                     <div class="copy-area-title">✅ シフトの提出が完了しました！</div>
                     <div class="copy-area-sub">下のボタンを押すと、提出したシフトをコピーできます</div>
-                    <button id="copyShiftButton">📋 提出したシフトをコピーする</button>
-                    <div id="copy-done-msg">
+                    <button class="copyShiftButtonShared">📋 提出したシフトをコピーする</button>
+                    <div class="copy-done-msg-shared" style="display:none;">
                         <span class="check-icon">✅</span>コピーしました！LINEやメモに貼り付けてください
                     </div>
                 </div>
@@ -1156,9 +1164,9 @@
             shiftInputForm: document.getElementById('shift-input-form'),
             submitShiftBtn: document.getElementById('submit-shift-btn'),
             // コピー関連
-            copyButtonArea: document.getElementById('copy-button-area'),
-            copyShiftButton: document.getElementById('copyShiftButton'),
-            copyDoneMsg: document.getElementById('copy-done-msg')
+            copyButtonAreas: document.querySelectorAll('.copy-button-area-shared'),
+            copyShiftButtons: document.querySelectorAll('.copyShiftButtonShared'),
+            copyDoneMsgs: document.querySelectorAll('.copy-done-msg-shared')
         };
 
         // ==================== ユーティリティ ====================
@@ -1611,7 +1619,7 @@
         const ClipboardManager = {
             // コピーボタンを表示するだけ（自動コピーはしない）
             showCopyButton() {
-                DOM.copyButtonArea.style.display = 'block';
+                DOM.copyButtonAreas.forEach(el => el.style.display = 'block');
             },
 
             // コピーボタン押下時の処理
@@ -1627,12 +1635,14 @@
             },
 
             onCopySuccess() {
-                // ボタンの見た目を「コピー済み」に変更
-                DOM.copyShiftButton.textContent = '✅ コピー済み！';
-                DOM.copyShiftButton.classList.add('copied');
-                DOM.copyShiftButton.disabled = true;
-                // 完了メッセージを表示
-                DOM.copyDoneMsg.style.display = 'block';
+                // 全ボタンを「コピー済み」に変更
+                DOM.copyShiftButtons.forEach(btn => {
+                    btn.textContent = '✅ コピー済み！';
+                    btn.classList.add('copied');
+                    btn.disabled = true;
+                });
+                // 全完了メッセージを表示
+                DOM.copyDoneMsgs.forEach(el => el.style.display = 'block');
             },
 
             fallbackCopy(text) {
@@ -1694,9 +1704,9 @@
         // ==================== イベントリスナー ====================
         const EventListeners = {
             setup() {
-                // コピーボタンは常に登録（提出済み再表示時も使えるように）
-                DOM.copyShiftButton.addEventListener('click', () => {
-                    ClipboardManager.copyOnClick();
+                // コピーボタンは常に登録（上部・下部どちらも）
+                DOM.copyShiftButtons.forEach(btn => {
+                    btn.addEventListener('click', () => ClipboardManager.copyOnClick());
                 });
 
                 if (!StorageManager.isSubmitted()) {
