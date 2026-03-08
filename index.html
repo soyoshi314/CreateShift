@@ -891,7 +891,7 @@
                         <div class="generated-area"></div>
                     </div>
 
-                    <div class="shift-block" data-days="3">
+                    <div class="shift-block" data-days="3" data-skip="holidays,preHolidays,extraDates,extraNextMonth">
                         <span class="block-title" id="section-2-6">【蒲田水曜日】</span>
                         <div class="block-description">
                             ◎築地日本海蒲田店<br>
@@ -1025,7 +1025,7 @@
                         <div class="generated-area"></div>
                     </div>
 
-                    <div class="shift-block" data-days="5" data-extra>
+                    <div class="shift-block" data-days="5">
                         <span class="block-title" id="section-4-2">【千葉】</span>
                         <div class="block-description">
                             ◎築地日本海千葉駅前店<br>
@@ -1093,7 +1093,7 @@
                         <div class="generated-area"></div>
                     </div>
 
-                    <div class="shift-block" data-days="3" data-extra>
+                    <div class="shift-block" data-days="3" data-skip="holidays,preHolidays,extraDates,extraNextMonth">
                         <span class="block-title" id="section-4-9">【新小岩】</span>
                         <div class="block-description">
                             ◎庄や新小岩南口<br>
@@ -1187,27 +1187,38 @@
                 return days[dayIndex];
             },
 
-            formatDateText(day, dayIndex, month = CONFIG.MONTH) {
+            /**
+             * 日付テキストを生成する
+             * @param {number} day - 日
+             * @param {number} dayIndex - 曜日インデックス (0=日〜6=土)
+             * @param {number} month - 月
+             * @param {Object} skip - ブロックごとのスキップ設定
+             * @param {boolean} skip.holidays - trueなら祝日ラベルを付けない
+             * @param {boolean} skip.preHolidays - trueなら祝前ラベルを付けない
+             */
+            formatDateText(day, dayIndex, month = CONFIG.MONTH, skip = {}) {
                 let dayLabel = this.getDayLabel(dayIndex);
                 let suffix = "";
-                
-                const isHoliday = month === CONFIG.MONTH
-                    ? CONFIG.HOLIDAYS.includes(day)
-                    : CONFIG.EXTRA_NEXT_MONTH?.holidays?.includes(day);
 
-                const isPreHoliday = month === CONFIG.MONTH
-                    ? CONFIG.PRE_HOLIDAYS.includes(day)
-                    : CONFIG.EXTRA_NEXT_MONTH?.preHolidays?.includes(day);
+                // 祝日ラベル（skip.holidaysがtrueの場合は適用しない）
+                if (!skip.holidays) {
+                    const isHoliday = month === CONFIG.MONTH
+                        ? CONFIG.HOLIDAYS.includes(day)
+                        : CONFIG.EXTRA_NEXT_MONTH?.holidays?.includes(day);
+                    if (isHoliday) suffix += "祝";
+                }
 
-                if (isHoliday) {
-                    suffix += "祝";
-                } else if (isPreHoliday) {
-                    suffix += "祝前";
+                // 祝前ラベル（skip.preHolidaysがtrueの場合は適用しない）
+                if (!skip.preHolidays) {
+                    const isPreHoliday = month === CONFIG.MONTH
+                        ? CONFIG.PRE_HOLIDAYS.includes(day)
+                        : CONFIG.EXTRA_NEXT_MONTH?.preHolidays?.includes(day);
+                    if (isPreHoliday) suffix += "祝前";
                 }
 
                 const monthPrefix = month !== CONFIG.MONTH ? `${month}/` : "";
                 return `${monthPrefix}${day}${dayLabel}${suffix}`;
-            },  
+            },
         };
 
         // ==================== カレンダー生成 ====================
@@ -1217,11 +1228,13 @@
                 
                 document.querySelectorAll('.shift-block').forEach(block => {
                     const allowedDays = this.getAllowedDays(block);
-                    const extraDates = this.getExtraDates(block);
+                    // ★ ブロックごとのスキップ設定を取得
+                    const skip = this.getSkipConfig(block);
+                    const extraDates = this.getExtraDates(block, skip);
                     const optionType = block.getAttribute('data-option');
                     
                     const batchButtons = this.createBatchButtons(daysInMonth, allowedDays, extraDates);
-                    const dateLines = this.createDateLines(daysInMonth, allowedDays, extraDates, optionType);
+                    const dateLines = this.createDateLines(daysInMonth, allowedDays, extraDates, optionType, skip);
                     
                     block.querySelector('.generated-area').innerHTML = batchButtons + dateLines;
                 });
@@ -1232,11 +1245,47 @@
                 return daysStr.split(',').map(Number);
             },
 
-            getExtraDates(block) {
+            /**
+             * data-skip 属性を解析してスキップ設定オブジェクトを返す
+             *
+             * 使い方（HTML側）:
+             *   data-skip="holidays"                    → 祝日ラベルのみ除外
+             *   data-skip="preHolidays"                 → 祝前ラベルのみ除外
+             *   data-skip="extraDates"                  → 当月の追加日程を除外
+             *   data-skip="extraNextMonth"              → 翌月の追加日程を除外
+             *   data-skip="holidays,preHolidays"        → 複数同時指定可
+             *   data-skip="holidays,preHolidays,extraDates,extraNextMonth" → 全除外
+             *
+             * @param {HTMLElement} block
+             * @returns {{ holidays: boolean, preHolidays: boolean, extraDates: boolean, extraNextMonth: boolean }}
+             */
+            getSkipConfig(block) {
+                const skipAttr = block.getAttribute('data-skip') || '';
+                const parts = skipAttr.split(',').map(s => s.trim()).filter(Boolean);
+                return {
+                    holidays:       parts.includes('holidays'),
+                    preHolidays:    parts.includes('preHolidays'),
+                    extraDates:     parts.includes('extraDates'),
+                    extraNextMonth: parts.includes('extraNextMonth'),
+                };
+            },
+
+            /**
+             * ブロックに表示する追加日程を返す
+             * skip.extraDates が true → 当月の EXTRA_DATES を除外
+             * skip.extraNextMonth が true → EXTRA_NEXT_MONTH の日程を除外
+             */
+            getExtraDates(block, skip = {}) {
                 if (!block.hasAttribute('data-extra')) return [];
-                const current = CONFIG.EXTRA_DATES.map(d => ({ month: CONFIG.MONTH, day: d }));
-                const next = CONFIG.EXTRA_NEXT_MONTH
-                    ? CONFIG.EXTRA_NEXT_MONTH.days.map(d => ({ month: CONFIG.MONTH + 1, day: d })) : [];
+
+                const current = skip.extraDates
+                    ? []
+                    : CONFIG.EXTRA_DATES.map(d => ({ month: CONFIG.MONTH, day: d }));
+
+                const next = (!skip.extraNextMonth && CONFIG.EXTRA_NEXT_MONTH)
+                    ? CONFIG.EXTRA_NEXT_MONTH.days.map(d => ({ month: CONFIG.MONTH + 1, day: d }))
+                    : [];
+
                 return [...current, ...next];
             },
 
@@ -1246,10 +1295,18 @@
                 for (let d = 1; d <= daysInMonth; d++) {
                     const dateObj = new Date(CONFIG.YEAR, CONFIG.MONTH - 1, d);
                     const dayIdx = dateObj.getDay();
-                    if (allowedDays.includes(dayIdx) || extraDates.includes(d)) {
+                    if (allowedDays.includes(dayIdx) || extraDates.some(e => e.month === CONFIG.MONTH && e.day === d)) {
                         daysFound.add(dayIdx);
                     }
                 }
+
+                // 翌月分の曜日も一括ボタンに含める
+                extraDates
+                    .filter(e => e.month !== CONFIG.MONTH)
+                    .forEach(({ month, day }) => {
+                        const dateObj = new Date(CONFIG.YEAR, month - 1, day);
+                        daysFound.add(dateObj.getDay());
+                    });
 
                 let html = '<div class="batch-select-container">';
                 [1, 2, 3, 4, 5, 6, 0].forEach(dIdx => {
@@ -1263,7 +1320,11 @@
                 return html;
             },
 
-            createDateLines(daysInMonth, allowedDays, extraDates, optionType) {
+            /**
+             * 各日付行のHTMLを生成する
+             * skip をそのまま Utils.formatDateText に渡して祝日・祝前の表示を制御する
+             */
+            createDateLines(daysInMonth, allowedDays, extraDates, optionType, skip = {}) {
                 let html = '';
 
                 for (let d = 1; d <= daysInMonth; d++) {
@@ -1271,7 +1332,7 @@
                     const dayIdx = dateObj.getDay();
 
                     if (allowedDays.includes(dayIdx) || extraDates.some(e => e.month === CONFIG.MONTH && e.day === d)) {
-                        const dateText = Utils.formatDateText(d, dayIdx, CONFIG.MONTH);
+                        const dateText = Utils.formatDateText(d, dayIdx, CONFIG.MONTH, skip);
                         html += this.buildShiftLine(d, CONFIG.MONTH, dateText, optionType);
                     }
                 }
@@ -1282,7 +1343,7 @@
                     .forEach(({ month, day }) => {
                         const dateObj = new Date(CONFIG.YEAR, month - 1, day);
                         const dayIdx = dateObj.getDay();
-                        const dateText = Utils.formatDateText(day, dayIdx, month);
+                        const dateText = Utils.formatDateText(day, dayIdx, month, skip);
                         html += this.buildShiftLine(day, month, dateText, optionType);
                     });
 
