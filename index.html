@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -521,8 +522,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .loading-text {
@@ -654,6 +660,7 @@
         }
     </style>
 </head>
+
 <body>
     <div id="loading-overlay">
         <div class="spinner"></div>
@@ -749,7 +756,7 @@
                         <li style="padding-left: 20px;"><a href="#section-1-2">【トニーローマ】</a></li>
                         <li style="padding-left: 20px;"><a href="#section-1-3">【目黒】</a></li>
                         <li style="padding-left: 20px;"><a href="#section-1-4">【茗荷谷】</a></li>
-                        
+
                         <li><a href="#section-2">２．都心ブロック②その他東京</a></li>
                         <li style="padding-left: 20px;"><a href="#section-2-1">【門前仲町+木場】</a></li>
                         <li style="padding-left: 20px;"><a href="#section-2-2">【門前仲町+水道橋】</a></li>
@@ -760,7 +767,7 @@
                         <li style="padding-left: 20px;"><a href="#section-2-7">【赤坂】</a></li>
                         <li style="padding-left: 20px;"><a href="#section-2-8">【上野】</a></li>
                         <li style="padding-left: 20px;"><a href="#section-2-9">【大井町】</a></li>
-                        
+
                         <li><a href="#section-3">３．立川町田ブロック</a></li>
                         <li style="padding-left: 20px;"><a href="#section-3-1">【立川A】</a></li>
                         <li style="padding-left: 20px;"><a href="#section-3-2">【立川B】</a></li>
@@ -769,7 +776,7 @@
                         <li style="padding-left: 20px;"><a href="#section-3-5">【町田＋登戸】</a></li>
                         <li style="padding-left: 20px;"><a href="#section-3-6">【古淵】</a></li>
                         <li style="padding-left: 20px;"><a href="#section-3-7">【横浜関内】</a></li>
-                        
+
                         <li><a href="#section-4">４．千葉埼玉ホームブロック</a></li>
                         <li style="padding-left: 20px;"><a href="#section-4-1">【南行徳】</a></li>
                         <li style="padding-left: 20px;"><a href="#section-4-2">【千葉】</a></li>
@@ -793,7 +800,7 @@
                             ◎築地日本海新宿西口店
                         </div>
                         <div class="generated-area">
-                             <span class="date-entry">30木</span>
+                            <span class="date-entry">30木</span>
                         </div>
                     </div>
 
@@ -963,8 +970,8 @@
                         <span class="block-title" id="section-3-3">【国立+新小平】</span>
                         <div class="block-description">
                             ◎庄や国立店<br>
-                            ◎庄や新小平店<br>	
-                            ◎クラフト酒場クニタチカ（1・4・7・10月予定で各月1回）	
+                            ◎庄や新小平店<br>
+                            ◎クラフト酒場クニタチカ（1・4・7・10月予定で各月1回）
                         </div>
                         <div class="generated-area"></div>
                     </div>
@@ -997,9 +1004,9 @@
                             ◎日本海庄や登戸店
                         </div>
                         <div class="generated-area"></div>
-                    </div>                  
-                    
-                     <div class="shift-block" data-days="0,3,4,5,6" data-option="kobuchi" data-extra>
+                    </div>
+
+                    <div class="shift-block" data-days="0,3,4,5,6" data-option="kobuchi" data-extra>
                         <span class="block-title" id="section-3-6">【古淵】</span>
                         <div class="block-description">
                             <span class="note-red">⚠️町田・登戸・小田急相模原、いつでも追加OK</span><br>
@@ -1007,7 +1014,7 @@
                         </div>
                         <div class="generated-area"></div>
                     </div>
-                    
+
                     <div class="shift-block" data-days="5,6" data-extra>
                         <span class="block-title" id="section-3-7">【横浜関内】</span>
                         <div class="block-description">
@@ -1151,8 +1158,8 @@
             PRE_HOLIDAYS: [28],
             EXTRA_DATES: [29, 30],
             // 翌月分（不要な月はnullにする）
-            EXTRA_NEXT_MONTH: {   
-                days: [1, 2, 3, 4, 5, 6],  
+            EXTRA_NEXT_MONTH: {
+                days: [1, 2, 3, 4, 5, 6],
                 holidays: [3, 4, 5, 6],
                 preHolidays: [2]
             }
@@ -1235,17 +1242,17 @@
         const CalendarGenerator = {
             generate() {
                 const daysInMonth = Utils.getDaysInMonth();
-                
+
                 document.querySelectorAll('.shift-block').forEach(block => {
                     const allowedDays = this.getAllowedDays(block);
                     // ★ ブロックごとのスキップ設定を取得
                     const skip = this.getSkipConfig(block);
                     const extraDates = this.getExtraDates(block, skip);
                     const optionType = block.getAttribute('data-option');
-                    
+
                     const batchButtons = this.createBatchButtons(daysInMonth, allowedDays, extraDates);
                     const dateLines = this.createDateLines(daysInMonth, allowedDays, extraDates, optionType, skip);
-                    
+
                     block.querySelector('.generated-area').innerHTML = batchButtons + dateLines;
                 });
             },
@@ -1273,9 +1280,9 @@
                 const skipAttr = block.getAttribute('data-skip') || '';
                 const parts = skipAttr.split(',').map(s => s.trim()).filter(Boolean);
                 return {
-                    holidays:       parts.includes('holidays'),
-                    preHolidays:    parts.includes('preHolidays'),
-                    extraDates:     parts.includes('extraDates'),
+                    holidays: parts.includes('holidays'),
+                    preHolidays: parts.includes('preHolidays'),
+                    extraDates: parts.includes('extraDates'),
                     extraNextMonth: parts.includes('extraNextMonth'),
                 };
             },
@@ -1301,7 +1308,7 @@
 
             createBatchButtons(daysInMonth, allowedDays, extraDates) {
                 const daysFound = new Set();
-                
+
                 for (let d = 1; d <= daysInMonth; d++) {
                     const dateObj = new Date(CONFIG.YEAR, CONFIG.MONTH - 1, d);
                     const dayIdx = dateObj.getDay();
@@ -1326,7 +1333,7 @@
                     }
                 });
                 html += '</div>';
-                
+
                 return html;
             },
 
@@ -1364,7 +1371,7 @@
                 let optionHtml = '';
                 if (optionType === 'monnaka') {
                     optionHtml = '<span class="secondary-option disabled">門前仲町も追加</span>';
-                } 
+                }
                 else if (optionType === 'kobuchi') {
                     optionHtml = '<span class="secondary-option disabled">登戸を追加</span><span class="secondary-option disabled">町田を追加</span><span class="secondary-option disabled">小田急相模原を追加</span>';
                 }
@@ -1391,7 +1398,7 @@
                 const parent = dateEntry.parentElement;
                 const assigneeSpan = parent.querySelector('.assignee');
                 const secondaryOptions = parent.querySelectorAll('.secondary-option');
-                
+
                 if (dateEntry.classList.contains('selected')) {
                     dateEntry.classList.remove('selected');
                     assigneeSpan.textContent = '';
@@ -1413,11 +1420,11 @@
 
             toggleSecondaryOption(option) {
                 if (option.classList.contains('disabled')) return;
-                
+
                 const appendedTextSpan = option.parentElement.querySelector('.appended-text');
                 const textToAdd = option.innerText;
                 let formattedText;
-                
+
                 if (textToAdd === '門前仲町も追加') {
                     formattedText = '（＋門前仲町）';
                 } else if (textToAdd === '登戸を追加') {
@@ -1446,12 +1453,12 @@
                     Utils.showNotification('先にマジシャン名を選択してください。', true);
                     return;
                 }
-                
+
                 const targetEntries = Array.from(shiftBlock.querySelectorAll('.date-entry'))
                     .filter(el => el.innerText.includes(dayChar));
 
                 if (targetEntries.length === 0) return;
-                
+
                 const isAllSelected = targetEntries.every(el => el.classList.contains('selected'));
 
                 targetEntries.forEach(dateEntry => {
@@ -1465,7 +1472,7 @@
                         }
                     }
                 });
-                
+
                 StorageManager.save();
             },
 
@@ -1481,7 +1488,7 @@
         const StorageManager = {
             save(forceSubmittedState = null, submittedPayload = null) {
                 const isAlreadySubmitted = this.isSubmitted();
-                
+
                 const data = {
                     magicianName: DOM.mainTextBox.value,
                     comment: DOM.commentBox.value,
@@ -1494,7 +1501,7 @@
                     value: data,
                     expiry: new Date().getTime() + (20 * 20 * 60 * 60 * 1000)
                 };
-                
+
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(item));
             },
 
@@ -1645,7 +1652,7 @@
         const ResultDisplay = {
             show(payload) {
                 DOM.submissionResult.style.display = 'block';
-                
+
                 // 入力を無効化
                 DOM.mainTextBox.disabled = true;
                 DOM.commentBox.disabled = true;
@@ -1750,11 +1757,11 @@
 
             getShiftsByStore() {
                 const shiftsByStore = new Map();
-                
+
                 document.querySelectorAll('.shift-block').forEach(block => {
                     const storeName = block.querySelector('.block-title').innerText.trim();
                     let datesForStore = [];
-                    
+
                     block.querySelectorAll('.shift-line').forEach(line => {
                         const assigneeSpan = line.querySelector('.assignee');
                         if (assigneeSpan && assigneeSpan.innerText.trim()) {
@@ -1762,7 +1769,7 @@
                             datesForStore.push(dateText);
                         }
                     });
-                    
+
                     if (datesForStore.length > 0) {
                         if (!shiftsByStore.has(storeName)) {
                             shiftsByStore.set(storeName, []);
@@ -1770,7 +1777,7 @@
                         shiftsByStore.get(storeName).push(...datesForStore);
                     }
                 });
-                
+
                 return shiftsByStore;
             }
         };
@@ -1789,12 +1796,12 @@
                             ShiftSelector.toggleSelection(e.target);
                             StorageManager.save();
                         }
-                        
+
                         if (e.target.classList.contains('secondary-option')) {
                             ShiftSelector.toggleSecondaryOption(e.target);
                             StorageManager.save();
                         }
-                        
+
                         if (e.target.classList.contains('batch-select-btn')) {
                             const day = e.target.getAttribute('data-day');
                             const shiftBlock = e.target.closest('.shift-block');
@@ -1849,7 +1856,7 @@
                             if (dateEntry) {
                                 dateEntry.classList.add('selected');
                                 line.querySelector('.assignee').textContent = data.magicianName;
-                                
+
                                 const secondaryOpts = line.querySelectorAll('.secondary-option');
                                 secondaryOpts.forEach(opt => opt.classList.remove('disabled'));
 
@@ -1859,7 +1866,7 @@
                                         opt.classList.add('selected');
                                         let textToAdd = opt.innerText;
                                         let formattedText;
-                                        
+
                                         if (textToAdd === '門前仲町も追加') {
                                             formattedText = '（＋門前仲町）';
                                         } else if (textToAdd === '登戸を追加') {
@@ -1869,7 +1876,7 @@
                                         } else {
                                             formattedText = `（${textToAdd}）`;
                                         }
-                                        
+
                                         appendedText += formattedText + ' ';
                                     }
                                 });
@@ -1885,4 +1892,5 @@
         document.addEventListener('DOMContentLoaded', () => App.init());
     </script>
 </body>
+
 </html>
