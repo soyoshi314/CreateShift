@@ -938,7 +938,7 @@
                         <span class="block-title" id="section-3-1">【立川A】</span>
                         <div class="block-description">
                             <span class="note-red">⚠️南口、マルミヤは行ける曜日を超！確認！ミス多発！</span><br>
-                            <span class="note-red">⚠️国立、いつでも追加OK(＋￥500)※片方ルートになったら国立を追加します</span><br>
+                            <span class="note-red">⚠️国立、いつでも追加OK(＋￥500)※選ぶと、片方ルートになった際に国立を追加します</span><br>
                             ◎GB立川店<br>
                             ◎ここにこんね<br>
                             ◎立川南口（日〜木）<br>
@@ -951,7 +951,7 @@
                     <div class="shift-block" data-days="3,5,6" data-option="kunitachi" data-extra>
                         <span class="block-title" id="section-3-2">【立川B】</span>
                         <div class="block-description">
-                            <span class="note-red">⚠️国立、いつでも追加OK(＋￥500)※片方ルートになったら国立を追加します</span><br>
+                            <span class="note-red">⚠️国立、いつでも追加OK(＋￥500)※選ぶと、片方ルートになった際に国立を追加します</span><br>
                             ◎庄や立川南諏訪通り<br>
                             ・おっ魚<br>
                             ・和海（なごみ）
@@ -1424,6 +1424,9 @@
                     formattedText = '（＋登戸）';
                 } else if (textToAdd === '町田を追加') {
                     formattedText = '（＋町田）';
+                }
+                else if (textToAdd === '小田急相模原を追加') {
+                    formattedText = '（＋小田急相模原）';
                 } else {
                     formattedText = `（${textToAdd}）`;
                 }
