@@ -1,0 +1,26 @@
+name: Multi-branch Deploy
+
+on:
+  push:
+    # 公開したいブランチをここで指定
+    branches:
+      - main
+      - develop
+      - 'feature/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # (必要であれば) ここでビルド工程（npm install && npm run buildなど）を入れる
+      # ビルド後のフォルダが "dist" なら、下の folder を dist に書き換えてください
+
+      - name: Deploy to Subfolder
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: . # 公開したいソースがあるフォルダ
+          target-folder: ${{ github.ref_name }} # ブランチ名と同じ名前のフォルダに配置
+          branch: gh-pages # 公開用の専用ブランチ
