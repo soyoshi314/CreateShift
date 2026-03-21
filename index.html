@@ -658,6 +658,21 @@
                 font-size: 0.95rem;
             }
         }
+
+        /* 期限切れアラート */
+        .deadline-alert {
+            background: #fee2e2;
+            border-left: 4px solid var(--danger-color);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            color: #991b1b;
+            font-weight: 700;
+            text-align: center;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
     </style>
 </head>
 
@@ -1151,6 +1166,7 @@
         const CONFIG = {
             YEAR: 2026,
             MONTH: 4,
+            DEADLINE: '2026-03-20T23:59:59+09:00', // ★ここを追加（3/20の23:59:59まで受付）
             HOLIDAYS: [29],
             PRE_HOLIDAYS: [28],
             EXTRA_DATES: [29, 30],
@@ -1823,9 +1839,41 @@
                 DOM.pageTitle.textContent = `${CONFIG.YEAR}年${CONFIG.MONTH}月シフト`;
                 CalendarGenerator.generate();
                 this.loadSavedData();
+
+                // ★ 期限チェックを実行
+                this.checkDeadline();
+
                 EventListeners.setup();
             },
 
+            // ★ 期限チェック用の処理を追加
+            checkDeadline() {
+                const now = new Date();
+                const deadline = new Date(CONFIG.DEADLINE);
+
+                if (now > deadline) {
+                    // 期限切れの場合、画面上部にアラートを表示
+                    const formArea = document.getElementById('shift-input-form');
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = 'deadline-alert';
+                    alertDiv.textContent = '提出期限は過ぎました';
+                    formArea.prepend(alertDiv);
+
+                    // 入力項目と送信ボタンを無効化
+                    DOM.mainTextBox.disabled = true;
+                    DOM.commentBox.disabled = true;
+                    DOM.sendButton.disabled = true;
+                    DOM.sendButton.textContent = '期限終了';
+                    
+                    // シフトカレンダー部分のクリック操作を無効化し、少し薄くする
+                    DOM.shiftContent.style.pointerEvents = 'none';
+                    DOM.shiftContent.style.opacity = '0.6';
+
+                    // 一括選択ボタンを無効化
+                    document.querySelectorAll('.batch-select-btn').forEach(btn => btn.disabled = true);
+                }
+            },
+            
             loadSavedData() {
                 const data = StorageManager.load();
                 if (!data) return;
