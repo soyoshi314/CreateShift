@@ -1171,7 +1171,8 @@
             PRE_HOLIDAYS: [],
             EXTRA_DATES: [],
             // 翌月分（不要な月はnullにする）
-            EXTRA_NEXT_MONTH: null
+            EXTRA_NEXT_MONTH: null,
+            HIDDEN_DATES: [1,2,3,4,5,6]
         };
 
         const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwmD-V9LWDQ7edPKsUwC9QWszCzJ-JYGT_vQ-nU6S75VnddpsQBRG91c90ZZymi7rP5yg/exec';
@@ -1319,6 +1320,7 @@
                 const daysFound = new Set();
 
                 for (let d = 1; d <= daysInMonth; d++) {
+                    if (CONFIG.HIDDEN_DATES.includes(d)) continue;
                     const dateObj = new Date(CONFIG.YEAR, CONFIG.MONTH - 1, d);
                     const dayIdx = dateObj.getDay();
                     if (allowedDays.includes(dayIdx) || extraDates.some(e => e.month === CONFIG.MONTH && e.day === d)) {
@@ -1354,6 +1356,7 @@
                 let html = '';
 
                 for (let d = 1; d <= daysInMonth; d++) {
+                    if (CONFIG.HIDDEN_DATES.includes(d)) continue;       // 日付で判定
                     const dateObj = new Date(CONFIG.YEAR, CONFIG.MONTH - 1, d);
                     const dayIdx = dateObj.getDay();
 
