@@ -873,7 +873,7 @@
                         <div class="generated-area"></div>
                     </div>
 
-                    <div class="shift-block" data-days="5,6" data-holidays data-pre-holidays>
+                    <div class="shift-block" data-days="5,6" data-holidays data-pre-holidays data-extra>
                         <span class="block-title" id="section-2-4">【蒲田A】</span>
                         <div class="block-description">
                             <span class="note-red">⚠️ワルンバリ→外2テーブルのみ実演OK</span><br>
@@ -891,7 +891,7 @@
                         <div class="generated-area"></div>
                     </div>
 
-                    <div class="shift-block" data-days="5,6" data-holidays data-pre-holidays>
+                    <div class="shift-block" data-days="5,6" data-holidays data-pre-holidays data-extra>
                         <span class="block-title" id="section-2-5">【蒲田B】</span>
                         <div class="block-description">
                             ・串幸 (日休)<br>
@@ -949,7 +949,7 @@
 
                     <h2 class="section-title" id="section-3">３．立川町田ブロック</h2>
 
-                    <div class="shift-block" data-days="0,1,2,3,4,5,6" data-option="kunitachi" data-holidays data-pre-holidays>
+                    <div class="shift-block" data-days="0,1,2,3,4,5,6" data-option="kunitachi" data-holidays data-pre-holidays data-extra>
                         <span class="block-title" id="section-3-1">【立川A】</span>
                         <div class="block-description">
                             <span class="note-red">⚠️南口、マルミヤは行ける曜日を超！確認！ミス多発！</span><br>
@@ -962,7 +962,7 @@
                         <div class="generated-area"></div>
                     </div>
 
-                    <div class="shift-block" data-days="3,5,6" data-option="kunitachi" data-holidays data-pre-holidays>
+                    <div class="shift-block" data-days="3,5,6" data-option="kunitachi" data-holidays data-pre-holidays data-extra>
                         <span class="block-title" id="section-3-2">【立川B】</span>
                         <div class="block-description">
                             <span class="note-red">⚠️国立、いつでも追加OK(+￥500)</span><br>
@@ -985,7 +985,7 @@
                         <div class="generated-area"></div>
                     </div>
 
-                    <div class="shift-block" data-days="0,3,5,6" data-holidays data-pre-holidays>
+                    <div class="shift-block" data-days="0,3,5,6" data-holidays data-pre-holidays data-extra>
                         <span class="block-title" id="section-3-4">【町田+小田急相模原】</span>
                         <div class="block-description">
                             <span class="note-red">⚠️町田にシフトあり→オダサガのみ</span><br>
@@ -1007,7 +1007,7 @@
                         <div class="generated-area"></div>
                     </div>
 
-                    <div class="shift-block" data-days="0,3,5,6" data-holidays data-pre-holidays>
+                    <div class="shift-block" data-days="0,3,5,6" data-holidays data-pre-holidays data-extra>
                         <span class="block-title" id="section-3-5">【町田＋登戸】</span>
                         <div class="block-description">
                             ◎庄や町田本家店<br>
@@ -1016,7 +1016,7 @@
                         <div class="generated-area"></div>
                     </div>
 
-                    <div class="shift-block" data-days="0,3,4,5,6" data-option="kobuchi" data-holidays data-pre-holidays>
+                    <div class="shift-block" data-days="0,3,4,5,6" data-option="kobuchi" data-holidays data-pre-holidays data-extra>
                         <span class="block-title" id="section-3-6">【古淵】</span>
                         <div class="block-description">
                             <span class="note-red">⚠️町田・登戸・小田急相模原、いつでも追加OK</span><br>
@@ -1166,9 +1166,9 @@
             YEAR: 2026,
             MONTH: 8,
             DEADLINE: '2026-07-20T11:59:59+09:00',
-            PRE_HOLIDAYS: [10],
-            HOLIDAYS: [11],
-            EXTRA_DATES: [8,9,10,11,12,13,14,15,16],
+            PRE_HOLIDAYS: [10], // 指定した日は、「祝前」とついて、「data-pre-holidays」属性が付与されている店舗に強制表示します
+            HOLIDAYS: [11], // 指定した日は、「祝」とついて、「data-holidays」属性が付与されている店舗に強制表示します
+            EXTRA_DATES: [9,13,16], // 指定した日は、「data-extra」属性が付与されている店舗に強制表示します
             HIDDEN_DATES: [],
             // 翌月分（不要な月はnullにする）
             EXTRA_NEXT_MONTH: null
