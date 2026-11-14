@@ -847,9 +847,9 @@
                         <span class="block-title" id="section-2-1">【門前仲町+木場】</span>
                         <div class="block-description">
                             ◎庄や門前仲町店<br>
-                            ◎とらまい（不定休）<br>
                             ◎庄や木場店<br>
-                            ◎39Bar（月休み、祝不定休）
+                            ◎39Bar（月休み、祝不定休）<br>
+                            ・とらまい（店長体調不良のためお休み中）
                         </div>
                         <div class="generated-area"></div>
                     </div>
@@ -859,7 +859,7 @@
                         <div class="block-description">
                             ◎庄や錦糸町店<br>
                             ◎錦糸町横丁<br>
-                            ＋ 金土：◎庄や神田東口店<br>
+                            ＋ 金土：◎庄や神田東口店（上野優先！上野にシフトが入っていない場合のみ入る）<br>
                             ＋ 日：◎庄や新小岩南口店<br>
                             <span class="note-red">⚠️フジサンデリは希望者のみ</span>
                         </div>
@@ -961,7 +961,8 @@
                         <span class="block-title" id="section-3-2">【立川B】</span>
                         <div class="block-description">
                             <span class="note-red">⚠️国立、いつでも追加OK(+￥500)</span><br>
-                            ◎庄や立川南諏訪通り（水金土）<br>
+                            ◎庄や立川南諏訪通り（水金土、祝・祝前）<br>
+                            ◎呑み食べ横丁（金土、祝・祝前）<br>
                             ・おっ魚<br>
                             ・おっ魚はなれ<br>
                             ・和海（なごみ）<br>
@@ -1167,10 +1168,10 @@
         // ==================== 設定 ====================
         const CONFIG = {
             YEAR: 2026,
-            MONTH: 11,
-            DEADLINE: '2026-10-22T11:59:59+09:00',
-            PRE_HOLIDAYS: [2,22], // 指定した日は、「祝前」とついて、「data-pre-holidays」属性が付与されている店舗に強制表示します
-            HOLIDAYS: [3,23], // 指定した日は、「祝」とついて、「data-holidays」属性が付与されている店舗に強制表示します
+            MONTH: 12,
+            DEADLINE: '2026-11-22T11:59:59+09:00',
+            PRE_HOLIDAYS: [], // 指定した日は、「祝前」とついて、「data-pre-holidays」属性が付与されている店舗に強制表示します
+            HOLIDAYS: [], // 指定した日は、「祝」とついて、「data-holidays」属性が付与されている店舗に強制表示します
             EXTRA_DATES: [], // 指定した日は、「data-extra」属性が付与されている店舗に強制表示します
             HIDDEN_DATES: [],
             // 翌月分（不要な月はnullにする）
