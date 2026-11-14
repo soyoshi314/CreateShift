@@ -1174,11 +1174,12 @@
             HOLIDAYS: [], // 指定した日は、「祝」とついて、「data-holidays」属性が付与されている店舗に強制表示します
             EXTRA_DATES: [26,27,28,29,30,31], // 指定した日は、「data-extra」属性が付与されている店舗に強制表示します
             HIDDEN_DATES: [],
-            // 翌月分（不要な月はnullにする）
+            // 翌月分（不要な月はnullにする）※「data-extra」属性が付与されている店舗のみ対象
             EXTRA_NEXT_MONTH: {
-                       days: [1,2,3,4,5,6,7,8,9,10],
-                    holidays: [],      // 1/1〜1/3を「祝」表示にしたい場合
-                    preHolidays: []
+                       days: [1,2,3,4,5,6,7,8,9,10], // 翌月の対象期間。この中から店舗の曜日（data-days）に合う日だけ表示します
+                    extraDates: [],    // 指定した日は、曜日に関係なく強制表示します（当月の EXTRA_DATES と同じ）
+                    holidays: [],      // 1/1〜1/3を「祝」表示にしたい場合。「data-holidays」属性の店舗に強制表示します
+                    preHolidays: []    // 「data-pre-holidays」属性の店舗に強制表示します
                             }
         };
 
@@ -1265,7 +1266,7 @@
                     const allowedDays = this.getAllowedDays(block);
                     // ★ ブロックごとのスキップ設定を取得
                     const skip = this.getSkipConfig(block);
-                    const extraDates = this.getExtraDates(block, skip);
+                    const extraDates = this.getExtraDates(block, allowedDays, skip);
                     const optionType = block.getAttribute('data-option');
 
                     const batchButtons = this.createBatchButtons(daysInMonth, allowedDays, extraDates);
@@ -1309,18 +1310,30 @@
              * ブロックに表示する追加日程を返す
              * skip.extraDates が true → 当月の EXTRA_DATES を除外
              * skip.extraNextMonth が true → EXTRA_NEXT_MONTH の日程を除外
+             * 翌月分は EXTRA_NEXT_MONTH.days のうち data-days の曜日に合う日 ＋ 強制表示日（extraDates / holidays / preHolidays）
              * data-holidays 属性 → CONFIG.HOLIDAYS の日程を曜日に関係なく強制表示
              * data-pre-holidays 属性 → CONFIG.PRE_HOLIDAYS の日程を曜日に関係なく強制表示
              */
-            getExtraDates(block, skip = {}) {
+            getExtraDates(block, allowedDays, skip = {}) {
                 const dates = [];
 
                 if (block.hasAttribute('data-extra')) {
                     if (!skip.extraDates) {
                         dates.push(...CONFIG.EXTRA_DATES.map(d => ({ month: CONFIG.MONTH, day: d })));
                     }
-                    if (!skip.extraNextMonth && CONFIG.EXTRA_NEXT_MONTH) {
-                        dates.push(...CONFIG.EXTRA_NEXT_MONTH.days.map(d => ({ month: CONFIG.MONTH + 1, day: d })));
+                    const next = CONFIG.EXTRA_NEXT_MONTH;
+                    if (!skip.extraNextMonth && next) {
+                        const nextMonth = CONFIG.MONTH + 1;
+                        const forced = [
+                            ...(next.extraDates || []),
+                            ...(block.hasAttribute('data-holidays') ? (next.holidays || []) : []),
+                            ...(block.hasAttribute('data-pre-holidays') ? (next.preHolidays || []) : []),
+                        ];
+                        const nextDays = next.days
+                            .filter(d => forced.includes(d) || allowedDays.includes(new Date(CONFIG.YEAR, nextMonth - 1, d).getDay()))
+                            .concat(forced.filter(d => !next.days.includes(d)))
+                            .sort((a, b) => a - b);
+                        dates.push(...nextDays.map(d => ({ month: nextMonth, day: d })));
                     }
                 }
 
