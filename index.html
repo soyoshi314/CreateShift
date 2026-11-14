@@ -1250,7 +1250,8 @@
                     if (isPreHoliday) suffix += "祝前";
                 }
 
-                const monthPrefix = month !== CONFIG.MONTH ? `${month}/` : "";
+                const displayMonth = ((month - 1) % 12) + 1;   // 13 → 1, 14 → 2 ...
+                const monthPrefix = month !== CONFIG.MONTH ? `${displayMonth}/` : "";
                 return `${monthPrefix}${day}${dayLabel}${suffix}`;
             },
         };
