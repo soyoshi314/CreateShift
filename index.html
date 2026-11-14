@@ -866,7 +866,7 @@
                         <div class="generated-area"></div>
                     </div>
 
-                    <div class="shift-block" data-days="5,6" data-holidays data-pre-holidays data-extra>
+                    <div class="shift-block" data-days="5,6" data-holidays data-pre-holidays data-extra data-extra-next>
                         <span class="block-title" id="section-2-3">【蒲田A】</span>
                         <div class="block-description">
                             <span class="note-red">⚠️ワルンバリ→外2テーブルのみ実演OK</span><br>
@@ -884,7 +884,7 @@
                         <div class="generated-area"></div>
                     </div>
 
-                    <div class="shift-block" data-days="5,6" data-holidays data-pre-holidays data-extra>
+                    <div class="shift-block" data-days="5,6" data-holidays data-pre-holidays data-extra data-extra-next>
                         <span class="block-title" id="section-2-4">【蒲田B】</span>
                         <div class="block-description">
                             ・串幸 (日休)<br>
@@ -944,7 +944,7 @@
 
                     <h2 class="section-title" id="section-3">３．立川町田ブロック</h2>
 
-                    <div class="shift-block" data-days="0,1,2,3,4,5,6" data-option="kunitachi" data-holidays data-pre-holidays data-extra>
+                    <div class="shift-block" data-days="0,1,2,3,4,5,6" data-option="kunitachi" data-holidays data-pre-holidays data-extra data-extra-next>
                         <span class="block-title" id="section-3-1">【立川A】</span>
                         <div class="block-description">
                             <span class="note-red">⚠️南口、マルミヤは行ける曜日を超！確認！ミス多発！</span><br>
@@ -957,7 +957,7 @@
                         <div class="generated-area"></div>
                     </div>
 
-                    <div class="shift-block" data-days="3,5,6" data-option="kunitachi" data-holidays data-pre-holidays data-extra>
+                    <div class="shift-block" data-days="3,5,6" data-option="kunitachi" data-holidays data-pre-holidays data-extra data-extra-next>
                         <span class="block-title" id="section-3-2">【立川B】</span>
                         <div class="block-description">
                             <span class="note-red">⚠️国立、いつでも追加OK(+￥500)</span><br>
@@ -980,7 +980,7 @@
                         <div class="generated-area"></div>
                     </div>
 
-                    <div class="shift-block" data-days="0,3,5,6" data-holidays data-pre-holidays data-extra>
+                    <div class="shift-block" data-days="0,3,5,6" data-holidays data-pre-holidays data-extra data-extra-next>
                         <span class="block-title" id="section-3-4">【町田+小田急相模原】</span>
                         <div class="block-description">
                             <span class="note-red">⚠️町田にシフトあり→オダサガのみ</span><br>
@@ -1002,7 +1002,7 @@
                         <div class="generated-area"></div>
                     </div>
 
-                    <div class="shift-block" data-days="0,3,5,6" data-holidays data-pre-holidays data-extra>
+                    <div class="shift-block" data-days="0,3,5,6" data-holidays data-pre-holidays data-extra data-extra-next>
                         <span class="block-title" id="section-3-5">【町田＋登戸】</span>
                         <div class="block-description">
                             ◎庄や町田本家店<br>
@@ -1011,7 +1011,7 @@
                         <div class="generated-area"></div>
                     </div>
 
-                    <div class="shift-block" data-days="0,3,4,5,6" data-option="kobuchi" data-holidays data-pre-holidays data-extra>
+                    <div class="shift-block" data-days="0,3,4,5,6" data-option="kobuchi" data-holidays data-pre-holidays data-extra data-extra-next>
                         <span class="block-title" id="section-3-6">【古淵】</span>
                         <div class="block-description">
                             <span class="note-red">⚠️町田・登戸・小田急相模原、いつでも追加OK</span><br>
@@ -1021,7 +1021,7 @@
                         <div class="generated-area"></div>
                     </div>
 
-                    <div class="shift-block" data-days="0,1,2,3,4,5,6" data-holidays data-pre-holidays data-extra>
+                    <div class="shift-block" data-days="0,1,2,3,4,5,6" data-holidays data-pre-holidays data-extra data-extra-next>
                         <span class="block-title" id="section-3-7">【荻窪＋国立】</span>
                         <div class="block-description">
                             ◎とりいちず荻窪
@@ -1174,10 +1174,10 @@
             HOLIDAYS: [], // 指定した日は、「祝」とついて、「data-holidays」属性が付与されている店舗に強制表示します
             EXTRA_DATES: [26,27,28,29,30,31], // 指定した日は、「data-extra」属性が付与されている店舗に強制表示します
             HIDDEN_DATES: [],
-            // 翌月分（不要な月はnullにする）
+            // 翌月分
             EXTRA_NEXT_MONTH: {
                        days: [1,2,3,4,5,6,7,8,9,10], // 翌月の対象期間。全店舗で、この中から曜日（data-days）に合う日だけ表示します
-                    extraDates: [1,2,3,4,5,6,7,8,9,10],    // 指定した日は、「data-extra」属性が付与されている店舗に強制表示します（当月の EXTRA_DATES と同じ）
+                    extraDates: [1,2,3,4,5,6,7,8,9,10],    // 指定した日は、「data-extra-next」属性が付与されている店舗に強制表示します（当月の EXTRA_DATES とは別指定）
                     holidays: [],      // 1/1〜1/3を「祝」表示にしたい場合。「data-holidays」属性の店舗に強制表示します
                     preHolidays: []    // 「data-pre-holidays」属性の店舗に強制表示します
                             }
@@ -1310,6 +1310,8 @@
              * ブロックに表示する追加日程を返す
              * skip.extraDates が true → 当月の EXTRA_DATES を除外
              * skip.extraNextMonth が true → EXTRA_NEXT_MONTH の日程を除外
+             * data-extra 属性 → 当月の CONFIG.EXTRA_DATES を強制表示
+             * data-extra-next 属性 → 翌月の EXTRA_NEXT_MONTH.extraDates を強制表示
              * 翌月分は EXTRA_NEXT_MONTH.days のうち data-days の曜日に合う日 ＋ 強制表示日（extraDates / holidays / preHolidays）
              * data-holidays 属性 → CONFIG.HOLIDAYS の日程を曜日に関係なく強制表示
              * data-pre-holidays 属性 → CONFIG.PRE_HOLIDAYS の日程を曜日に関係なく強制表示
@@ -1326,7 +1328,7 @@
                 if (!skip.extraNextMonth && next) {
                     const nextMonth = CONFIG.MONTH + 1;
                     const forced = [
-                        ...(block.hasAttribute('data-extra') ? (next.extraDates || []) : []),
+                        ...(block.hasAttribute('data-extra-next') ? (next.extraDates || []) : []),
                         ...(block.hasAttribute('data-holidays') ? (next.holidays || []) : []),
                         ...(block.hasAttribute('data-pre-holidays') ? (next.preHolidays || []) : []),
                     ];
